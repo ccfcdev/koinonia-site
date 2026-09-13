@@ -3,6 +3,10 @@
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
 const V = { css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
+const SETTINGS_URL = 'https://dcqydtkjzgilyjnjyisb.supabase.co/rest/v1/site_settings?select=key,value&site=eq.koinonia';
+function loadSettings(defaults){ try { const out = require('child_process').execSync(`curl -s --max-time 6 -H "apikey: sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp" "${SETTINGS_URL}"`, { encoding:'utf8' }); const rows = JSON.parse(out); const s = Object.assign({}, defaults); for (const r of rows) if (r.value && r.value.trim()) s[r.key] = r.value; console.log('settings: live'); return s; } catch (e){ console.log('settings: defaults (offline)'); return Object.assign({}, defaults); } }
+const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
+const set = (k, cls='') => `<span data-setting="${k}"${cls ? ' class="' + cls + '"' : ''}>${S[k]}</span>`;
 const WA = '260975065391', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
 /* Registration: mirrors the church's Google Form (currently the K24 form). Responses go straight into that form's sheet,
    and into the shared Supabase `registrations` table once js/config.js on the main site is filled in. */
@@ -37,9 +41,9 @@ const EDITIONS = {
       ['portrait-marodza','Pastor Stephen Marodza','Senior Pastor, CCFC Zimbabwe'],
     ],
     hero:'worship-1', gallery:['crowd-koinonia','worship-2','worship-3','worship-7','worship-8','worship-6','worship-4'] },
-  k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:'December 2026', where:'Lusaka, Zambia', theme:'', status:'next',
-    blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.',
-    videos:[], speakers:[], hero:'worship-3', gallery:[] },
+  k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:set('k26_when'), where:set('k26_where'), theme:S.k26_theme ? set('k26_theme') : '', status:'next',
+    blurb:set('k26_blurb'),
+    videos:[], speakers:[], hero:'k26-soon', gallery:[] },
 };
 
 const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']];
@@ -119,9 +123,9 @@ ${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0">
     <p class="lede mt-1">The same questions as the church's conference form, so your place is counted straight away. It takes about two minutes.</p></div>
   <div class="reg__layout">
     <aside class="reg__aside" data-rv-stagger>
-      <div class="reg__fact"><b>Dates</b><span>December 2026. Exact dates to be announced.</span></div>
-      <div class="reg__fact"><b>Venue</b><span>Lusaka, Zambia. Venue to be announced.</span></div>
-      <div class="reg__fact"><b>Delegate fee</b><span>Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.</span></div>
+      <div class="reg__fact"><b>Dates</b><span data-setting="k26_when">${S.k26_when}</span></div>
+      <div class="reg__fact"><b>Venue</b><span data-setting="k26_where">${S.k26_where}</span></div>
+      <div class="reg__fact"><b>Delegate fee</b><span data-setting="k26_fee">${S.k26_fee}</span></div>
       <div class="reg__fact"><b>Questions</b><span><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hello, I need help registering for Koi 26'.")}" target="_blank" rel="noopener">WhatsApp the office</a> or email ccfczambia@gmail.com</span></div>
     </aside>
     <form class="reg" data-edition="${e.key}" novalidate data-rv="fade">
@@ -179,7 +183,7 @@ const updates = { file:'updates.html', title:'Updates', og:'worship-3', desc:'Ko
 <section class="sec" id="feed" data-site="koinonia" style="padding-top:clamp(40px,6vw,70px)"><div class="wrap"><div class="feed__grid">
   <div><div class="feed__filters mb-2"></div><div class="feed__composer"></div><div class="feed__list mt-2"></div></div>
   <aside class="feed__side">
-    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', December 2026</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a></div>
+    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a></div>
     <div class="side"><h3>Watch Koi 25'</h3><p>Both Worship Connect sets from Koi 25' are up.</p><a class="link" href="k25.html#videos">Watch the sets ${ICON.arrow}</a></div>
     <div class="side" data-guest><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account ${ICON.arrow}</button></div>
   </aside></div></div></section>` };
