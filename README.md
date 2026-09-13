@@ -16,3 +16,6 @@ Assets are copies from `../ccfc-site/assets` (fonts, logo cut-outs, Koinonia 25 
 
 `?cap=1&y=<px>` capture mode and `./shot.sh` work as on the main site. `k25.html?lb=<videoId>` opens a video.
 Set `MAIN` in build.js to the church's main domain once registered (currently a placeholder).
+
+## Brand kit (2026-09-13)
+Colours: Koinonia Orange #FB7624, Fellowship Blue #013E87, Covenant Gold #886C2B (lighter #C9A54A on dark), Deep Navy #0A203D, Warm Stone #EEECE6, Pure White. Type: Bebas Neue (display, all caps), Montserrat (supporting), Great Vibes (accent script), self-hosted in assets/fonts. Logo lockups are vector SVGs rebuilt from the brand kit: `assets/logo/koinonia-stacked.svg` (primary, hero and next edition) and `koinonia-horizontal.svg` (nav and menu), each with a `-light` variant for light grounds. The crescent is geometric, KOINONIA is Bebas Neue outlines, and the Experience script is traced from the brand kit artwork. Emblem favicon rendered from the K mark. Tagline "Deep in Christ. One in Fellowship. Sent to Multiply." on the hero and footer; four pillars and purpose sections on the home page; annual lockup (year + theme) on the next edition page; Koi 26' theme "Abide and Bear Fruit" lives in site_settings k26_theme.
