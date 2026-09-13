@@ -106,6 +106,16 @@
       "source": "/faq",
       "destination": "/k26#faq",
       "permanent": true
+    },
+    {
+      "source": "/dashboard",
+      "destination": "https://madmin.ccfczambia.org/?site=koinonia",
+      "permanent": false
+    },
+    {
+      "source": "/admin",
+      "destination": "https://madmin.ccfczambia.org/?site=koinonia",
+      "permanent": false
     }
   ]
 }

@@ -260,14 +260,14 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
     <li><a href="${MAIN}"><b>CCFC Zambia</b><span>The church website</span></a></li>
   </ul>
 </div></section>` };
-const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), photosPage, updates, dashboard, notFound];
+const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), photosPage, updates, notFound];
 for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.clean(layout(p)); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
 fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
 fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#150F3A', background: '#150F3A' }));
 console.log('built', pages.length, 'pages', V);
 
-/* Knowledge base for the Ask Connect assistant: the visible text of every page, rebuilt on each deploy (kb.json). */
+/* Knowledge base for Ozer, the AI assistant: the visible text of every page, rebuilt on each deploy (kb.json). */
 function writeKb(pages, site){
   const strip = html => { const main = (html.match(/<main[^>]*>([\s\S]*?)<\/main>/) || [,''])[1];
     return main.replace(/<(script|style|svg|video|iframe|form)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&middot;|&amp;|&quot;|&#39;/g, m => ({'&nbsp;':' ','&middot;':'.','&amp;':'&','&quot;':'"','&#39;':"'"}[m])).replace(/\s+/g, ' ').trim().slice(0, 6000); };
