@@ -362,3 +362,40 @@
 .setting textarea{font:inherit;font-size:.93rem;padding:.6rem .8rem;border:1.5px solid var(--k-line);border-radius:12px;background:var(--k-soft);color:inherit;resize:vertical}
 .setting.is-dirty .save{background:var(--k-accent,#F15A29);color:#fff}
 .setting .row{display:flex;gap:.8rem;align-items:center}
+
+/* cookie consent (shared, themed by each site's tokens) */
+.consent{position:fixed;left:1.2rem;bottom:1.2rem;z-index:96;width:min(440px,calc(100vw - 2.4rem));opacity:0;transform:translateY(24px);transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.consent.is-in{opacity:1;transform:none;pointer-events:auto}
+.consent__card{background:var(--k-panel);color:var(--k-ink);border:1px solid var(--k-line);border-radius:22px;padding:1.2rem 1.25rem 1.1rem;box-shadow:0 30px 80px -30px rgba(0,0,0,.45);display:grid;gap:.75rem}
+.consent__head{display:flex;align-items:center;gap:.6rem}
+.consent__head b{font-family:var(--font-display);font-size:1.05rem;color:var(--k-head)}
+.consent__ico{width:34px;height:34px;border-radius:50%;background:var(--k-soft);color:var(--k-accent);display:grid;place-items:center;flex:none}
+.consent__ico svg{width:19px;height:19px}
+.consent p{margin:0;font-size:.88rem;line-height:1.5;color:var(--k-muted)}
+.consent p a{color:var(--k-head);text-decoration:underline;text-underline-offset:2px}
+.consent__opts{display:grid;gap:.45rem}
+.consent__opt{display:flex;gap:.7rem;align-items:flex-start;padding:.65rem .75rem;border-radius:14px;background:var(--k-soft);cursor:pointer}
+.consent__opt input{margin-top:.2rem;width:18px;height:18px;accent-color:var(--k-accent);flex:none}
+.consent__opt b{display:block;font-size:.88rem;color:var(--k-head)}
+.consent__opt small{display:block;font-size:.78rem;color:var(--k-muted);line-height:1.4}
+.consent__btns{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.consent__btns .btn{padding:.62rem 1.05rem;font-size:.86rem}
+.consent__more{background:none;border:0;color:var(--k-head);font:inherit;font-size:.86rem;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:.4rem .3rem}
+@media (max-width:640px){.consent{left:.75rem;right:.75rem;bottom:.75rem;width:auto}.consent__btns .btn{flex:1 1 auto;justify-content:center}.has-consent .chat{opacity:0;pointer-events:none}}
+/* consent-gated map */
+.cgate{position:absolute;inset:0;display:grid;place-items:center;padding:1.2rem;text-align:center;background:var(--k-ground) radial-gradient(circle at 30% 20%,var(--k-soft),transparent 60%);border-radius:inherit;z-index:2}
+.cgate > div{max-width:34ch;display:grid;gap:.6rem;justify-items:center}
+.cgate b{font-family:var(--font-display);font-size:1.2rem;color:var(--k-head)}
+.cgate p{margin:0;color:var(--k-muted);font-size:.9rem}
+.cgate__btns{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;align-items:center}
+.cgate__open{font-weight:600;color:var(--k-head);text-decoration:underline;text-underline-offset:3px;font-size:.9rem}
+.cgate__remember{display:flex;gap:.4rem;align-items:center;font-size:.8rem;color:var(--k-muted);cursor:pointer}
+.cgate__remember input{accent-color:var(--k-accent)}
+/* legal links row used in every footer */
+.legal{display:flex;flex-wrap:wrap;gap:.35rem .9rem;align-items:center}
+.legal a,.legal button{color:inherit;opacity:.8;font:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:none}
+.legal a:hover,.legal button:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
+/* visible keyboard focus everywhere */
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:2.5px solid var(--k-accent);outline-offset:3px;border-radius:6px}
+/* skip link becomes visible when focused */
+a.sr:focus,a.sr:focus-visible{position:fixed;left:1rem;top:1rem;width:auto;height:auto;clip:auto;overflow:visible;z-index:300;background:var(--k-accent);color:var(--k-on-accent);padding:.7rem 1.1rem;border-radius:999px;font-weight:700;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}

@@ -32,15 +32,15 @@ const can = {
 const KINDS = { news:'News', announcement:'Announcement', photo:'Photos', video:'Video', music:'Music' };
 /* ---------- the three sites: identity, pages, what the feed is called, which post kinds it uses ---------- */
 const SITES = {
-  ccfc:     { label:'CCFC Zambia', short:'CCFC', origin:'https://ccfczambia.org', feed:'feed.html', feedLabel:'Church feed', feedWord:'the family',
-              kinds:['news','photo','video','announcement'], logo:'assets/logo/ccfc-mark.png?v=2', dashTitle:'Church dashboard',
-              links: r => [['account.html','Account Center'], ['feed.html','Church feed'], ['blog.html','Blog'], ['library.html','Upper Room library'], can.staff(r) ? ['dashboard.html','Dashboard'] : null] },
-  koinonia: { label:'Koinonia Experience', short:'Koinonia', origin:'https://koinonia.ccfczambia.org', feed:'updates.html', feedLabel:'Conference updates', feedWord:'everyone coming to Koinonia',
-              kinds:['news','announcement','video','photo'], logo:'assets/logo/ccfc-mark.png?v=2', dashTitle:'Koinonia dashboard',
-              links: r => [['https://ccfczambia.org/account.html','Account Center'], ['updates.html','Updates'], ['k26.html#register',"Register for Koi 26'"], can.staff(r) ? ['dashboard.html','Dashboard'] : null] },
-  worship:  { label:'Worship Connect', short:'Worship', origin:'https://worship.ccfczambia.org', feed:'latest.html', feedLabel:'Latest from the team', feedWord:'the team',
-              kinds:['video','music','photo','news'], logo:'assets/logo/ccfc-mark-white.png?v=2', dashTitle:'Worship Connect dashboard',
-              links: r => [['https://ccfczambia.org/account.html','Account Center'], ['latest.html','Latest'], ['team.html','The team'], ['join.html','Join the team'], can.staff(r) ? ['dashboard.html','Dashboard'] : null] },
+  ccfc:     { label:'CCFC Zambia', short:'CCFC', origin:'https://ccfczambia.org', feed:'/feed', feedLabel:'Church feed', feedWord:'the family',
+              kinds:['news','photo','video','announcement'], logo:'/assets/logo/ccfc-mark.png?v=2', dashTitle:'Church dashboard',
+              links: r => [['/account','Account Center'], ['/feed','Church feed'], ['/blog','Blog'], ['/library','Upper Room library'], can.staff(r) ? ['/dashboard','Dashboard'] : null] },
+  koinonia: { label:'Koinonia Experience', short:'Koinonia', origin:'https://koinonia.ccfczambia.org', feed:'/updates', feedLabel:'Conference updates', feedWord:'everyone coming to Koinonia',
+              kinds:['news','announcement','video','photo'], logo:'/assets/logo/ccfc-mark.png?v=2', dashTitle:'Koinonia dashboard',
+              links: r => [['https://ccfczambia.org/account','Account Center'], ['/updates','Updates'], ['/k26#register',"Register for Koi 26'"], can.staff(r) ? ['/dashboard','Dashboard'] : null] },
+  worship:  { label:'Worship Connect', short:'Worship', origin:'https://worship.ccfczambia.org', feed:'/latest', feedLabel:'Latest from the team', feedWord:'the team',
+              kinds:['video','music','photo','news'], logo:'/assets/logo/ccfc-mark-white.png?v=2', dashTitle:'Worship Connect dashboard',
+              links: r => [['https://ccfczambia.org/account','Account Center'], ['/latest','Latest'], ['/team','The team'], ['/join','Join the team'], can.staff(r) ? ['/dashboard','Dashboard'] : null] },
 };
 const SITE_KEY = (window.CCFC_SITE && SITES[window.CCFC_SITE.key]) ? window.CCFC_SITE.key : 'ccfc';
 const SITE = Object.assign({}, SITES[SITE_KEY], window.CCFC_SITE || {});
@@ -182,7 +182,7 @@ function accountUI(modal){
       btn.addEventListener('click', () => { menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', !menu.hidden); });
       document.addEventListener('click', e => { if (!slot.contains(e.target)){ menu.hidden = true; btn.setAttribute('aria-expanded', false); } });
     }
-    $$('.nav__signout', slot).forEach(b => b.addEventListener('click', async () => { await sb.auth.signOut(); location.href = 'index.html'; }));
+    $$('.nav__signout', slot).forEach(b => b.addEventListener('click', async () => { await sb.auth.signOut(); location.href = '/'; }));
   });
   $$('[data-auth]').forEach(b => { if (b._bound) return; b._bound = true; b.addEventListener('click', e => { e.preventDefault(); modal.open(b.dataset.auth || 'in'); }); });
   $$('[data-guest]').forEach(el => { el.hidden = !!session; }); $$('[data-member]').forEach(el => { el.hidden = !session; });
@@ -364,13 +364,13 @@ async function blogPage(modal){
   const root = $('#blog'); if (!root) return; const list = $('.blog__list', root), single = $('.blog__single', root), editorSlot = $('.blog__editor', root);
   if (!ready){ list.innerHTML = `<div class="empty"><h3>The blog is almost ready</h3><p>Articles from the CCFC bloggers will appear here once accounts are switched on.</p></div>`; return; }
   const slug = new URLSearchParams(location.search).get('post');
-  if (can.blog(role())) editorSlot.innerHTML = `<div class="row"><button class="btn btn--navy blog__new">Write a post</button><a class="link" href="dashboard.html?site=ccfc&tab=blogs">Manage my posts</a></div>`;
-  $('.blog__new', root)?.addEventListener('click', () => { editorSlot.innerHTML = ''; blogEditor(editorSlot, null, () => location.href = 'blog.html'); editorSlot.scrollIntoView({ behavior:'smooth' }); });
+  if (can.blog(role())) editorSlot.innerHTML = `<div class="row"><button class="btn btn--navy blog__new">Write a post</button><a class="link" href="/dashboard?site=ccfc&tab=blogs">Manage my posts</a></div>`;
+  $('.blog__new', root)?.addEventListener('click', () => { editorSlot.innerHTML = ''; blogEditor(editorSlot, null, () => location.href = '/blog'); editorSlot.scrollIntoView({ behavior:'smooth' }); });
   if (slug){ list.hidden = true; single.hidden = false;
     const { data:b } = await sb.from('blog_feed').select('*').eq('slug', slug).maybeSingle();
-    if (!b){ single.innerHTML = `<div class="empty"><h3>Post not found</h3><p><a class="link" href="blog.html">Back to the blog</a></p></div>`; return; }
+    if (!b){ single.innerHTML = `<div class="empty"><h3>Post not found</h3><p><a class="link" href="/blog">Back to the blog</a></p></div>`; return; }
     document.title = `${b.title} | CCFC Blog`;
-    single.innerHTML = `<article class="article"><a class="link" href="blog.html">All posts</a><h1>${esc(b.title)}</h1><p class="article__meta">By ${esc(b.author_name)} &middot; ${esc(when(b.published_at || b.created_at))}${b.tags?.length ? ' &middot; ' + b.tags.map(esc).join(', ') : ''}</p>
+    single.innerHTML = `<article class="article"><a class="link" href="/blog">All posts</a><h1>${esc(b.title)}</h1><p class="article__meta">By ${esc(b.author_name)} &middot; ${esc(when(b.published_at || b.created_at))}${b.tags?.length ? ' &middot; ' + b.tags.map(esc).join(', ') : ''}</p>
       ${b.cover_url ? `<img class="article__cover" src="${esc(b.cover_url)}" alt="">` : ''}<div class="article__body">${md(b.body)}</div>
       ${(profile && (profile.id === b.author_id || can.admin(role()))) ? '<div class="row mt-2"><button class="btn btn--ghost blog__edit">Edit this post</button></div>' : ''}
       <h3 class="mt-3">Comments</h3><div class="post__comments blog__comments"></div></article>`;
@@ -380,7 +380,7 @@ async function blogPage(modal){
   const { data, error } = await sb.from('blog_feed').select('*').order('published_at', { ascending:false }).limit(30);
   if (error){ list.innerHTML = `<div class="empty"><h3>Could not load the blog</h3><p>${esc(error.message)}</p></div>`; return; }
   if (!data?.length){ list.innerHTML = `<div class="empty"><h3>No articles yet</h3><p>The first blog post will appear here.</p></div>`; return; }
-  list.innerHTML = data.map((b,i) => `<a class="bcard ${i===0?'bcard--lead':''}" href="blog.html?post=${esc(b.slug)}"><div class="ph">${b.cover_url ? `<img src="${esc(b.cover_url)}" alt="" loading="lazy">` : `<span class="bcard__mono">${esc(initials(b.title))}</span>`}</div><div class="bcard__body"><span class="bcard__meta">${esc(b.author_name)} &middot; ${esc(when(b.published_at || b.created_at))}</span><h3>${esc(b.title)}</h3><p>${esc(b.excerpt)}</p><span class="link">Read ${b.comment_count ? `&middot; ${b.comment_count} comments` : ''}</span></div></a>`).join('');
+  list.innerHTML = data.map((b,i) => `<a class="bcard ${i===0?'bcard--lead':''}" href="/blog?post=${esc(b.slug)}"><div class="ph">${b.cover_url ? `<img src="${esc(b.cover_url)}" alt="" loading="lazy">` : `<span class="bcard__mono">${esc(initials(b.title))}</span>`}</div><div class="bcard__body"><span class="bcard__meta">${esc(b.author_name)} &middot; ${esc(when(b.published_at || b.created_at))}</span><h3>${esc(b.title)}</h3><p>${esc(b.excerpt)}</p><span class="link">Read ${b.comment_count ? `&middot; ${b.comment_count} comments` : ''}</span></div></a>`).join('');
 }
 function blogEditor(slot, b, onDone){
   slot.innerHTML = `<form class="compose blogform" novalidate><div class="compose__head"><b>${b ? 'Edit post' : 'New blog post'}</b></div>
@@ -398,7 +398,7 @@ function blogEditor(slot, b, onDone){
       const { error } = b ? await sb.from('blogs').update(row).eq('id', b.id) : await sb.from('blogs').insert({ ...row, author_id: profile.id, slug: slugify(title) + '-' + Math.random().toString(36).slice(2,6) });
       if (error) throw error; toast(pub ? 'Published.' : 'Draft saved.'); onDone && onDone();
     } catch (err){ status.textContent = friendly(err); status.className='form__status is-err'; } });
-  $('.blog__delete', f)?.addEventListener('click', async () => { if (!confirm('Delete this post?')) return; const { error } = await sb.from('blogs').delete().eq('id', b.id); if (error) toast(error.message, false); else location.href = 'blog.html'; });
+  $('.blog__delete', f)?.addEventListener('click', async () => { if (!confirm('Delete this post?')) return; const { error } = await sb.from('blogs').delete().eq('id', b.id); if (error) toast(error.message, false); else location.href = '/blog'; });
 }
 
 /* ---------- UPPER ROOM LIBRARY (leaders and above) ---------- */
@@ -456,14 +456,14 @@ async function dashboardPage(modal){
   const q = new URLSearchParams(location.search);
   $('.dash__head', app).innerHTML = `<span class="eyebrow">${esc(D.eyebrow)}</span><h1>${esc(SITE.dashTitle)}</h1><p class="sub">${esc(D.intro)}</p>
     <div class="dash__who">${avatar(profile.full_name, profile.avatar_url)}<div><b>${esc(profile.full_name || profile.email)}</b><span class="pill pill--orange">${esc(ROLES[r].label)}</span></div>
-    ${can.admin(r) ? `<div class="dash__others">${Object.entries(SITES).filter(([k]) => k !== site).map(([k,s]) => `<a href="${s.origin}/dashboard.html">${esc(s.short)} dashboard ${ICO.arrow}</a>`).join('')}</div>` : ''}</div>`;
+    ${can.admin(r) ? `<div class="dash__others">${Object.entries(SITES).filter(([k]) => k !== site).map(([k,s]) => `<a href="${s.origin}/dashboard">${esc(s.short)} dashboard ${ICO.arrow}</a>`).join('')}</div>` : ''}</div>`;
   const bar = $('.dash__tabs', app), panel = $('.dash__panel', app), statsEl = $('.dash__stats', app);
   const { data: stats } = await sb.rpc('dashboard_stats', { p_site: site });
   statsEl.innerHTML = D.stats(stats).map(([k,v]) => `<div class="stat"><b>${v ?? 0}</b><span>${k}</span></div>`).join('');
   const tabs = D.tabs(r).filter(Boolean);
   bar.innerHTML = tabs.map(t => `<button class="dash__tab" data-t="${t[0]}">${t[1]}</button>`).join('');
-  const show = t => { $$('.dash__tab', bar).forEach(x => x.classList.toggle('is-on', x.dataset.t === t)); history.replaceState(null, '', `dashboard.html?tab=${t}`); panel.innerHTML = '<div class="skel"></div>';
-    ({ assistant: assistantTab, settings: settingsTab, posts: postsTab, regs: regsTab, apps: appsTab, team: teamTab, blogs: blogsTab, library: () => { location.href = 'library.html'; }, users: usersTab, audit: auditTab, roles: rolesTab })[t](); };
+  const show = t => { $$('.dash__tab', bar).forEach(x => x.classList.toggle('is-on', x.dataset.t === t)); history.replaceState(null, '', `/dashboard?tab=${t}`); panel.innerHTML = '<div class="skel"></div>';
+    ({ assistant: assistantTab, settings: settingsTab, posts: postsTab, regs: regsTab, apps: appsTab, team: teamTab, blogs: blogsTab, library: () => { location.href = '/library'; }, users: usersTab, audit: auditTab, roles: rolesTab })[t](); };
   $$('.dash__tab', bar).forEach(b => b.addEventListener('click', () => show(b.dataset.t)));
   const want = q.get('tab'); show(tabs.find(t => t[0] === want) ? want : tabs[0][0]);
   const csvOf = (name, cols, rows) => { const body = [cols.join(','), ...rows.map(x => cols.map(c => '"' + String(x[c] ?? '').replace(/"/g,'""') + '"').join(','))].join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], { type:'text/csv' })); a.download = name; a.click(); };
@@ -577,7 +577,7 @@ async function dashboardPage(modal){
   }
   async function blogsTab(){
     const { data } = await sb.from('blogs').select('id, title, slug, published, published_at, created_at, author:author_id(full_name)').order('created_at', { ascending:false }).limit(100);
-    panel.innerHTML = `<div class="row mb-2"><a class="btn" href="blog.html?new=1">Write a post</a></div><div class="dash__list">${(data||[]).map(b => `<div class="drow" data-id="${b.id}"><div><b>${esc(b.title)}</b><span>${b.published ? 'Published ' + esc(when(b.published_at)) : 'Draft'} &middot; ${esc(b.author?.full_name||'')}</span></div><div class="row"><a class="pill" href="blog.html?post=${esc(b.slug)}">Open</a>${can.admin(r) ? '<button class="pill pill--danger del">Delete</button>' : ''}</div></div>`).join('') || '<p class="sub">No blog posts yet.</p>'}</div>`;
+    panel.innerHTML = `<div class="row mb-2"><a class="btn" href="/blog?new=1">Write a post</a></div><div class="dash__list">${(data||[]).map(b => `<div class="drow" data-id="${b.id}"><div><b>${esc(b.title)}</b><span>${b.published ? 'Published ' + esc(when(b.published_at)) : 'Draft'} &middot; ${esc(b.author?.full_name||'')}</span></div><div class="row"><a class="pill" href="/blog?post=${esc(b.slug)}">Open</a>${can.admin(r) ? '<button class="pill pill--danger del">Delete</button>' : ''}</div></div>`).join('') || '<p class="sub">No blog posts yet.</p>'}</div>`;
     $$('.del', panel).forEach(b => b.addEventListener('click', async () => { if (!confirm('Delete this blog post?')) return; const { error } = await sb.from('blogs').delete().eq('id', b.closest('.drow').dataset.id); if (error) toast(friendly(error), false); else blogsTab(); }));
   }
   async function usersTab(){
@@ -640,7 +640,7 @@ async function accountPage(modal){
       <section class="acct__card acct__meta">
         <h2>Your account</h2>
         <dl class="drow__dl"><dt>Role</dt><dd>${esc(ROLES[role()||'member'].label)}: ${esc(ROLES[role()||'member'].desc)}</dd><dt>Signs in with</dt><dd>${esc(providers.map(p => p === 'email' ? 'Email and password' : p[0].toUpperCase() + p.slice(1)).join(', '))}</dd><dt>Member since</dt><dd>${esc(fullDate(profile.created_at))}</dd><dt>Works on</dt><dd>ccfczambia.org, koinonia.ccfczambia.org, worship.ccfczambia.org</dd></dl>
-        <div class="row mt-2"><button class="btn btn--ghost nav__signout">Sign out</button><a class="link" href="privacy.html">Privacy policy</a></div>
+        <div class="row mt-2"><button class="btn btn--ghost nav__signout">Sign out</button><a class="link" href="/privacy">Privacy policy</a></div>
       </section>
     </div>`;
     const setStatus = (f, msg, ok) => { const st = $('.form__status', f); st.textContent = msg; st.className = 'form__status ' + (ok ? 'is-ok' : 'is-err'); };
@@ -666,7 +666,7 @@ async function accountPage(modal){
     $('.acct__pass', app).addEventListener('submit', async e => { e.preventDefault(); const f = e.target; const p1 = f.password.value, p2 = f.password2.value;
       if (p1.length < 8){ setStatus(f, 'Use at least 8 characters.', false); return; } if (p1 !== p2){ setStatus(f, 'The two passwords do not match.', false); return; }
       const { error } = await sb.auth.updateUser({ password: p1 }); if (error){ setStatus(f, friendly(error), false); return; } f.reset(); setStatus(f, 'Password changed.', true); });
-    $('.nav__signout', app).addEventListener('click', async () => { await sb.auth.signOut(); location.href = 'index.html'; });
+    $('.nav__signout', app).addEventListener('click', async () => { await sb.auth.signOut(); location.href = '/'; });
   };
   render();
 }
@@ -681,8 +681,61 @@ async function teamPage(){
   $$('.tm .ph img', grid).forEach((im, i) => im.addEventListener('click', () => lb.open(imgs, i)));
 }
 
+
+/* ================================================================ COOKIE CONSENT + ANALYTICS
+   One choice covers all three sites (cookie on .ccfczambia.org, 6 months). Essential cookies (sign-in, this choice)
+   are always on. Optional: anonymous analytics (Vercel Web Analytics + Speed Insights, cookieless) and third-party
+   embeds that set their own cookies (Google Maps). Nothing optional loads until the visitor says yes. */
+const Consent = (() => {
+  const NAME = 'ccfc-consent', VER = 1, CAP = new URLSearchParams(location.search).has('cap');
+  const onDomain = /(^|\.)ccfczambia\.org$/.test(location.hostname);
+  const read = () => { const m = document.cookie.match(/(?:^|;\s*)ccfc-consent=([^;]*)/); if (!m) return null; try { const v = JSON.parse(decodeURIComponent(m[1])); return v && v.v === VER ? v : null; } catch (_) { return null; } };
+  const write = v => { document.cookie = `${NAME}=${encodeURIComponent(JSON.stringify(v))}; Max-Age=${60 * 60 * 24 * 180}; Path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}${onDomain ? '; Domain=.ccfczambia.org' : ''}`; };
+  let state = read(), el = null;
+  const analytics = () => { if (window.__ccfcVA || !onDomain) return; window.__ccfcVA = true;
+    window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
+    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js'].forEach(src => { const sc = document.createElement('script'); sc.defer = true; sc.src = src; document.head.appendChild(sc); }); };
+  const loadFrame = f => { if (f.getAttribute('src')) return; f.setAttribute('src', f.dataset.consentSrc); const g = f.parentElement.querySelector('.cgate'); if (g) g.remove(); };
+  const gates = () => $$('iframe[data-consent-src]').forEach(f => {
+    if (state && state.media) return loadFrame(f);
+    if (f.parentElement.querySelector('.cgate')) return;
+    const g = document.createElement('div'); g.className = 'cgate';
+    g.innerHTML = `<div><b>${esc(f.dataset.consentLabel || 'Map')}</b><p>This map comes from Google, which may set its own cookies.</p><div class="cgate__btns"><button type="button" class="btn cgate__load">Load the map</button>${f.dataset.consentLink ? `<a class="cgate__open" href="${esc(f.dataset.consentLink)}" target="_blank" rel="noopener">Open in Google Maps</a>` : ''}</div><label class="cgate__remember"><input type="checkbox"> Always load maps on these sites</label></div>`;
+    $('.cgate__load', g).addEventListener('click', () => { if ($('.cgate__remember input', g).checked) set({ analytics: !!(state && state.analytics), media: true }); loadFrame(f); });
+    f.parentElement.appendChild(g); });
+  const apply = () => { if (state && state.analytics) analytics(); gates(); };
+  function set(v){ state = { v: VER, t: Date.now(), analytics: !!v.analytics, media: !!v.media }; write(state); close(); apply(); }
+  function close(){ if (!el) return; el.classList.remove('is-in'); document.body.classList.remove('has-consent'); const x = el; el = null; setTimeout(() => x.remove(), 350); }
+  function open(){
+    if (el) return; el = document.createElement('div'); el.className = 'consent'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Cookie choices'); el.setAttribute('aria-describedby', 'consent-text');
+    const a = state ? state.analytics : false, m = state ? state.media : false;
+    el.innerHTML = `<div class="consent__card"><div class="consent__head"><span class="consent__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9 3 3 0 0 0 3 3 3 3 0 0 0 3 3 3 3 0 0 0 3 3z"/><circle cx="8.5" cy="10.5" r="1"/><circle cx="12" cy="15.5" r="1"/><circle cx="15.5" cy="12" r="1"/></svg></span><b>Your privacy on our sites</b></div>
+      <p id="consent-text">We use essential cookies to keep you signed in. With your OK we also count visits anonymously and load maps from Google. One choice covers all three CCFC sites. <a href="https://ccfczambia.org/privacy#cookies">Read the privacy policy</a></p>
+      <div class="consent__opts" ${state ? '' : 'hidden'}>
+        <label class="consent__opt"><input type="checkbox" checked disabled><span><b>Essential</b><small>Sign-in and remembering this choice. Always on.</small></span></label>
+        <label class="consent__opt"><input type="checkbox" name="analytics" ${a ? 'checked' : ''}><span><b>Anonymous analytics</b><small>Counts page views and page speed with Vercel. No cookies, no advertising.</small></span></label>
+        <label class="consent__opt"><input type="checkbox" name="media" ${m ? 'checked' : ''}><span><b>Maps</b><small>Loads Google Maps on the visit and contact pages. Google may set cookies.</small></span></label>
+      </div>
+      <div class="consent__btns"><button type="button" class="btn consent__all">Accept all</button><button type="button" class="btn btn--ghost consent__min">Essential only</button><button type="button" class="consent__more" ${state ? 'hidden' : ''}>Choose</button><button type="button" class="btn consent__save" ${state ? '' : 'hidden'}>Save my choices</button></div></div>`;
+    document.body.appendChild(el); document.body.classList.add('has-consent'); requestAnimationFrame(() => requestAnimationFrame(() => el && el.classList.add('is-in')));
+    $('.consent__all', el).addEventListener('click', () => set({ analytics: true, media: true }));
+    $('.consent__min', el).addEventListener('click', () => set({ analytics: false, media: false }));
+    $('.consent__more', el).addEventListener('click', e => { $('.consent__opts', el).hidden = false; e.currentTarget.hidden = true; $('.consent__save', el).hidden = false; $('input[name=analytics]', el).focus(); });
+    $('.consent__save', el).addEventListener('click', () => set({ analytics: $('input[name=analytics]', el).checked, media: $('input[name=media]', el).checked }));
+    if (state) $('.consent__save', el).focus();
+  }
+  function init(){
+    document.addEventListener('click', e => { const b = e.target.closest('[data-consent-open]'); if (b){ e.preventDefault(); open(); } });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && el && state) close(); });
+    apply(); if (!state && !CAP) setTimeout(open, 900);
+  }
+  return { init, open, get: () => state };
+})();
+
 /* ---------- helpers other site scripts call (Koinonia registration, Worship applications) ---------- */
 window.CCFC = {
+  consent: { open: () => Consent.open(), get: () => Consent.get() },
   async register(row){ if (!ready) return { offline:true }; const { error } = await sb.from('registrations').insert({ ...row, user_id: session?.user?.id || null }); return { error }; },
   async apply(row){ if (!ready) return { offline:true }; const { error } = await sb.from('applications').insert({ site:'worship', ...row, user_id: session?.user?.id || null }); return { error }; },
 };
@@ -703,6 +756,7 @@ async function applySettings(){ if (!ready) return; try {
 
 /* ================================================================ BOOT */
 async function boot(){
+  Consent.init();
   const modal = authModal();
   if (ready){ const { data } = await sb.auth.getSession(); session = data.session; await loadProfile();
     if (location.hash === '' && location.href.endsWith('#')) history.replaceState(null, '', location.pathname + location.search);
