@@ -455,3 +455,10 @@ h2 .script,.h-script{font-size:1.05em}
   .tagline{display:grid;gap:.3rem;justify-items:start}
   .tagline i{display:none}
 }
+
+/* desktop: keep the nav on one row; the church link folds to its icon when space is short */
+.nav .row{flex-wrap:nowrap}
+@media (max-width:1499px){.nav__home{padding:0;width:44px;height:44px;justify-content:center}.nav__home-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+.nav__signin{white-space:nowrap}
+@media (min-width:960px) and (max-width:1299px){.nav .nav__cta-long{display:none}.nav .nav__cta-short{display:inline}.nav__links{gap:1.1rem}}
+@media (min-width:960px) and (max-width:1139px){.nav__links{display:none}}
