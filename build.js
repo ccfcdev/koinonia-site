@@ -53,7 +53,7 @@ function layout(p){
 <meta name="description" content="${p.desc}">
 <link rel="canonical" href="https://koinonia.ccfczambia.org/${p.file === 'index.html' ? '' : p.file.replace(/\.html$/, '')}">
 <meta name="robots" content="${p.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}">
-<meta name="theme-color" content="#EEEDF0">
+<meta name="theme-color" content="#150F3A">
 <link rel="icon" href="assets/logo/favicon-32.png?v=3" sizes="32x32" type="image/png"><link rel="icon" href="assets/logo/favicon-192.png?v=3" sizes="192x192" type="image/png"><link rel="icon" href="assets/logo/favicon-512.png?v=3" sizes="512x512" type="image/png"><link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png?v=3">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Koinonia Experience"><meta property="og:title" content="${p.title} | Koinonia Experience"><meta property="og:description" content="${p.desc}"><meta property="og:image" content="assets/img/${p.og||'worship-1'}-1280.webp">
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
