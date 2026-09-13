@@ -99,7 +99,7 @@ const closeBlock = () => `<section class="close"><div class="bg">${img('worship-
 
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
-  return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`,
+  return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
     body:`
 <section class="hero hero--short"><div class="hero__media">${img(e.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
