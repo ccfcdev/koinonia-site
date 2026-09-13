@@ -42,6 +42,7 @@ const EDITIONS = {
     videos:[], speakers:[], hero:'worship-3', gallery:[] },
 };
 
+const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html','Koinonia 26','December 2026, register now'],['k25.html','Koinonia 25','Going Deep and Multiplying'],['k24.html','Koinonia 24','Where it began, Ibex Hill']];
 function layout(p){
   const links = [['index.html','Home'],['k24.html','K24'],['k25.html','K25'],['k26.html','K26'],['updates.html','Updates']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
   return `<!DOCTYPE html>
@@ -64,10 +65,18 @@ function layout(p){
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="Christ Connect Family Church"><b>KOINONIA<i>Experience</i></b></a>
   <ul class="nav__links">${links}</ul>
-  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register">I am coming to K26 ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button></div>
+  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register">I am coming to K26 ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
-<nav class="menu" aria-label="Site menu"><div class="menu__top"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="" style="height:40px"><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <ul class="menu__list">${links}<li><a class="menu__home" href="${MAIN}">${ICON.back}Back to the church website</a></li></ul><div class="menu__account"></div></nav>
+<div class="menu__veil"></div>
+<nav class="menu" aria-label="Site menu" id="menu">
+  <div class="menu__top"><a class="nav__brand" href="index.html"><img src="assets/logo/ccfc-mark-white.png?v=2" alt=""><b>KOINONIA<i>Experience</i></b></a><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="menu__scroll">
+    <div class="menu__quick"><a class="mq mq--a" href="k26.html#register"><b>I am coming to K26</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch K25</b><small>Both worship sets</small></a></div>
+    <h4 class="menu__h">Pages</h4><ul class="menu__list">${MENU.map(([f,l,t],i) => `<li style="--i:${i}"><a href="${f}"${f===p.file?' aria-current="page"':''}><b>${l}</b><small>${t}</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></li>`).join('')}</ul>
+    <h4 class="menu__h">Our sites</h4><div class="menu__cards"><a class="mcard mcard--church" href="${MAIN}"><b>CCFC Zambia</b><small>Back to the church website</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a><a class="mcard mcard--wc" href="https://worship.ccfczambia.org"><b>WORSHIP<i>Connect</i></b><small>The worship team, all videos</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></div>
+  </div>
+  <div class="menu__bottom"><div class="menu__account"></div><a class="menu__wa" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
+</nav>
 <main id="main">${p.body}</main>
 <footer class="foot"><div class="wrap"><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><span>&copy; <span class="year"></span> CCFC</span></div></footer>
 <script>window.KOI_GFORM=${JSON.stringify(GFORM.entry)};window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
