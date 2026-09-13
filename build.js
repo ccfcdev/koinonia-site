@@ -2,7 +2,7 @@
 /* KOINONIA EXPERIENCE site builder. node build.js → index.html, k24.html, k25.html, k26.html */
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
-const V = { css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css') };
+const V = { css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
 const WA = '260975065391', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
 /* Registration: mirrors the church's Google Form (currently the K24 form). Responses go straight into that form's sheet,
    and into the shared Supabase `registrations` table once js/config.js on the main site is filled in. */
@@ -43,7 +43,7 @@ const EDITIONS = {
 };
 
 function layout(p){
-  const links = [['index.html','Home'],['k24.html','K24'],['k25.html','K25'],['k26.html','K26']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
+  const links = [['index.html','Home'],['k24.html','K24'],['k25.html','K25'],['k26.html','K26'],['updates.html','Updates']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,12 +51,12 @@ function layout(p){
 <title>${p.title === 'Home' ? 'Koinonia Experience | Annual Family Conference in Lusaka, Zambia | CCFC' : p.title + ' | Koinonia Experience, Lusaka'}</title>
 <meta name="description" content="${p.desc}">
 <link rel="canonical" href="https://koinonia.ccfczambia.org/${p.file === 'index.html' ? '' : p.file.replace(/\.html$/, '')}">
-<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="robots" content="${p.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}">
 <meta name="theme-color" content="#EEEDF0">
 <link rel="icon" href="assets/logo/favicon.png?v=2" type="image/png"><link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png?v=2">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Koinonia Experience"><meta property="og:title" content="${p.title} | Koinonia Experience"><meta property="og:description" content="${p.desc}"><meta property="og:image" content="assets/img/${p.og||'worship-1'}-1280.webp">
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}">
+<link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',organizer:{'@type':'Organization',name:'Christ Connect Family Church'},location:{'@type':'Place',name:'Lusaka, Zambia'}})}</script>
 </head>
 <body>
@@ -64,14 +64,17 @@ function layout(p){
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="Christ Connect Family Church"><b>KOINONIA<i>Experience</i></b></a>
   <ul class="nav__links">${links}</ul>
-  <div class="row"><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register">I am coming to K26 ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button></div>
+  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register">I am coming to K26 ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button></div>
 </div></header>
 <nav class="menu" aria-label="Site menu"><div class="menu__top"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="" style="height:40px"><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <ul class="menu__list">${links}<li><a class="menu__home" href="${MAIN}">${ICON.back}Back to the church website</a></li></ul><div></div></nav>
+  <ul class="menu__list">${links}<li><a class="menu__home" href="${MAIN}">${ICON.back}Back to the church website</a></li></ul><div class="menu__account"></div></nav>
 <main id="main">${p.body}</main>
 <footer class="foot"><div class="wrap"><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><span>&copy; <span class="year"></span> CCFC</span></div></footer>
 <script>window.KOI_GFORM=${JSON.stringify(GFORM.entry)};window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
 <script src="js/site.js?v=${V.js}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
+<script>window.CCFC_SITE={key:'koinonia'};window.CCFC_CONFIG=window.CCFC_CONFIG||{supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
+<script src="js/core.js?v=${V.corejs}" defer></script>
 </body></html>`;
 }
 
@@ -142,6 +145,22 @@ const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia E
 <section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>From K25</h2>${videos(EDITIONS.k25.videos)}</div></section>
 ${closeBlock()}` };
 
-const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26)];
+
+const updates = { file:'updates.html', title:'Updates', og:'worship-3', desc:'Koinonia Experience updates: announcements about the next conference, speaker news, videos and photos from past editions, posted by the church media team.',
+  body:`
+<section class="hero hero--short"><div class="hero__media">${img('worship-3','', '100vw', true)}</div><div class="hero__scrim"></div><div class="wrap"><div class="hero__copy"><span class="pill pill--orange">Live from the team</span><h1 class="hero__k mt-1">Koinonia <span class="script">updates</span></h1><p>Announcements about K26, speaker news, and videos and photos from every edition, as the media team posts them. Sign in to react and comment.</p></div></div></section>
+<section class="sec" id="feed" data-site="koinonia" style="padding-top:clamp(40px,6vw,70px)"><div class="wrap"><div class="feed__grid">
+  <div><div class="feed__filters mb-2"></div><div class="feed__composer"></div><div class="feed__list mt-2"></div></div>
+  <aside class="feed__side">
+    <div class="side"><span class="eyebrow">Next edition</span><h3>Koinonia 26, December 2026</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="k26.html#register">I am coming to K26 ${ICON.arrow}</a></div>
+    <div class="side"><h3>Watch K25</h3><p>Both Worship Connect sets from Koinonia 25 are up.</p><a class="link" href="k25.html#videos">Watch the sets ${ICON.arrow}</a></div>
+    <div class="side"><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account ${ICON.arrow}</button></div>
+  </aside></div></div></section>` };
+const dashboard = { file:'dashboard.html', title:'Dashboard', og:'worship-1', desc:'Koinonia Experience team dashboard.', noindex:true, body:`
+<section class="sec" id="dashboard" style="padding-top:calc(var(--nav-h) + clamp(40px,6vw,80px))"><div class="wrap">
+  <div class="dash__gate"></div>
+  <div class="dash__app" hidden><div class="dash__head"></div><div class="dash__stats"></div><div class="dash__tabs"></div><div class="dash__panel"></div></div>
+</div></section>` };
+const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), updates, dashboard];
 for (const p of pages){ const html = layout(p); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
 console.log('built', pages.length, 'pages', V);
