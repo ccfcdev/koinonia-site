@@ -2,13 +2,110 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
-    ] },
-    { "source": "/assets/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] },
-    { "source": "/(css|js)/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(css|js)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(kb|k25-photos).json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/register",
+      "destination": "/k26#register",
+      "permanent": true
+    },
+    {
+      "source": "/koi26",
+      "destination": "/k26",
+      "permanent": true
+    },
+    {
+      "source": "/koi25",
+      "destination": "/k25",
+      "permanent": true
+    },
+    {
+      "source": "/koi24",
+      "destination": "/k24",
+      "permanent": true
+    },
+    {
+      "source": "/photos",
+      "destination": "/k25-photos",
+      "permanent": true
+    },
+    {
+      "source": "/k25/photos",
+      "destination": "/k25-photos",
+      "permanent": true
+    },
+    {
+      "source": "/gallery",
+      "destination": "/k25-photos",
+      "permanent": true
+    },
+    {
+      "source": "/privacy",
+      "destination": "https://ccfczambia.org/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "https://ccfczambia.org/terms",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/k26#faq",
+      "permanent": true
+    }
   ]
 }

@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /* KOINONIA EXPERIENCE site builder. node build.js → index.html, k24.html, k25.html, k26.html */
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
+const SEO = require('./build-shared.js');
+const ORIGIN = 'https://koinonia.ccfczambia.org';
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
-const V = { css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
+const V = { chat: hash('js/chat.js'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
 const SETTINGS_URL = 'https://dcqydtkjzgilyjnjyisb.supabase.co/rest/v1/site_settings?select=key,value&site=eq.koinonia';
 function loadSettings(defaults){ try { const out = require('child_process').execSync(`curl -s --max-time 6 -H "apikey: sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp" "${SETTINGS_URL}"`, { encoding:'utf8' }); const rows = JSON.parse(out); const s = Object.assign({}, defaults); for (const r of rows) if (r.value && r.value.trim()) s[r.key] = r.value; console.log('settings: live'); return s; } catch (e){ console.log('settings: defaults (offline)'); return Object.assign({}, defaults); } }
 const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
@@ -46,30 +48,36 @@ const EDITIONS = {
     videos:[], speakers:[], hero:'k26-soon', gallery:[] },
 };
 
-const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']];
+
+const KSEO = {
+  'index.html': ["Koinonia Experience | Family Conference in Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
+  'k24.html': ["Koi 24' | Where Koinonia Began | Koinonia Experience", "Koi 24', the first Koinonia Experience, gathered the CCFC family at Ibex Hill, Lusaka, on 21 and 22 December 2024 for worship, the Word and testimonies."],
+  'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
+  'k26.html': ["Koi 26' | Register for December 2026 | Koinonia", "Register for Koi 26', the next Koinonia Experience family conference in Lusaka, December 2026. It takes two minutes. Dates and venue announced here first."],
+  'k25-photos.html': ["Koi 25' Photos | View and Download | Koinonia", "View and download free photos from Koi 25', Going Deep and Multiplying, the Koinonia Experience family conference in Lusaka, December 2025."],
+  'updates.html': ["Koinonia Updates | News, Videos and Photos", "Announcements, speaker news, videos and photos from every Koinonia Experience conference, posted by the Christ Connect Family Church media team."],
+  'dashboard.html': ["Koinonia Dashboard | CCFC", "Koinonia Experience team dashboard."],
+  '404.html': ["Page not found | Koinonia Experience", "This page could not be found on the Koinonia Experience website."],
+};
+const CARD = { 'index.html':'home', 'k24.html':'k24', 'k25.html':'k25', 'k26.html':'k26', 'k25-photos.html':'k25-photos', 'updates.html':'updates' };
+const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k25-photos.html',"Koi 25' photos",'View and download'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']];
 function layout(p){
   const links = [['index.html','Home'],['k24.html',"Koi 24'"],['k25.html',"Koi 25'"],['k26.html',"Koi 26'"],['updates.html','Updates']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${p.title === 'Home' ? 'Koinonia Experience | Annual Family Conference in Lusaka, Zambia | CCFC' : p.title + ' | Koinonia Experience, Lusaka'}</title>
-<meta name="description" content="${p.desc}">
-<link rel="canonical" href="https://koinonia.ccfczambia.org/${p.file === 'index.html' ? '' : p.file.replace(/\.html$/, '')}">
-<meta name="robots" content="${p.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}">
-<meta name="theme-color" content="#150F3A">
-<link rel="icon" href="assets/logo/favicon-32.png?v=3" sizes="32x32" type="image/png"><link rel="icon" href="assets/logo/favicon-192.png?v=3" sizes="192x192" type="image/png"><link rel="icon" href="assets/logo/favicon-512.png?v=3" sizes="512x512" type="image/png"><link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png?v=3">
-<meta property="og:type" content="website"><meta property="og:site_name" content="Koinonia Experience"><meta property="og:title" content="${p.title} | Koinonia Experience"><meta property="og:description" content="${p.desc}"><meta property="og:image" content="assets/img/${p.og||'worship-1'}-1280.webp">
+${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: KSEO[p.file][0].split(' | ')[0] + ', Koinonia Experience family conference', siteName: 'Koinonia Experience', themeColor: '#150F3A' })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}">
-<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',organizer:{'@type':'Organization',name:'Christ Connect Family Church'},location:{'@type':'Place',name:'Lusaka, Zambia'}})}</script>
+<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
 </head>
 <body>
 <a class="sr" href="#main">Skip to content</a>
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="Christ Connect Family Church"><b>KOINONIA<i>Experience</i></b></a>
   <ul class="nav__links">${links}</ul>
-  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
@@ -82,21 +90,34 @@ function layout(p){
   <div class="menu__bottom"><div class="menu__account"></div><a class="menu__wa" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
 </nav>
 <main id="main">${p.body}</main>
-<footer class="foot"><div class="wrap"><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><span><a href="${MAIN}/sitemap">Site map</a> &nbsp;&middot;&nbsp; &copy; <span class="year"></span> CCFC</span></div></footer>
+<footer class="foot"><div class="wrap"><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><nav class="legal" aria-label="Legal"><a href="${MAIN}/privacy">Privacy</a><a href="${MAIN}/terms">Terms</a><a href="${MAIN}/faq">FAQ</a><button type="button" data-consent-open>Cookie settings</button><a href="${MAIN}/sitemap">Site map</a><span>&copy; <span class="year"></span> CCFC</span></nav></div></footer>
 <script>window.KOI_GFORM=${JSON.stringify(GFORM.entry)};window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
 <script src="js/site.js?v=${V.js}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
-<script>window.CCFC_SITE={key:'koinonia'};window.CCFC_CONFIG=window.CCFC_CONFIG||{supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
+<script>window.CCFC_SITE={key:'koinonia'};window.CCFC_CONFIG=Object.assign(window.CCFC_CONFIG||{supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'},{chatEndpoint:'https://dcqydtkjzgilyjnjyisb.supabase.co/functions/v1/ministry-chat'})</script>
 <script src="js/core.js?v=${V.corejs}" defer></script>
+<script src="js/chat.js?v=${V.chat}" defer></script>
 </body></html>`;
 }
 
 const videos = list => list.length ? `<div class="vgrid" data-rv-stagger>${list.map(v => `<a href="https://www.youtube.com/watch?v=${v.id}" class="vcard" data-lb="${v.id}" data-title="${v.t}" aria-label="Play: ${v.t}"><div class="ph">${img(v.img,'','(min-width:800px) 50vw, 100vw')}</div><span class="vcard__play" aria-hidden="true">${ICON.play}</span><div class="vcard__meta"><b>${v.t}</b><span>${v.by}</span></div></a>`).join('')}</div>`
   : `<div class="vcard vcard--soon" data-rv><div><h3>Videos on the way</h3><p>Recordings from this edition will be added here as the media team uploads them.</p></div></div>`;
-const gallery = list => list.length ? `<div class="gal" data-rv-stagger>${list.map(n => `<div class="ph">${img(n,'Koinonia moment','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
+const GALT = { 'crowd-koinonia':'Delegates seated together during a Koinonia session', 'worship-1':'Worship Connect singers in white shirts leading praise on stage', 'worship-2':'The worship team singing behind the pulpit under blue lights', 'worship-3':'A worship leader singing with the choir behind him', 'worship-4':'The choir and worship leader in blue stage light, seen from the audience', 'worship-5':'Vocalists and the drummer leading a song on stage', 'worship-6':'The choir dancing on a red-lit stage', 'worship-7':'A keyboard player on a red-lit stage beside the Koinonia screen', 'worship-8':'The choir singing on stage during an evening session' };
+const gallery = list => list.length ? `<div class="gal" data-rv-stagger>${list.map(n => `<div class="ph">${img(n, GALT[n] || 'A moment from Koinonia','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
   : `<div class="gal"><div class="gal__soon">Photographs from this edition are being added.</div></div>`;
 const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2 data-split>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
 
+
+const K26FAQ = [
+  ['Who can come to Koinonia?', "Everyone is welcome: members, friends and first-time guests from every CCFC church in Zambia, Zimbabwe, Malawi and the wider family."],
+  ["When and where is Koi 26?", "Koi 26 is in December 2026 in Lusaka. The exact dates, venue and theme will be announced on this page first."],
+  ['How much does it cost?', "The delegate fee is announced with the dates. For Koi 25 it was K200 for Zambian delegates and USD 10 for international delegates."],
+  ['Can I register my children?', "Yes. Koinonia is a family conference. Fill in the form for each child and choose their age range."],
+  ['Can I take part by preaching, singing or performing?', "Yes. Choose Yes on the form and tell us what you would like to share. Slots are limited and the organisers will confirm."],
+  ['How do I know my registration went through?', "A thank-you message appears on the page as soon as you register. The team will then contact you with the dates and delegate rates."],
+  ['Who do I ask if I have a question?', "WhatsApp the church office on +260 975 065 391 or email ccfczambia@gmail.com."],
+];
+const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
@@ -117,7 +138,7 @@ function editionPage(e){
 </div></div></section>
 ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Moments</h2>${gallery(e.gallery)}</div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${e.key === 'k25' ? `<a class="btn btn--ghost" href="k25-photos.html">See and download every photo ${ICON.arrow}</a>` : ''}</div>${gallery(e.gallery)}</div></section>
 ${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0"><div class="wrap">
   <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h2 data-split>Register for<br>Koi ${e.n}'.</h2>
     <p class="lede mt-1">The same questions as the church's conference form, so your place is counted straight away. It takes about two minutes.</p></div>
@@ -154,13 +175,13 @@ ${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0">
   <iframe name="gform-sink" hidden aria-hidden="true"></iframe>
   <form hidden method="POST" action="${GFORM.action}" target="gform-sink" class="reg__gform"></form>
 </div></section>` : ''}
-
-${closeBlock()}` };
+${e.status==='next' ? k26Faq() : ''}
+${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: K26FAQ.map(([q, a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) } } : {}) };
 }
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
-<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}<video data-src="assets/img/hero-1080.mp4" data-src4k="assets/img/hero-4k.mp4" poster="assets/img/hero-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div><div class="hero__scrim"></div>
+<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}<video data-src720="assets/img/hero-720.mp4" data-src="assets/img/hero-1080-v2.mp4" data-src4k="assets/img/hero-4k.mp4" poster="assets/img/hero-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
     <h1 class="hero__k">KOINONIA<span class="script">Experience</span></h1>
     <p>Once a year the whole Christ Connect family comes home to Lusaka: three days of worship, the Word and fellowship that sends us back out multiplying.</p>
@@ -192,8 +213,43 @@ const dashboard = { file:'dashboard.html', title:'Dashboard', og:'worship-1', de
   <div class="dash__gate"></div>
   <div class="dash__app" hidden><div class="dash__head"></div><div class="dash__stats"></div><div class="dash__tabs"></div><div class="dash__panel"></div></div>
 </div></section>` };
-const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), updates, dashboard];
-for (const p of pages){ const html = layout(p); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
+
+const photosPage = { file:'k25-photos.html', title:"Koi 25' photos", og:'worship-1', desc:KSEO['k25-photos.html'][1],
+  body:`
+<section class="hero hero--short phx__hero"><div class="hero__media">${img('worship-6','', '100vw', true)}</div><div class="hero__scrim"></div>
+  <div class="wrap"><div class="hero__copy">
+    <a class="phx__back" href="k25.html">${ICON.back} Koi 25'</a>
+    <h1 class="hero__k mt-1">KOI <em>25'</em><span class="script">photos</span></h1>
+    <p>Moments from Going Deep and Multiplying, 19 to 21 December 2025. Tap any photo to see it large and download it.</p>
+    <div class="row phx__dl" data-zips></div>
+  </div></div>
+</section>
+<section class="sec phx" style="padding-top:clamp(28px,4vw,48px)"><div class="wrap">
+  <div class="phx__bar"><p class="phx__count" aria-live="polite">Loading photos</p><p class="phx__fine">Free for personal and church use. Please credit CCFC Zambia. <a href="${MAIN}/terms#photos">Photo terms</a></p></div>
+  <div class="phx__grid" data-photos="k25-photos.json"></div>
+  <noscript><p>Turn on JavaScript to browse the photos, or download them all using the buttons above.</p></noscript>
+</div></section>
+${closeBlock()}` };
+const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noindex:true, desc:KSEO['404.html'][1],
+  body:`
+<section class="sec nf" style="padding-top:calc(var(--nav-h) + clamp(40px,6vw,90px))"><div class="wrap">
+  <span class="pill">Error 404</span>
+  <h1 class="hero__k mt-1" style="font-size:clamp(3rem,10vw,7rem)">LOST<span class="script">in Lusaka</span></h1>
+  <p class="lede mt-1">This page does not exist, or it has moved. Everything about Koinonia is one tap away.</p>
+  <div class="row mt-2"><a class="btn" href="index.html">Koinonia home ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#register">Register for Koi 26'</a></div>
+  <ul class="nf__links mt-3">
+    <li><a href="k26.html"><b>Koi 26'</b><span>December 2026, register now</span></a></li>
+    <li><a href="k25.html"><b>Koi 25'</b><span>Videos and speakers</span></a></li>
+    <li><a href="k25-photos.html"><b>Koi 25' photos</b><span>View and download</span></a></li>
+    <li><a href="updates.html"><b>Updates</b><span>News from the team</span></a></li>
+    <li><a href="${MAIN}"><b>CCFC Zambia</b><span>The church website</span></a></li>
+  </ul>
+</div></section>` };
+const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), photosPage, updates, dashboard, notFound];
+for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.clean(layout(p)); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
+fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
+fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
+fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#150F3A', background: '#150F3A' }));
 console.log('built', pages.length, 'pages', V);
 
 /* Knowledge base for the Ask Connect assistant: the visible text of every page, rebuilt on each deploy (kb.json). */
