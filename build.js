@@ -118,6 +118,21 @@ const K26FAQ = [
   ['Who do I ask if I have a question?', "WhatsApp the church office on +260 975 065 391 or email ccfczambia@gmail.com."],
 ];
 const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
+
+/* Koi 25' Moments: hand-picked from the published photo set, each opens in the gallery */
+const K25_PHOTOS = fs.existsSync(path.join(__dirname, 'k25-photos.json')) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'k25-photos.json'), 'utf8')) : [];
+const K25_MOMENTS = [
+  ['DSC_3008.JPG', 'The choir in bright jackets singing across the stage'],
+  ['DSC_2758.JPG', 'A leader praying over a delegate'],
+  ['DSC_2465.JPG', 'Singers leading worship, seen past the stage flowers'],
+  ['DSC_2616.JPG', 'A Worship Connect keyboardist playing'],
+  ['DSC_3120.JPG', 'A singer kneeling in worship on stage'],
+  ['DSC_2865.JPG', 'The hall full of delegates'],
+  ['DSC_2507.JPG', 'A worship leader with arms raised on stage'],
+  ['DSC_2520.JPG', 'The youth group dancing in praise'],
+];
+const k25Moments = () => { const tiles = K25_MOMENTS.map(([src, alt]) => [K25_PHOTOS.find(p => p.src === src), alt]).filter(([p]) => p);
+  return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="k25-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="assets/k25/mid/${p.id}.webp" srcset="assets/k25/thumb/${p.id}.webp 520w, assets/k25/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
@@ -138,7 +153,7 @@ function editionPage(e){
 </div></div></section>
 ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${e.key === 'k25' ? `<a class="btn btn--ghost" href="k25-photos.html">See and download every photo ${ICON.arrow}</a>` : ''}</div>${gallery(e.gallery)}</div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${e.key === 'k25' ? `<a class="btn btn--ghost" href="k25-photos.html">See and download ${K25_PHOTOS.length} photos ${ICON.arrow}</a>` : ''}</div>${e.key === 'k25' && K25_PHOTOS.length ? k25Moments() : gallery(e.gallery)}</div></section>
 ${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0"><div class="wrap">
   <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h2 data-split>Register for<br>Koi ${e.n}'.</h2>
     <p class="lede mt-1">The same questions as the church's conference form, so your place is counted straight away. It takes about two minutes.</p></div>

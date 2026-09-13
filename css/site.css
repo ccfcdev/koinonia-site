@@ -399,3 +399,8 @@ h2 .script,.h-script{font-size:.9em}
 /* phone header: keep logo, call to action and menu on one line */
 @media (max-width:959px){.nav .wrap{gap:.8rem}.nav .row{flex-wrap:nowrap;gap:.5rem}}
 @media (max-width:560px){.nav__brand{gap:.5rem}.nav__brand img{height:34px}.nav__brand b{font-size:.98rem}.nav__brand b i{display:none}}
+
+/* Koi 25 moments link into the gallery */
+.gal--photos a.ph{display:block;position:relative}
+.gal--photos a.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,6,30,.4),transparent 50%);opacity:0;transition:opacity .3s}
+.gal--photos a.ph:hover::after{opacity:1}

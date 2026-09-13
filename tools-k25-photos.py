@@ -90,6 +90,24 @@ def publish(cap):
     mb = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(PUB) for f in fs) / 1e6
     print(f'{len(meta)} staged, {len(groups)} moments, {len(keep)} published, {mb:.0f} MB on the site')
 
+def publish_list(names_file):
+    """Publish exactly the photos named in a JSON list (hand-picked), ordered by capture time."""
+    meta = json.load(open(SJSON)); names = json.load(open(names_file))
+    keep = sorted([meta[n] for n in names if n in meta], key=lambda p: (p['taken'] or '9999', p['src']))
+    for d in ('photo', 'thumb', 'mid', 'zip'):
+        shutil.rmtree(os.path.join(PUB, d), ignore_errors=True); os.makedirs(os.path.join(PUB, d))
+    out = []
+    for i, p in enumerate(keep, 1):
+        src = os.path.join(STAGE, p['id'] + '.jpg'); shutil.copyfile(src, os.path.join(PUB, 'photo', p['id'] + '.jpg'))
+        im = Image.open(src)
+        mid = im.copy(); mid.thumbnail((1000, 1000), Image.LANCZOS); mid.save(os.path.join(PUB, 'mid', p['id'] + '.webp'), 'WEBP', quality=74, method=5)
+        im.thumbnail((520, 520), Image.LANCZOS); im.save(os.path.join(PUB, 'thumb', p['id'] + '.webp'), 'WEBP', quality=72, method=5)
+        out.append({'id': p['id'], 'src': p['src'], 'n': i, 'w': p['w'], 'h': p['h'], 'taken': p['taken'], 'kb': round(os.path.getsize(src) / 1024)})
+    json.dump(out, open(os.path.join(ROOT, 'k25-photos.json'), 'w'), separators=(',', ':'))
+    mb = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(PUB) for f in fs) / 1e6
+    print(f'{len(out)} published, {mb:.0f} MB on the site')
+
 if __name__ == '__main__':
     if sys.argv[1] == 'stage': stage(sys.argv[2:])
+    elif sys.argv[1] == 'publish-list': publish_list(sys.argv[2])
     else: publish(int(sys.argv[2]) if len(sys.argv) > 2 else 200)
