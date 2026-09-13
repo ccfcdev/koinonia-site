@@ -290,3 +290,13 @@ h2 .script,.h-script{font-size:.9em}
 .rolesel option,.field select option{color:#111}
 .auth__oauth{color:#12123A}
 .mcard--church{background:#fff;color:var(--navy)}
+/* the next edition card shows a coming-soon mark instead of a photo */
+.ed__soon{position:absolute;inset:0;z-index:-1;display:grid;place-content:center;justify-items:center;gap:.1rem;text-align:center;background:radial-gradient(70% 60% at 50% 30%,rgba(255,106,69,.45),transparent 70%),radial-gradient(60% 50% at 80% 100%,rgba(255,179,92,.3),transparent 70%),var(--indigo);overflow:hidden}
+.ed__soon::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 40%,rgba(255,255,255,.06) 50%,transparent 60% 100%);animation:soonSpin 18s linear infinite}
+@keyframes soonSpin{to{transform:rotate(360deg)}}
+.ed__soon img{position:absolute;width:62%;left:50%;top:50%;transform:translate(-50%,-56%);opacity:.08;filter:blur(.5px)}
+.ed__soon b{position:relative;font-family:var(--font-display);font-weight:800;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:-.04em;line-height:.95;color:#fff}
+.ed__soon i{position:relative;font-family:var(--font-script);font-style:italic;font-size:clamp(2.6rem,5.4vw,4rem);line-height:.9;color:var(--amber);margin-top:-.1em}
+.ed__soon small{position:relative;margin-top:1rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:600}
+.ed--next .ed__k,.ed--next .ed__when,.ed--next p{position:relative}
+@media (prefers-reduced-motion:reduce){.ed__soon::before{animation:none}}
