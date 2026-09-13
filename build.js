@@ -20,7 +20,7 @@ const ICON = {
   arrow: '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
 };
-const img = (n, alt, sizes='(min-width:900px) 50vw, 100vw', eager=false) => `<img src="assets/img/${n}-1280.webp" srcset="assets/img/${n}-800.webp 800w, assets/img/${n}-1280.webp 1280w" sizes="${sizes}" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>`;
+const img = (n, alt, sizes='(min-width:900px) 50vw, 100vw', eager=false) => `<img src="assets/img/${n}-1280.webp" srcset="assets/img/${n}-800.webp 800w, assets/img/${n}-1280.webp 1280w${fs.existsSync(path.join(__dirname, `assets/img/${n}-1920.webp`)) ? `, assets/img/${n}-1920.webp 1920w` : ''}" sizes="${sizes}" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>`;
 const imgP = (n, alt) => `<img src="assets/img/${n}-800.webp" srcset="assets/img/${n}-480.webp 480w, assets/img/${n}-800.webp 800w" sizes="(min-width:900px) 20vw, 50vw" alt="${alt}" loading="lazy" decoding="async">`;
 
 /* ---------- editions (facts from the church's posters and channel; K24 and K26 details are open) ---------- */
@@ -42,7 +42,7 @@ const EDITIONS = {
       ['portrait-nyirenda','Bishop Brain Nyirenda','Presiding Bishop, CCFC Malawi'],
       ['portrait-marodza','Pastor Stephen Marodza','Senior Pastor, CCFC Zimbabwe'],
     ],
-    hero:'worship-1', gallery:['crowd-koinonia','worship-2','worship-3','worship-7','worship-8','worship-6','worship-4'] },
+    hero:'k25-hero', gallery:['crowd-koinonia','worship-2','worship-3','worship-7','worship-8','worship-6','worship-4'] },
   k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:set('k26_when'), where:set('k26_where'), theme:S.k26_theme ? set('k26_theme') : '', status:'next',
     blurb:set('k26_blurb'),
     videos:[], speakers:[], hero:'k26-soon', gallery:[] },
@@ -77,13 +77,13 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home"><img src="assets/logo/ccfc-mark-white.png?v=2" alt="Christ Connect Family Church"><b>KOINONIA<i>Experience</i></b></a>
   <ul class="nav__links">${links}</ul>
-  <div class="row"><span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row">${SEO.ozerNav()}<span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website">${ICON.back}Church website</a><a class="btn nav__cta" href="k26.html#register"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
   <div class="menu__top"><a class="nav__brand" href="index.html"><img src="assets/logo/ccfc-mark-white.png?v=2" alt=""><b>KOINONIA<i>Experience</i></b></a><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="menu__scroll">
-    <div class="menu__quick"><a class="mq mq--a" href="k26.html#register"><b>I am coming to Koi 26'</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch Koi 25'</b><small>Both worship sets</small></a></div>
+    <div class="menu__quick"><a class="mq mq--a" href="k26.html#register"><b>I am coming to Koi 26'</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch Koi 25'</b><small>Both worship sets</small></a></div>${SEO.ozerMenu()}
     <h4 class="menu__h">Pages</h4><ul class="menu__list">${MENU.map(([f,l,t],i) => `<li style="--i:${i}"><a href="${f}"${f===p.file?' aria-current="page"':''}><b>${l}</b><small>${t}</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></li>`).join('')}</ul>
     <h4 class="menu__h">Our sites</h4><div class="menu__cards"><a class="mcard mcard--church" href="${MAIN}"><b>CCFC Zambia</b><small>Back to the church website</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a><a class="mcard mcard--wc" href="https://worship.ccfczambia.org"><b>WORSHIP<i>Connect</i></b><small>The worship team, all videos</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></div>
   </div>
@@ -102,7 +102,7 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 
 const videos = list => list.length ? `<div class="vgrid" data-rv-stagger>${list.map(v => `<a href="https://www.youtube.com/watch?v=${v.id}" class="vcard" data-lb="${v.id}" data-title="${v.t}" aria-label="Play: ${v.t}"><div class="ph">${img(v.img,'','(min-width:800px) 50vw, 100vw')}</div><span class="vcard__play" aria-hidden="true">${ICON.play}</span><div class="vcard__meta"><b>${v.t}</b><span>${v.by}</span></div></a>`).join('')}</div>`
   : `<div class="vcard vcard--soon" data-rv><div><h3>Videos on the way</h3><p>Recordings from this edition will be added here as the media team uploads them.</p></div></div>`;
-const GALT = { 'crowd-koinonia':'Delegates seated together during a Koinonia session', 'worship-1':'Worship Connect singers in white shirts leading praise on stage', 'worship-2':'The worship team singing behind the pulpit under blue lights', 'worship-3':'A worship leader singing with the choir behind him', 'worship-4':'The choir and worship leader in blue stage light, seen from the audience', 'worship-5':'Vocalists and the drummer leading a song on stage', 'worship-6':'The choir dancing on a red-lit stage', 'worship-7':'A keyboard player on a red-lit stage beside the Koinonia screen', 'worship-8':'The choir singing on stage during an evening session' };
+const GALT = { 'k25-hero':'Worship Connect singers in bright blazers leading praise at Koinonia 25', 'crowd-koinonia':'Delegates seated together during a Koinonia session', 'worship-1':'Worship Connect singers in white shirts leading praise on stage', 'worship-2':'The worship team singing behind the pulpit under blue lights', 'worship-3':'A worship leader singing with the choir behind him', 'worship-4':'The choir and worship leader in blue stage light, seen from the audience', 'worship-5':'Vocalists and the drummer leading a song on stage', 'worship-6':'The choir dancing on a red-lit stage', 'worship-7':'A keyboard player on a red-lit stage beside the Koinonia screen', 'worship-8':'The choir singing on stage during an evening session' };
 const gallery = list => list.length ? `<div class="gal" data-rv-stagger>${list.map(n => `<div class="ph">${img(n, GALT[n] || 'A moment from Koinonia','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
   : `<div class="gal"><div class="gal__soon">Photographs from this edition are being added.</div></div>`;
 const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2 data-split>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
