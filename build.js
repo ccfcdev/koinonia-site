@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* KOINONIA EXPERIENCE site builder. node build.js → index.html, k24.html, k25.html, k26.html */
+/* KOINONIA EXPERIENCE site builder. node build.js → index.html, k24.html, k25.html, k26.html, <ed>-photos.html (published galleries) */
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const SEO = require('./build-shared.js');
 const ORIGIN = 'https://koinonia.ccfczambia.org';
@@ -23,11 +23,26 @@ const ICON = {
 const img = (n, alt, sizes='(min-width:900px) 50vw, 100vw', eager=false) => `<img src="assets/img/${n}-1280.webp" srcset="assets/img/${n}-800.webp 800w, assets/img/${n}-1280.webp 1280w${fs.existsSync(path.join(__dirname, `assets/img/${n}-1920.webp`)) ? `, assets/img/${n}-1920.webp 1920w` : ''}" sizes="${sizes}" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>`;
 const imgP = (n, alt) => `<img src="assets/img/${n}-800.webp" srcset="assets/img/${n}-480.webp 480w, assets/img/${n}-800.webp 800w" sizes="(min-width:900px) 20vw, 50vw" alt="${alt}" loading="lazy" decoding="async">`;
 
-/* ---------- editions (facts from the church's posters and channel; K24 and K26 details are open) ---------- */
+/* ---------- editions (facts from the church's posters and channel; K24 and K26 details are open) ----------
+   photos: the edition's photo gallery. `python3 tools-k25-photos.py <key> publish-list names.json` writes <key>-photos.json and
+   assets/<key>/{photo,mid,thumb}; the <key>-photos.html page, menu entry and Moments tiles appear once that list has photos.
+   days: capture date (EXIF) -> group heading; moments: [original file name, alt] hand-picked for the edition page, each opens in the gallery */
 const EDITIONS = {
   k24: { key:'k24', n:'24', title:'Koinonia 24 Experience', when:'21 to 22 December 2024', where:'Ibex Hill, opposite Chainda Legacy Academy, Lusaka', theme:'', status:'past',
     blurb:'Two days in Ibex Hill where the family first gathered under the Koinonia name: worship, the Word, and members sharing preaching, songs, dance, poems and testimonies.',
-    videos:[], speakers:[], hero:'worship-6', gallery:[] },
+    videos:[], speakers:[], hero:'k24-hero', gallery:[],
+    /* the Drive set came through Photoroom with no capture dates, so k24-photos.json carries story sections (group) instead of days */
+    photos:{ json:'k24-photos.json', dir:'assets/k24', prefix:'Koi24', hero:'k24-photos-hero', intro:'Moments from the first Koinonia Experience, 21 and 22 December 2024 at Ibex Hill.', days:{},
+      moments:[
+        ['Photoroom_021_20250109_010910.jpeg', 'The Koi 24\' family gathered for a group photo in the tent'],
+        ['IMG_7933-Photoroom.jpg', 'Two women in pink scarves clapping and singing in worship'],
+        ['IMG_8169-Photoroom.jpg', 'A bass player grinning on stage'],
+        ['IMG_8292-Photoroom.jpg', 'A young delegate speaking into a microphone from her seat'],
+        ['Photoroom_014_20250109_011303.jpeg', 'A leader praying with his arm around a woman'],
+        ['DQQV6888.JPG', 'Dancing in front of the stage and the KOINONIA 24 letters'],
+        ['Photoroom_013_20250108_121247.jpeg', 'Women dancing together in praise'],
+        ['XRLC2909.JPG', 'Young delegates taking a selfie in the evening sun'],
+      ] } },
   k25: { key:'k25', n:'25', title:'Koinonia 25 Experience', when:'19 to 21 December 2025', where:'Grace Exploits Event Center, Don Gordon Road (opposite Don Gordon School), Chainama Minestone, Lusaka', theme:'Going Deep and Multiplying', status:'past',
     blurb:'Three days under one roof with the churches of Zambia, Zimbabwe, Malawi and the wider family. Worship Connect led, five leaders taught, and Lusaka sang.',
     cost:'K200 for Zambian delegates, USD 10 for international delegates',
@@ -42,11 +57,25 @@ const EDITIONS = {
       ['portrait-nyirenda','Bishop Brain Nyirenda','Presiding Bishop, CCFC Malawi'],
       ['portrait-marodza','Pastor Stephen Marodza','Senior Pastor, CCFC Zimbabwe'],
     ],
-    hero:'k25-hero', gallery:['crowd-koinonia','worship-2','worship-3','worship-7','worship-8','worship-6','worship-4'] },
+    hero:'k25-hero', gallery:['crowd-koinonia','worship-2','worship-3','worship-7','worship-8','worship-6','worship-4'],
+    photos:{ json:'k25-photos.json', dir:'assets/k25', prefix:'Koi25', hero:'worship-6', intro:'Moments from Going Deep and Multiplying, 19 to 21 December 2025.',
+      days:{ '2025-12-19':'Day 1, Friday 19 December', '2025-12-20':'Day 2, Saturday 20 December', '2025-12-21':'Day 3, Sunday 21 December' },
+      moments:[
+        ['DSC_3008.JPG', 'The choir in bright jackets singing across the stage'],
+        ['DSC_2758.JPG', 'A leader praying over a delegate'],
+        ['DSC_2465.JPG', 'Singers leading worship, seen past the stage flowers'],
+        ['DSC_2616.JPG', 'A Worship Connect keyboardist playing'],
+        ['DSC_3120.JPG', 'A singer kneeling in worship on stage'],
+        ['DSC_2865.JPG', 'The hall full of delegates'],
+        ['DSC_2507.JPG', 'A worship leader with arms raised on stage'],
+        ['DSC_2520.JPG', 'The youth group dancing in praise'],
+      ] } },
   k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:set('k26_when'), where:set('k26_where'), theme:S.k26_theme ? set('k26_theme') : '', status:'next',
     blurb:set('k26_blurb'),
     videos:[], speakers:[], hero:'k26-soon', gallery:[] },
 };
+for (const e of Object.values(EDITIONS)) if (e.photos){ const f = path.join(__dirname, e.photos.json); e.photos.list = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : []; }
+const PHOTO_EDS = Object.values(EDITIONS).filter(e => e.photos && e.photos.list.length);   // editions whose gallery is published
 
 
 const KSEO = {
@@ -55,12 +84,14 @@ const KSEO = {
   'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
   'k26.html': ["Koi 26' | Register for December 2026 | Koinonia", "Register for Koi 26', the next Koinonia Experience family conference in Lusaka, December 2026. It takes two minutes. Dates and venue announced here first."],
   'k25-photos.html': ["Koi 25' Photos | View and Download | Koinonia", "View and download free photos from Koi 25', Going Deep and Multiplying, the Koinonia Experience family conference in Lusaka, December 2025."],
+  'k24-photos.html': ["Koi 24' Photos | View and Download | Koinonia", "View and download free photos from Koi 24', the first Koinonia Experience family conference, held at Ibex Hill in Lusaka in December 2024."],
   'updates.html': ["Koinonia Updates | News, Videos and Photos", "Announcements, speaker news, videos and photos from every Koinonia Experience conference, posted by the Christ Connect Family Church media team."],
   'dashboard.html': ["Koinonia Dashboard | CCFC", "Koinonia Experience team dashboard."],
   '404.html': ["Page not found | Koinonia Experience", "This page could not be found on the Koinonia Experience website."],
 };
-const CARD = { 'index.html':'home', 'k24.html':'k24', 'k25.html':'k25', 'k26.html':'k26', 'k25-photos.html':'k25-photos', 'updates.html':'updates' };
-const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k25-photos.html',"Koi 25' photos",'View and download'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']];
+const CARD = { 'index.html':'home', 'k24.html':'k24', 'k25.html':'k25', 'k26.html':'k26', 'k25-photos.html':'k25-photos', 'k24-photos.html': fs.existsSync(path.join(__dirname, 'assets/og/k24-photos.jpg')) ? 'k24-photos' : 'k24', 'updates.html':'updates' };
+const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']]
+  .flatMap(m => { const e = EDITIONS[m[0].replace('.html', '')]; return e && PHOTO_EDS.includes(e) ? [m, [`${e.key}-photos.html`, `Koi ${e.n}' photos`, 'View and download']] : [m]; });
 function layout(p){
   const links = [['index.html','Home'],['k24.html',"Koi 24'"],['k25.html',"Koi 25'"],['k26.html',"Koi 26'"],['updates.html','Updates']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
   return `<!DOCTYPE html>
@@ -120,19 +151,6 @@ const K26FAQ = [
 ];
 const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
 
-/* Koi 25' Moments: hand-picked from the published photo set, each opens in the gallery */
-const K25_PHOTOS = fs.existsSync(path.join(__dirname, 'k25-photos.json')) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'k25-photos.json'), 'utf8')) : [];
-const K25_MOMENTS = [
-  ['DSC_3008.JPG', 'The choir in bright jackets singing across the stage'],
-  ['DSC_2758.JPG', 'A leader praying over a delegate'],
-  ['DSC_2465.JPG', 'Singers leading worship, seen past the stage flowers'],
-  ['DSC_2616.JPG', 'A Worship Connect keyboardist playing'],
-  ['DSC_3120.JPG', 'A singer kneeling in worship on stage'],
-  ['DSC_2865.JPG', 'The hall full of delegates'],
-  ['DSC_2507.JPG', 'A worship leader with arms raised on stage'],
-  ['DSC_2520.JPG', 'The youth group dancing in praise'],
-];
-
 /* brand lockups traced from the 2026 brand kit (assets/logo/koinonia-*.svg): gold crescent + KOINONIA (Bebas Neue) + Experience script */
 const klogo = (cls = 'klogo--nav') => `<img class="klogo ${cls}" src="assets/logo/koinonia-horizontal.svg" alt="Koinonia Experience" width="350" height="94" decoding="async">`;
 const kstack = (eager) => `<img class="klogo klogo--stack" src="assets/logo/koinonia-stacked.svg" alt="Koinonia Experience" width="352" height="247"${eager ? ' fetchpriority="high"' : ' decoding="async"'}>`;
@@ -148,10 +166,11 @@ const pillarsSection = () => `<section class="pillars"><div class="wrap"><div cl
 <section class="purpose"><div class="wrap purpose__grid"><div data-rv><span class="eyebrow">Our purpose</span><h2>To encounter Christ <span class="script">deeply,</span> live in fellowship genuinely, be formed biblically, and multiply faithfully.</h2></div>
   <div class="purpose__side" data-rv><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li>Acts 2:42-47</li><li>1 John 1:3</li><li>Philippians 2:1-2</li><li>2 Timothy 2:2</li><li>John 15:4-5, 16</li></ul></div></div></div></section>`;
 
-const k25Moments = () => { const tiles = K25_MOMENTS.map(([src, alt]) => [K25_PHOTOS.find(p => p.src === src), alt]).filter(([p]) => p);
-  return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="k25-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="assets/k25/mid/${p.id}.webp" srcset="assets/k25/thumb/${p.id}.webp 520w, assets/k25/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
+const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) => [P.list.find(p => p.src === src), alt]).filter(([p]) => p);
+  return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
+  const P = PHOTO_EDS.includes(e) ? e.photos : null;
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
     body:`
 <section class="hero hero--short"><div class="hero__media">${img(e.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
@@ -161,7 +180,7 @@ function editionPage(e){
       ? `<h1 class="klock mt-1"><span class="sr-only">Koinonia ${e.n}': ${e.theme}</span>${kstack(true)}<span class="klock__side" aria-hidden="true"><span class="klock__year">20${e.n}</span><span class="klock__theme">${e.theme}</span></span></h1>`
       : `<h1 class="hero__k mt-1">KOINONIA <em>${e.n}'</em><span class="script">Experience</span></h1>${e.theme ? `<div class="hero__theme"><small>Theme</small>${e.theme}</div>` : ''}`}
     <p>${e.blurb}</p>
-    <div class="row">${e.status==='next' ? `<a class="btn" href="#register">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
+    <div class="row">${e.status==='next' ? `<a class="btn" href="#register">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
   </div>
   <div class="hero__meta" data-rv-stagger>${metaRows.slice(0,3).map(([k,v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('')}</div></div>
 </section>
@@ -171,7 +190,7 @@ function editionPage(e){
 </div></div></section>
 ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${e.key === 'k25' ? `<a class="btn btn--ghost" href="k25-photos.html">See and download ${K25_PHOTOS.length} photos ${ICON.arrow}</a>` : ''}</div>${e.key === 'k25' && K25_PHOTOS.length ? k25Moments() : gallery(e.gallery)}</div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos ${ICON.arrow}</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
 ${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0"><div class="wrap">
   <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h2 data-split>Register for<br>Koi ${e.n}'.</h2>
     <p class="lede mt-1">The same questions as the church's conference form, so your place is counted straight away. It takes about two minutes.</p></div>
@@ -249,22 +268,23 @@ const dashboard = { file:'dashboard.html', title:'Dashboard', og:'worship-1', de
   <div class="dash__app" hidden><div class="dash__head"></div><div class="dash__stats"></div><div class="dash__tabs"></div><div class="dash__panel"></div></div>
 </div></section>` };
 
-const photosPage = { file:'k25-photos.html', title:"Koi 25' photos", og:'worship-1', desc:KSEO['k25-photos.html'][1],
+/* <ed>-photos.html: js/site.js photos() reads the list, image folder, download names and day headings from the grid's data attributes */
+const photosPage = e => { const P = e.photos, file = `${e.key}-photos.html`; return { file, title:`Koi ${e.n}' photos`, og:'worship-1', desc:KSEO[file][1],
   body:`
-<section class="hero hero--short phx__hero"><div class="hero__media">${img('worship-6','', '100vw', true)}</div><div class="hero__scrim"></div>
+<section class="hero hero--short phx__hero"><div class="hero__media">${img(P.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
-    <a class="phx__back" href="k25.html">${ICON.back} Koi 25'</a>
-    <h1 class="hero__k mt-1">KOI <em>25'</em><span class="script">photos</span></h1>
-    <p>Moments from Going Deep and Multiplying, 19 to 21 December 2025. Tap any photo to see it large and download it.</p>
+    <a class="phx__back" href="${e.key}.html">${ICON.back} Koi ${e.n}'</a>
+    <h1 class="hero__k mt-1">KOI <em>${e.n}'</em><span class="script">photos</span></h1>
+    <p>${P.intro} Tap any photo to see it large and download it.</p>
     <div class="row phx__dl" data-zips></div>
   </div></div>
 </section>
 <section class="sec phx" style="padding-top:clamp(28px,4vw,48px)"><div class="wrap">
   <div class="phx__bar"><p class="phx__count" aria-live="polite">Loading photos</p><p class="phx__fine">Free for personal and church use. Please credit CCFC Zambia. <a href="${MAIN}/terms#photos">Photo terms</a></p></div>
-  <div class="phx__grid" data-photos="k25-photos.json"></div>
+  <div class="phx__grid" data-photos="${P.json}" data-dir="${P.dir}" data-prefix="${P.prefix}" data-name="Koi ${e.n}'" data-days="${SEO.esc(JSON.stringify(P.days))}"></div>
   <noscript><p>Turn on JavaScript to browse the photos, or download them all using the buttons above.</p></noscript>
 </div></section>
-${closeBlock()}` };
+${closeBlock()}` }; };
 const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noindex:true, desc:KSEO['404.html'][1],
   body:`
 <section class="sec nf" style="padding-top:calc(var(--nav-h) + clamp(40px,6vw,90px))"><div class="wrap">
@@ -275,14 +295,14 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
   <ul class="nf__links mt-3">
     <li><a href="k26.html"><b>Koi 26'</b><span>December 2026, register now</span></a></li>
     <li><a href="k25.html"><b>Koi 25'</b><span>Videos and speakers</span></a></li>
-    <li><a href="k25-photos.html"><b>Koi 25' photos</b><span>View and download</span></a></li>
+    ${PHOTO_EDS.slice().reverse().map(e => `<li><a href="${e.key}-photos.html"><b>Koi ${e.n}' photos</b><span>View and download</span></a></li>`).join('\n    ')}
     <li><a href="updates.html"><b>Updates</b><span>News from the team</span></a></li>
     <li><a href="${MAIN}"><b>CCFC Zambia</b><span>The church website</span></a></li>
   </ul>
 </div></section>` };
-const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), photosPage, updates, notFound];
+const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), ...PHOTO_EDS.slice().reverse().map(photosPage), updates, notFound];
 for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.clean(layout(p)); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
-fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
+fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7', 'k24-photos.html':'0.6' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
 fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#0A203D', background: '#0A203D' }));
 console.log('built', pages.length, 'pages', V);

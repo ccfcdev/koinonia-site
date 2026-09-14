@@ -52,27 +52,30 @@ function register(){ const f = $('.reg'); if (!f) return; const g = $('.reg__gfo
       f.reset(); $$('.field.is-invalid', f).forEach(x => x.classList.remove('is-invalid')); status.textContent = 'Registered. Thank you, ' + d.first + '. We will be in touch with dates and delegate rates.'; status.className = 'reg__status is-ok'; status.scrollIntoView({ block:'center', behavior:'smooth' });
     } catch (err){ status.textContent = 'Something went wrong. Please try again or WhatsApp the office.'; status.className = 'reg__status is-err'; } finally { btn.disabled = false; } }); }
 
-/* ---------- Koi 25' photo gallery: day groups, lightbox, download, share, download-all zip ---------- */
+/* ---------- edition photo galleries (k24-photos, k25-photos): day groups, lightbox, download, share, download-all zip.
+   The grid says what to show: data-photos (list json), data-dir (assets/<ed>), data-prefix (download names), data-name, data-days {date: heading};
+   photos carrying a `group` (story sections, for sets without capture dates) are shown under that heading instead ---------- */
 function photos(){ const grid = $('[data-photos]'); if (!grid) return;
-  const count = $('.phx__count'), dlWrap = $('[data-zips]');
-  const DAYS = { '2025-12-19':'Day 1, Friday 19 December', '2025-12-20':'Day 2, Saturday 20 December', '2025-12-21':'Day 3, Sunday 21 December' };
-  const label = p => !p.taken ? 'More moments' : (DAYS[p.taken.slice(0,10)] || (p.taken < '2025-12-19' ? 'Behind the scenes: setting up the venue' : 'More moments'));
-  const order = ['Day 1, Friday 19 December','Day 2, Saturday 20 December','Day 3, Sunday 21 December','More moments','Behind the scenes: setting up the venue'];
+  const count = $('.phx__count'), dlWrap = $('[data-zips]'), D = grid.dataset, N = (D.photos.match(/k(\d\d)/) || [])[1] || '';
+  const DIR = '/' + (D.dir || 'assets/k' + N).replace(/^\/|\/$/g, ''), PRE = D.prefix || 'Koi' + N, NAME = D.name || `Koi ${N}'`;
+  const DAYS = D.days ? JSON.parse(D.days) : {}, FIRST = Object.keys(DAYS).sort()[0] || '', SETUP = 'Behind the scenes: setting up the venue';
+  const label = p => p.group || (!p.taken ? 'More moments' : (DAYS[p.taken.slice(0,10)] || (p.taken < FIRST ? SETUP : 'More moments')));
   fetch('/' + grid.dataset.photos.replace(/^\//, '')).then(r => r.json()).then(list => {
+    const order = [...new Set(list.map(p => p.group).filter(Boolean)), ...Object.values(DAYS), 'More moments', SETUP];   // story sections (undated sets) first, then days
     const groups = {}; list.forEach((p, i) => { p.i = i; (groups[label(p)] = groups[label(p)] || []).push(p); });
     const mb = Math.round(list.reduce((t, p) => t + p.kb, 0) / 1024);
     count.textContent = `${list.length} photos`;
     dlWrap.innerHTML = `<button class="btn" type="button" data-dlall>Download all ${list.length} photos <small>${mb} MB zip</small></button>`;
-    grid.innerHTML = order.filter(g => groups[g]).map(g => `<section class="phx__group"><h2>${g}<span>${groups[g].length}</span></h2><div class="phx__tiles">${groups[g].map(p => `<button class="phx__tile" type="button" data-i="${p.i}" aria-label="Open photo ${p.n} of ${list.length}"><img src="/assets/k25/thumb/${p.id}.webp" width="${Math.round(p.w/4)}" height="${Math.round(p.h/4)}" loading="lazy" decoding="async" alt="Koi 25' photo ${p.n}, ${g.split(',')[0]}"></button>`).join('')}</div></section>`).join('');
+    grid.innerHTML = order.filter(g => groups[g]).map(g => `<section class="phx__group"><h2>${g}<span>${groups[g].length}</span></h2><div class="phx__tiles">${groups[g].map(p => `<button class="phx__tile" type="button" data-i="${p.i}" aria-label="Open photo ${p.n} of ${list.length}"><img src="${DIR}/thumb/${p.id}.webp" width="${Math.round(p.w/4)}" height="${Math.round(p.h/4)}" loading="lazy" decoding="async" alt="${NAME} photo ${p.n}, ${g.split(',')[0]}"></button>`).join('')}</div></section>`).join('');
     const lb = document.createElement('div'); lb.className = 'plb'; lb.hidden = true; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Photo viewer');
-    lb.innerHTML = `<div class="plb__top"><span class="plb__n" aria-live="polite"></span><div class="plb__acts"><a class="btn plb__dl" href="/k25-photos" download>${ICON_DL} Download</a><button type="button" class="plb__btn plb__share" aria-label="Share this photo">${ICON_SHARE}</button><button type="button" class="plb__btn plb__x" aria-label="Close viewer">&times;</button></div></div>
+    lb.innerHTML = `<div class="plb__top"><span class="plb__n" aria-live="polite"></span><div class="plb__acts"><a class="btn plb__dl" href="${location.pathname}" download>${ICON_DL} Download</a><button type="button" class="plb__btn plb__share" aria-label="Share this photo">${ICON_SHARE}</button><button type="button" class="plb__btn plb__x" aria-label="Close viewer">&times;</button></div></div>
       <button type="button" class="plb__nav plb__prev" aria-label="Previous photo">&#8249;</button><figure class="plb__fig"><img alt=""><div class="plb__spin" aria-hidden="true"></div></figure><button type="button" class="plb__nav plb__next" aria-label="Next photo">&#8250;</button>`;
     document.body.appendChild(lb);
     const img = $('.plb__fig img', lb), fig = $('.plb__fig', lb); let cur = -1, back = null;
-    const url = p => '/assets/k25/photo/' + p.id + '.jpg';
+    const url = p => DIR + '/photo/' + p.id + '.jpg', file = p => `${PRE}-${String(p.n).padStart(3, '0')}.jpg`;
     const show = i => { cur = (i + list.length) % list.length; const p = list[cur];
-      fig.classList.add('is-loading'); img.onload = () => fig.classList.remove('is-loading'); img.src = url(p); img.alt = `Koi 25' photo ${p.n}, ${label(p).split(',')[0]}`;
-      $('.plb__n', lb).textContent = `${p.n} / ${list.length}`; const dl = $('.plb__dl', lb); dl.href = url(p); dl.setAttribute('download', `Koi25-${String(p.n).padStart(3, '0')}.jpg`);
+      fig.classList.add('is-loading'); img.onload = () => fig.classList.remove('is-loading'); img.src = url(p); img.alt = `${NAME} photo ${p.n}, ${label(p).split(',')[0]}`;
+      $('.plb__n', lb).textContent = `${p.n} / ${list.length}`; const dl = $('.plb__dl', lb); dl.href = url(p); dl.setAttribute('download', file(p));
       [cur - 1, cur + 1].forEach(k => { const q = list[(k + list.length) % list.length]; if (q) { const pre = new Image(); pre.src = url(q); } });
       history.replaceState(null, '', location.pathname + '?photo=' + p.id); };
     const open = (i, from) => { back = from || document.activeElement; lb.hidden = false; document.documentElement.style.overflow = 'hidden'; requestAnimationFrame(() => lb.classList.add('is-open')); show(i); $('.plb__x', lb).focus(); };
@@ -84,16 +87,16 @@ function photos(){ const grid = $('[data-photos]'); if (!grid) return;
       else if (e.key === 'Tab'){ const f = $$('a,button', lb); const a = f.indexOf(document.activeElement); if (e.shiftKey && a <= 0){ e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && a === f.length - 1){ e.preventDefault(); f[0].focus(); } } });
     let sx = null; fig.addEventListener('pointerdown', e => { sx = e.clientX; }); fig.addEventListener('pointerup', e => { if (sx === null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); });
     $('.plb__share', lb).addEventListener('click', async () => { const link = location.origin + location.pathname + '?photo=' + list[cur].id;
-      try { if (navigator.share) await navigator.share({ title: "Koi 25' photo", url: link }); else { await navigator.clipboard.writeText(link); flash('Link copied'); } } catch (_) {} });
+      try { if (navigator.share) await navigator.share({ title: `${NAME} photo`, url: link }); else { await navigator.clipboard.writeText(link); flash('Link copied'); } } catch (_) {} });
     const flash = t => { let f = $('.plb__flash', lb); if (!f){ f = document.createElement('div'); f.className = 'plb__flash'; lb.appendChild(f); } f.textContent = t; f.classList.add('is-on'); setTimeout(() => f.classList.remove('is-on'), 1600); };
     const want = new URLSearchParams(location.search).get('photo'); const wi = list.findIndex(p => p.id === want); if (wi >= 0) open(wi);
     $('[data-dlall]').addEventListener('click', async e => { const b = e.currentTarget; if (b.disabled) return; b.disabled = true; const orig = b.innerHTML;
       try {
         if (!window.JSZip) await new Promise((ok, no) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
         const zip = new JSZip();
-        for (let k = 0; k < list.length; k++){ b.innerHTML = `Preparing ${k + 1} of ${list.length}`; const blob = await (await fetch(url(list[k]))).blob(); zip.file(`Koi25-${String(list[k].n).padStart(3, '0')}.jpg`, blob); }
+        for (let k = 0; k < list.length; k++){ b.innerHTML = `Preparing ${k + 1} of ${list.length}`; const blob = await (await fetch(url(list[k]))).blob(); zip.file(file(list[k]), blob); }
         b.innerHTML = 'Zipping...'; const out = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(out); a.download = 'Koi25-photos.zip'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+        const a = document.createElement('a'); a.href = URL.createObjectURL(out); a.download = `${PRE}-photos.zip`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
         b.innerHTML = 'Downloaded. Thank you for sharing the family moments.';
       } catch (err){ b.innerHTML = 'Could not prepare the zip. Please try again.'; }
       setTimeout(() => { b.innerHTML = orig; b.disabled = false; }, 5000); });

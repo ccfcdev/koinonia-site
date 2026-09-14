@@ -13,7 +13,7 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background-color:var(--ground);background-image:radial-gradient(1100px 600px at 85% -10%,rgba(251,118,36,.2),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(201,165,74,.12),transparent 60%);background-attachment:fixed;color:var(--white);font-family:var(--font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background-color:var(--ground);background-image:radial-gradient(1100px 600px at 85% -10%,rgba(251,118,36,.2),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(201,165,74,.12),transparent 60%);background-attachment:fixed;color:var(--white);font-family:var(--font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
 img,video{display:block;max-width:100%;height:auto}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}

@@ -42,7 +42,7 @@
       ]
     },
     {
-      "source": "/(kb|k25-photos).json",
+      "source": "/(kb|k25-photos|k24-photos).json",
       "headers": [
         {
           "key": "Cache-Control",
@@ -90,6 +90,16 @@
     {
       "source": "/gallery",
       "destination": "/k25-photos",
+      "permanent": true
+    },
+    {
+      "source": "/koi24-photos",
+      "destination": "/k24-photos",
+      "permanent": true
+    },
+    {
+      "source": "/k24/photos",
+      "destination": "/k24-photos",
       "permanent": true
     },
     {
