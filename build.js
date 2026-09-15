@@ -301,7 +301,10 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
   </ul>
 </div></section>` };
 const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), ...PHOTO_EDS.slice().reverse().map(photosPage), updates, notFound];
-for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.clean(layout(p)); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
+/* page editor: text, photos, links and sections the Master Admin changed through Mazar Prime are baked into the HTML */
+const PAGE_CONTENT = SEO.loadPageContent('koinonia'), CONTENT_MAP = [];
+for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.editable(SEO.clean(layout(p)), { site:'koinonia', file:p.file, origin:ORIGIN, overrides:PAGE_CONTENT, map:CONTENT_MAP }); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }
+SEO.writeContentMap(__dirname, CONTENT_MAP, PAGE_CONTENT);
 fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7', 'k24-photos.html':'0.6' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
 fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#0A203D', background: '#0A203D' }));
