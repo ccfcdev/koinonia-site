@@ -58,11 +58,6 @@
       "permanent": true
     },
     {
-      "source": "/register",
-      "destination": "/k26#register",
-      "permanent": true
-    },
-    {
       "source": "/koi26",
       "destination": "/k26",
       "permanent": true
