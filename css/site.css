@@ -475,4 +475,8 @@ h2 .script,.h-script{font-size:1.05em}
 .reg-thanks{border:0;border-radius:22px;padding:clamp(24px,5vw,50px);max-width:520px;width:calc(100% - 32px);color:#0a203d;background:#fffaf3;text-align:center}.reg-thanks::backdrop{background:#06172acc;backdrop-filter:blur(5px)}.reg-thanks h2{font-size:2.2rem;margin-bottom:1rem}.reg-thanks p{margin-bottom:1.8rem}.purpose__side a{text-decoration:underline;text-underline-offset:4px}
 
 .reg-thanks h2{color:#0a203d}
+/* The number is the one thing on this screen worth writing down, so it is set apart and large. */
+.reg-thanks__ref{display:grid;gap:.35rem;margin:0 0 1.6rem;padding:1rem 1.2rem;border-radius:14px;background:#0a203d0d;border:1px solid #0a203d1f;font-size:.9rem;color:#0a203dcc}
+.reg-thanks__ref b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1.9rem;letter-spacing:.06em;color:#0a203d}
+.reg-thanks__ref small{font-size:.78rem;color:#0a203d99;line-height:1.5}
 @media(max-width:999px){.reg__layout>.reg{order:-1}}
