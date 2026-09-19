@@ -88,7 +88,9 @@ function register(){
       const result=await window.CCFC.register(row); if(!result || result.offline || result.error) throw new Error('Registration could not be confirmed');
       saved=true;
       const dialog=document.createElement('dialog'); dialog.className='reg-thanks'; dialog.setAttribute('aria-labelledby','reg-thanks-title');
-      dialog.innerHTML='<h2 id="reg-thanks-title">Thank you for registering!</h2><p>Your Koinonia registration has been received. We look forward to gathering with you.</p><button type="button" class="btn">Back to Koinonia home</button>';
+      // Shape-checked before it goes near innerHTML, even though it comes from our own database.
+      const ref = /^[A-Z]{1,4}[0-9]{2,12}$/.test(result.reference || '') ? result.reference : '';
+      dialog.innerHTML='<h2 id="reg-thanks-title">Thank you for registering!</h2>'+(ref?'<p class="reg-thanks__ref">Your registration number<b>'+ref+'</b><small>Keep it. Quote it if you contact the church office about your registration.</small></p>':'')+'<p>Your Koinonia registration has been received. We look forward to gathering with you.</p><button type="button" class="btn">Back to Koinonia home</button>';
       document.body.append(dialog); const finish=()=>location.assign('/'); dialog.addEventListener('close',finish); dialog.addEventListener('cancel',e=>{e.preventDefault();dialog.close();}); $('button',dialog).addEventListener('click',()=>dialog.close()); dialog.showModal();
       status.textContent='Registration received.';
     } catch(err){ status.textContent='We could not confirm your registration. Please try again or contact the church office.'; status.className='reg__status is-err'; }
