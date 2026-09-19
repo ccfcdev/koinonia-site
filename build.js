@@ -10,11 +10,7 @@ function loadSettings(defaults){ try { const out = require('child_process').exec
 const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'Abide and Bear Fruit', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
 const set = (k, cls='') => `<span data-setting="${k}"${cls ? ' class="' + cls + '"' : ''}>${S[k]}</span>`;
 const WA = '260573762913', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
-/* Registration: mirrors the church's Google Form (currently the K24 form). Responses go straight into that form's sheet,
-   and into the shared Supabase `registrations` table once js/config.js on the main site is filled in. */
-const GFORM = { action: 'https://docs.google.com/forms/d/e/1FAIpQLSf2SJmOAM9EAOb0d3wxAI6xl6Jx14diNO-3p9etbjzgZwuZUQ/formResponse',
-  entry: { first:'entry.2092238618', middle:'entry.1051651339', surname:'entry.325064257', gender:'entry.1277704406', age:'entry.1310610037', address:'entry.1808511093', country:'entry.757054003', phone:'entry.358701520', email:'entry.1556369182', participation:'entry.140544252', detail:'entry.366338568', days:'entry.1753222212', dietary:'entry.428609997', expectation:'entry.1127212752' } };
-const AGES = ['0-10 Years Old', '11-15 Years Old', '16-20 Years Old', '21-30 Years Old', '31-40 Years Old', '41-50 Years Old', '51-60 Years Old', '61 Years and Older'];
+const AGES = ['0-6 Years Old', '7-12 Years Old', '13-15 Years Old', '16-20 Years Old', '21-30 Years Old', '31-40 Years Old', '41-50 Years Old', '51-60 Years Old', '61 Years and Older'];
 const ICON = {
   back: '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
   arrow: '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
@@ -79,6 +75,7 @@ const PHOTO_EDS = Object.values(EDITIONS).filter(e => e.photos && e.photos.list.
 
 
 const KSEO = {
+  'register.html': ["Register for Koi 26 | Koinonia Experience", "Register for Koi 26, the Koinonia family conference in Lusaka. Share your contact details, attendance days and conference needs with the church office."],
   'index.html': ["Koinonia Experience | Family Conference in Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
   'k24.html': ["Koi 24' | Where Koinonia Began | Koinonia Experience", "Koi 24', the first Koinonia Experience, gathered the CCFC family at Ibex Hill, Lusaka, on 21 and 22 December 2024 for worship, the Word and testimonies."],
   'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
@@ -108,13 +105,13 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home">${klogo()}</a>
   <ul class="nav__links">${links}</ul>
-  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website" aria-label="Church website">${ICON.back}<span class="nav__home-t">Church website</span></a><a class="btn nav__cta" href="k26.html#register"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website" aria-label="Church website">${ICON.back}<span class="nav__home-t">Church website</span></a><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
   <div class="menu__top"><a class="nav__brand" href="index.html">${klogo()}</a><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="menu__scroll">
-    <div class="menu__quick"><a class="mq mq--a" href="k26.html#register"><b>I am coming to Koi 26'</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch Koi 25'</b><small>Both worship sets</small></a></div>${SEO.mazarMenu()}
+    <div class="menu__quick"><a class="mq mq--a" href="register.html"><b>I am coming to Koi 26'</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch Koi 25'</b><small>Both worship sets</small></a></div>${SEO.mazarMenu()}
     <h4 class="menu__h">Pages</h4><ul class="menu__list">${MENU.map(([f,l,t],i) => `<li style="--i:${i}"><a href="${f}"${f===p.file?' aria-current="page"':''}><b>${l}</b><small>${t}</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></li>`).join('')}</ul>
     <h4 class="menu__h">Our sites</h4><div class="menu__cards"><a class="mcard mcard--church" href="${MAIN}"><b>CCFC Zambia</b><small>Back to the church website</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a><a class="mcard mcard--wc" href="https://worship.ccfczambia.org"><b>WORSHIP<i>Connect</i></b><small>The worship team, all videos</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></div>
   </div>
@@ -122,7 +119,7 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 </nav>
 <main id="main">${p.body}</main>
 <footer class="foot"><div class="wrap"><span class="foot__tag">Deep in Christ. One in Fellowship. Sent to Multiply.</span><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><nav class="legal" aria-label="Legal"><a href="${MAIN}/privacy">Privacy</a><a href="${MAIN}/terms">Terms</a><a href="${MAIN}/faq">FAQ</a><button type="button" data-consent-open>Cookie settings</button><a href="${MAIN}/sitemap">Site map</a><span>&copy; <span class="year"></span> CCFC</span></nav></div></footer>
-<script>window.KOI_GFORM=${JSON.stringify(GFORM.entry)};window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
+<script>window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
 <script src="js/site.js?v=${V.js}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
 <script>window.CCFC_SITE={key:'koinonia'};window.CCFC_CONFIG=Object.assign(window.CCFC_CONFIG||{supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'},{chatEndpoint:'https://dcqydtkjzgilyjnjyisb.supabase.co/functions/v1/ministry-chat'})</script>
@@ -137,7 +134,7 @@ const videos = list => list.length ? `<div class="vgrid" data-rv-stagger>${list.
 const GALT = { 'k25-hero':'Worship Connect singers in bright blazers leading praise at Koinonia 25', 'crowd-koinonia':'Delegates seated together during a Koinonia session', 'worship-1':'Worship Connect singers in white shirts leading praise on stage', 'worship-2':'The worship team singing behind the pulpit under blue lights', 'worship-3':'A worship leader singing with the choir behind him', 'worship-4':'The choir and worship leader in blue stage light, seen from the audience', 'worship-5':'Vocalists and the drummer leading a song on stage', 'worship-6':'The choir dancing on a red-lit stage', 'worship-7':'A keyboard player on a red-lit stage beside the Koinonia screen', 'worship-8':'The choir singing on stage during an evening session' };
 const gallery = list => list.length ? `<div class="gal" data-rv-stagger>${list.map(n => `<div class="ph">${img(n, GALT[n] || 'A moment from Koinonia','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
   : `<div class="gal"><div class="gal__soon">Photographs from this edition are being added.</div></div>`;
-const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2 data-split>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
+const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2 data-split>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
 
 
 const K26FAQ = [
@@ -164,7 +161,7 @@ const PILLARS = [
 const pillarsSection = () => `<section class="pillars"><div class="wrap"><div class="sec__head"><div><span class="eyebrow">What Koinonia is about</span><h2>Deep in Christ. <span class="script">One in Fellowship.</span> Sent to Multiply.</h2></div></div>
   <div class="pillars__grid" data-rv-stagger>${PILLARS.map(([t, d, ic], i) => `<div class="pillar"><span class="pillar__n">0${i + 1}</span><span class="pillar__ico">${ic}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div></div></section>
 <section class="purpose"><div class="wrap purpose__grid"><div data-rv><span class="eyebrow">Our purpose</span><h2>To encounter Christ <span class="script">deeply,</span> live in fellowship genuinely, be formed biblically, and multiply faithfully.</h2></div>
-  <div class="purpose__side" data-rv><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li>Acts 2:42-47</li><li>1 John 1:3</li><li>Philippians 2:1-2</li><li>2 Timothy 2:2</li><li>John 15:4-5, 16</li></ul></div></div></div></section>`;
+  <div class="purpose__side" data-rv><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li><a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=Acts%202%3A42-47">Acts 2:42-47</a></li><li><a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=1%20John%201%3A3">1 John 1:3</a></li><li><a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=Philippians%202%3A1-2">Philippians 2:1-2</a></li><li><a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=2%20Timothy%202%3A2">2 Timothy 2:2</a></li><li><a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=John%2015%3A4-5">John 15:4-5</a>, <a href="https://mazar.ccfczambia.org/?mazar=bible&amp;ref=John%2015%3A16">16</a></li></ul></div></div></div></section>`;
 
 const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) => [P.list.find(p => p.src === src), alt]).filter(([p]) => p);
   return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
@@ -180,7 +177,7 @@ function editionPage(e){
       ? `<h1 class="klock mt-1"><span class="sr-only">Koinonia ${e.n}': ${e.theme}</span>${kstack(true)}<span class="klock__side" aria-hidden="true"><span class="klock__year">20${e.n}</span><span class="klock__theme">${e.theme}</span></span></h1>`
       : `<h1 class="hero__k mt-1">KOINONIA <em>${e.n}'</em><span class="script">Experience</span></h1>${e.theme ? `<div class="hero__theme"><small>Theme</small>${e.theme}</div>` : ''}`}
     <p>${e.blurb}</p>
-    <div class="row">${e.status==='next' ? `<a class="btn" href="#register">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
+    <div class="row">${e.status==='next' ? `<a class="btn" href="register.html">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
   </div>
   <div class="hero__meta" data-rv-stagger>${metaRows.slice(0,3).map(([k,v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('')}</div></div>
 </section>
@@ -191,42 +188,6 @@ function editionPage(e){
 ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
 <section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos ${ICON.arrow}</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
-${e.status==='next' ? `<section class="sec" id="register" style="padding-top:0"><div class="wrap">
-  <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h2 data-split>Register for<br>Koi ${e.n}'.</h2>
-    <p class="lede mt-1">The same questions as the church's conference form, so your place is counted straight away. It takes about two minutes.</p></div>
-  <div class="reg__layout">
-    <aside class="reg__aside" data-rv-stagger>
-      <div class="reg__fact"><b>Dates</b><span data-setting="k26_when">${S.k26_when}</span></div>
-      <div class="reg__fact"><b>Venue</b><span data-setting="k26_where">${S.k26_where}</span></div>
-      <div class="reg__fact"><b>Delegate fee</b><span data-setting="k26_fee">${S.k26_fee}</span></div>
-      <div class="reg__fact"><b>Questions</b><span><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hello, I need help registering for Koi 26'.")}" target="_blank" rel="noopener">WhatsApp the office</a> or email ccfczambia@gmail.com</span></div>
-    </aside>
-    <form class="reg" data-edition="${e.key}" novalidate data-rv="fade">
-      <fieldset class="reg__step"><legend><i>1</i>About you</legend>
-        <div class="reg__row reg__row--3"><div class="field"><label for="r-first">First name <em>*</em></label><input id="r-first" name="first" required autocomplete="given-name"></div><div class="field"><label for="r-middle">Middle name</label><input id="r-middle" name="middle" autocomplete="additional-name"></div><div class="field"><label for="r-sur">Surname <em>*</em></label><input id="r-sur" name="surname" required autocomplete="family-name"></div></div>
-        <div class="reg__row"><div class="field"><span class="field__label">Sex <em>*</em></span><div class="reg__choices"><label><input type="radio" name="gender" value="Male" required><span>Male</span></label><label><input type="radio" name="gender" value="Female"><span>Female</span></label></div></div>
-          <div class="field"><label for="r-age">Age range <em>*</em></label><select id="r-age" name="age" required><option value="">Select</option>${AGES.map(a => `<option>${a}</option>`).join('')}</select></div></div>
-      </fieldset>
-      <fieldset class="reg__step"><legend><i>2</i>Where to reach you</legend>
-        <div class="reg__row"><div class="field"><label for="r-addr">Physical address <em>*</em></label><input id="r-addr" name="address" required autocomplete="street-address" placeholder="Area and town"></div><div class="field"><label for="r-country">Country of residence <em>*</em></label><input id="r-country" name="country" required autocomplete="country-name" value="Zambia"></div></div>
-        <div class="reg__row"><div class="field"><label for="r-phone">Contact number <em>*</em></label><input id="r-phone" name="phone" required type="tel" autocomplete="tel" placeholder="+260 97 ..."></div><div class="field"><label for="r-email">Email <em>*</em></label><input id="r-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div></div>
-      </fieldset>
-      <fieldset class="reg__step"><legend><i>3</i>At the conference</legend>
-        <div class="field"><span class="field__label">Are you taking part by sharing a talent? <em>*</em></span><small>Preaching, singing, dancing, a poem, a testimony. Limited slots.</small><div class="reg__choices"><label><input type="radio" name="participation" value="Yes" required><span>Yes, I want to take part</span></label><label><input type="radio" name="participation" value="No"><span>No, just attending</span></label></div></div>
-        <div class="field"><label for="r-detail">If taking part, what will you do?</label><input id="r-detail" name="detail" placeholder="Optional"></div>
-        <div class="field"><span class="field__label">Which days will you attend? <em>*</em></span><div class="reg__choices"><label><input type="checkbox" name="days" value="Day 1"><span>Day 1</span></label><label><input type="checkbox" name="days" value="Day 2"><span>Day 2</span></label><label><input type="checkbox" name="days" value="Day 3"><span>Day 3</span></label><label><input type="checkbox" name="days" value="All Three"><span>All three days</span></label></div></div>
-      </fieldset>
-      <fieldset class="reg__step"><legend><i>4</i>Anything else</legend>
-        <div class="field"><label for="r-diet">Any dietary restrictions? <em>*</em></label><input id="r-diet" name="dietary" required placeholder="None, or the foods you do not eat"></div>
-        <div class="field"><label for="r-exp">What is your expectation at Koi ${e.n}' Experience? <em>*</em></label><textarea id="r-exp" name="expectation" rows="3" required></textarea></div>
-      </fieldset>
-      <div class="reg__submit"><button class="btn" type="submit">Register for Koi ${e.n}' ${ICON.arrow}</button><span class="reg__status" aria-live="polite"></span></div>
-      <p class="reg__fine">Your details go to the church office only and are used for conference planning. <em>*</em> Required.</p>
-    </form>
-  </div>
-  <iframe name="gform-sink" hidden aria-hidden="true"></iframe>
-  <form hidden method="POST" action="${GFORM.action}" target="gform-sink" class="reg__gform"></form>
-</div></section>` : ''}
 ${e.status==='next' ? k26Faq() : ''}
 ${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: K26FAQ.map(([q, a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) } } : {}) };
 }
@@ -238,7 +199,7 @@ const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia E
     <h1 class="hero__logo">${kstack(true)}</h1>
     <div class="hero__tag">${TAGLINE}</div>
     <p>Once a year the whole Christ Connect family comes home to Lusaka: three days of worship, the Word and fellowship that sends us back out multiplying.</p>
-    <div class="row"><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k25.html#videos">Watch Koi 25'</a></div>
+    <div class="row"><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k25.html#videos">Watch Koi 25'</a></div>
   </div>
   <div class="hero__meta" data-rv-stagger><div><b>Next</b><span>Koi 26', December 2026</span></div><div><b>Where</b><span>Lusaka, Zambia</span></div><div><b>Last theme</b><span>"Going Deep and Multiplying"</span></div></div></div>
 </section>
@@ -258,7 +219,7 @@ const updates = { file:'updates.html', title:'Updates', og:'worship-3', desc:'Ko
 <section class="sec" id="feed" data-site="koinonia" style="padding-top:clamp(40px,6vw,70px)"><div class="wrap"><div class="feed__grid">
   <div><div class="feed__filters mb-2"></div><div class="feed__composer"></div><div class="feed__list mt-2"></div></div>
   <aside class="feed__side">
-    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="k26.html#register">I am coming to Koi 26' ${ICON.arrow}</a></div>
+    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a></div>
     <div class="side"><h3>Watch Koi 25'</h3><p>Both Worship Connect sets from Koi 25' are up.</p><a class="link" href="k25.html#videos">Watch the sets ${ICON.arrow}</a></div>
     <div class="side" data-guest><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account ${ICON.arrow}</button></div>
   </aside></div></div></section>` };
@@ -291,7 +252,7 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
   <span class="pill">Error 404</span>
   <h1 class="hero__k mt-1" style="font-size:clamp(3rem,10vw,7rem)">LOST<span class="script">in Lusaka</span></h1>
   <p class="lede mt-1">This page does not exist, or it has moved. Everything about Koinonia is one tap away.</p>
-  <div class="row mt-2"><a class="btn" href="index.html">Koinonia home ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#register">Register for Koi 26'</a></div>
+  <div class="row mt-2"><a class="btn" href="index.html">Koinonia home ${ICON.arrow}</a><a class="btn btn--ghost" href="register.html">Register for Koi 26'</a></div>
   <ul class="nf__links mt-3">
     <li><a href="k26.html"><b>Koi 26'</b><span>December 2026, register now</span></a></li>
     <li><a href="k25.html"><b>Koi 25'</b><span>Videos and speakers</span></a></li>
@@ -300,7 +261,42 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
     <li><a href="${MAIN}"><b>CCFC Zambia</b><span>The church website</span></a></li>
   </ul>
 </div></section>` };
-const pages = [home, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), ...PHOTO_EDS.slice().reverse().map(photosPage), updates, notFound];
+const registration = (() => { const e = EDITIONS.k26; return { file:'register.html', title:'Register for Koi 26', desc:'Register for the Koinonia Experience family conference.', body:`<section class="sec" id="register" style="padding-top:calc(var(--nav-h) + 70px)"><div class="wrap">
+  <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h1 data-split>Register for<br>Koi ${e.n}'.</h1>
+    <p class="lede mt-1">Join the family this December. Fields marked * are required. Email is optional; add it if you would like a confirmation.</p></div>
+  <div class="reg__layout">
+    <aside class="reg__aside" data-rv-stagger>
+      <div class="reg__fact"><b>Dates</b><span data-setting="k26_when">${S.k26_when}</span></div>
+      <div class="reg__fact"><b>Venue</b><span data-setting="k26_where">${S.k26_where}</span></div>
+      <div class="reg__fact"><b>Delegate fee</b><span data-setting="k26_fee">${S.k26_fee}</span></div>
+      <div class="reg__fact"><b>Questions</b><span><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hello, I need help registering for Koi 26'.")}" target="_blank" rel="noopener">WhatsApp the office</a> or email ccfczambia@gmail.com</span></div>
+    </aside>
+    <form class="reg" data-edition="${e.key}" novalidate data-rv="fade">
+      <fieldset class="reg__step"><legend><i>1</i>About you</legend>
+        <div class="reg__row reg__row--3"><div class="field"><label for="r-first">First name <em>*</em></label><input id="r-first" name="first" required autocomplete="given-name"></div><div class="field"><label for="r-middle">Middle name</label><input id="r-middle" name="middle" autocomplete="additional-name"></div><div class="field"><label for="r-sur">Surname <em>*</em></label><input id="r-sur" name="surname" required autocomplete="family-name"></div></div>
+        <div class="reg__row"><div class="field"><span class="field__label">Sex <em>*</em></span><div class="reg__choices"><label><input type="radio" name="gender" value="Male" required><span>Male</span></label><label><input type="radio" name="gender" value="Female"><span>Female</span></label></div></div>
+          <div class="field"><label for="r-age">Age range <em>*</em></label><select id="r-age" name="age" required><option value="">Select</option>${AGES.map(a => `<option>${a}</option>`).join('')}</select></div></div>
+      </fieldset>
+      <fieldset class="reg__step"><legend><i>2</i>Where to reach you</legend>
+        <div class="reg__row"><div class="field"><label for="r-addr">Physical address <em>*</em></label><input id="r-addr" name="address" required autocomplete="street-address" placeholder="Area and town"></div><div class="field"><label for="r-country">Country of residence <em>*</em></label><input id="r-country" name="country" required autocomplete="country-name" value="Zambia"></div></div>
+        <div class="reg__row"><div class="field"><label for="r-phone">Contact number <em>*</em></label><input id="r-phone" name="phone" required minlength="5" maxlength="40" type="tel" autocomplete="tel" placeholder="+260 97 ..."></div><div class="field"><label for="r-email">Email (optional)</label><input id="r-email" name="email" maxlength="254" type="email" autocomplete="email" placeholder="you@example.com"></div></div>
+        <div class="field"><label for="r-whatsapp">WhatsApp number (optional)</label><input id="r-whatsapp" name="whatsapp" minlength="5" maxlength="40" type="tel" autocomplete="off" placeholder="+260 97 ..." aria-describedby="r-whatsapp-help"><small id="r-whatsapp-help">If your WhatsApp number is the same as your contact number, tick the box below.</small></div><label class="reg__same"><input type="checkbox" name="same_whatsapp"> My contact number is also my WhatsApp number</label>
+      </fieldset>
+      <fieldset class="reg__step"><legend><i>3</i>At the conference</legend>
+        <div class="field"><span class="field__label">Are you taking part by sharing a talent? <em>*</em></span><small>Preaching, singing, dancing, a poem, a testimony. Limited slots.</small><div class="reg__choices"><label><input type="radio" name="participation" value="Yes" required><span>Yes, I want to take part</span></label><label><input type="radio" name="participation" value="No"><span>No, just attending</span></label></div></div>
+        <div class="field"><label for="r-detail">If taking part, what will you do?</label><input id="r-detail" name="detail" placeholder="Optional"></div>
+        <div class="field"><span class="field__label">Which days will you attend? <em>*</em></span><div class="reg__choices"><label><input type="checkbox" name="days" value="Day 1"><span>Day 1</span></label><label><input type="checkbox" name="days" value="Day 2"><span>Day 2</span></label><label><input type="checkbox" name="days" value="Day 3"><span>Day 3</span></label><label><input type="checkbox" name="days" value="All Three"><span>All three days</span></label></div></div>
+      </fieldset>
+      <fieldset class="reg__step"><legend><i>4</i>Anything else</legend>
+        <div class="field"><label for="r-diet">Any dietary restrictions? <em>*</em></label><input id="r-diet" name="dietary" required placeholder="None, or the foods you do not eat"></div>
+        <div class="field"><label for="r-exp">What is your expectation at Koi ${e.n}' Experience? <em>*</em></label><textarea id="r-exp" name="expectation" rows="3" required></textarea></div>
+      </fieldset>
+      <div class="reg__submit"><button class="btn" type="submit">Register for Koi ${e.n}' ${ICON.arrow}</button><span class="reg__status" aria-live="polite"></span></div>
+      <p class="reg__fine">Your details go to the church office only and are used for conference planning. <em>*</em> Required.</p>
+    </form>
+  </div>
+</div></section>` }; })();
+const pages = [home, registration, editionPage(EDITIONS.k24), editionPage(EDITIONS.k25), editionPage(EDITIONS.k26), ...PHOTO_EDS.slice().reverse().map(photosPage), updates, notFound];
 /* page editor: text, photos, links and sections the Master Admin changed through Mazar Prime are baked into the HTML */
 const PAGE_CONTENT = SEO.loadPageContent('koinonia'), CONTENT_MAP = [];
 for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const html = SEO.editable(SEO.clean(layout(p)), { site:'koinonia', file:p.file, origin:ORIGIN, overrides:PAGE_CONTENT, map:CONTENT_MAP }); if (/[—–]/.test(html)) { console.error('dash in', p.file); process.exit(1); } fs.writeFileSync(path.join(__dirname, p.file), html); }

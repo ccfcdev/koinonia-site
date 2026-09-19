@@ -1,6 +1,7 @@
 /* KOINONIA EXPERIENCE — motion. Dependency-free, degrades to static. */
 (() => {
 'use strict';
+if (/^\/k26(?:\.html)?\/?$/.test(location.pathname) && location.hash === '#register') { location.replace('/register' + location.search); return; }
 const Q = new URLSearchParams(location.search), IS_CAP = Q.has('cap');
 if (IS_CAP){ const st = document.createElement('style'); st.textContent = `.grain{display:none!important}*{transition:none!important;animation:none!important}[data-rv],[data-rv-stagger]>*{opacity:1!important;transform:none!important}.ml>span{transform:none!important}.hero__media video{display:none}`; document.documentElement.appendChild(st); }
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -33,24 +34,67 @@ function countdown(){ const el = $('[data-countdown]'); if (!el) return; const t
   const tick = () => { const d = Math.max(0, to - Date.now())/1000; const set = (k,v) => { const e = $(`[data-cd=${k}]`, el); if (e) e.textContent = String(v).padStart(2,'0'); };
     set('d', Math.floor(d/86400)); set('h', Math.floor(d%86400/3600)); set('m', Math.floor(d%3600/60)); set('s', Math.floor(d%60)); }; tick(); if (!IS_CAP) setInterval(tick, 1000); }
 function capture(){ if (!IS_CAP) return; const y = +(Q.get('y')||0); const apply = () => { document.body.style.transform = `translateY(-${y}px)`; }; addEventListener('load', () => setTimeout(apply, 300)); setTimeout(apply, 1500); }
-function register(){ const f = $('.reg'); if (!f) return; const g = $('.reg__gform'), status = $('.reg__status', f), map = window.KOI_GFORM || {};
-  const mark = (fl, bad) => fl.classList.toggle('is-invalid', bad);
-  $$('input,select,textarea', f).forEach(i => i.addEventListener('input', () => mark(i.closest('.field'), false)));
-  f.addEventListener('submit', async e => { e.preventDefault(); let ok = true, first = null;
-    $$('.field', f).forEach(fl => { const inp = $('input:not([type=radio]):not([type=checkbox]), select, textarea', fl); if (inp){ const bad = (inp.required && !inp.value.trim()) || (inp.type === 'email' && inp.value && !/^\S+@\S+\.\S+$/.test(inp.value)); mark(fl, bad); if (bad){ ok = false; first ||= inp; } return; }
-      const radios = $$('input[type=radio]', fl); if (radios.length){ const bad = !radios.some(r => r.checked); mark(fl, bad); if (bad){ ok = false; first ||= radios[0]; } }
-      const boxes = $$('input[type=checkbox]', fl); if (boxes.length){ const bad = !boxes.some(c => c.checked); mark(fl, bad); if (bad){ ok = false; first ||= boxes[0]; } } });
-    if (!ok){ status.textContent = 'Please complete the highlighted fields.'; status.className = 'reg__status is-err'; first && first.closest('.field').scrollIntoView({ block:'center', behavior:'smooth' }); return; }
-    const days = $$('input[name=days]:checked', f).map(x => x.value);
-    const d = { first: f.first.value.trim(), middle: f.middle.value.trim(), surname: f.surname.value.trim(), gender: f.querySelector('input[name=gender]:checked').value, age: f.age.value, address: f.address.value.trim(), country: f.country.value.trim(), phone: f.phone.value.trim(), email: f.email.value.trim(), participation: f.querySelector('input[name=participation]:checked').value, detail: f.detail.value.trim(), days, dietary: f.dietary.value.trim(), expectation: f.expectation.value.trim() };
-    status.className = 'reg__status'; status.textContent = 'Sending...'; const btn = $('.btn', f); btn.disabled = true;
+function register(){
+  const f = $('.reg'); if (!f) return;
+  const status = $('.reg__status', f), btn = $('button[type=submit]', f);
+  const same = f.elements.same_whatsapp, whatsapp = f.elements.whatsapp;
+  const syncPhone = () => { whatsapp.disabled = same.checked; if (same.checked) whatsapp.value = f.phone.value; };
+  same.addEventListener('change', syncPhone); f.phone.addEventListener('input', syncPhone);
+  let sending = false, saved = false, submissionId = crypto.randomUUID();
+  // Enhance each form select with a keyboard-accessible listbox; retain its value for form helpers.
+  $$('select', f).forEach(select => {
+    const wrapper = document.createElement('div'); wrapper.className = 'reg-select'; select.before(wrapper); wrapper.append(select);
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'reg-select__button';
+    button.setAttribute('role', 'combobox'); button.setAttribute('aria-haspopup', 'listbox'); button.setAttribute('aria-expanded', 'false');
+    const list = document.createElement('div'); list.className = 'reg-select__list'; list.id = select.id + '-options'; list.setAttribute('role', 'listbox'); list.hidden = true;
+    const label = document.querySelector('label[for="' + select.id + '"]'); if (label){ label.id = select.id + '-label'; button.setAttribute('aria-labelledby', label.id); label.addEventListener('click', e => { e.preventDefault(); button.focus(); }); }
+    button.setAttribute('aria-controls', list.id); button.setAttribute('aria-required', String(select.required));
+    select.hidden = true; select.tabIndex = -1; wrapper.append(button, list);
+    let active = 0; const options = Array.from(select.options);
+    const update = () => { button.textContent = select.selectedOptions[0]?.textContent || 'Select'; Array.from(list.children).forEach((el,i) => el.setAttribute('aria-selected', String(i === select.selectedIndex))); };
+    const close = () => { list.hidden = true; button.setAttribute('aria-expanded','false'); button.removeAttribute('aria-activedescendant'); };
+    const focus = i => { active = Math.max(0, Math.min(options.length-1,i)); button.setAttribute('aria-activedescendant', list.children[active].id); Array.from(list.children).forEach((el,j) => el.classList.toggle('is-active',j===active)); list.children[active].scrollIntoView({block:'nearest'}); };
+    const open = () => { list.hidden = false; button.setAttribute('aria-expanded','true'); focus(select.selectedIndex); };
+    const choose = i => { select.selectedIndex = i; select.dispatchEvent(new Event('input',{bubbles:true})); select.dispatchEvent(new Event('change',{bubbles:true})); update(); close(); button.focus(); };
+    options.forEach((o,i) => { const el = document.createElement('div'); el.id = select.id + '-option-' + i; el.setAttribute('role','option'); el.textContent = o.textContent; el.addEventListener('click', () => choose(i)); list.append(el); });
+    button.addEventListener('click', () => list.hidden ? open() : close());
+    button.addEventListener('keydown', e => {
+      if (['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(e.key)){ e.preventDefault(); if (list.hidden){ open(); return; } if (e.key==='Enter'||e.key===' '){ choose(active); return; } focus(e.key==='Home'?0:e.key==='End'?options.length-1:active+(e.key==='ArrowDown'?1:-1)); }
+      else if(e.key==='Escape'){ e.preventDefault(); close(); } else if(e.key==='Tab') close();
+      else if(e.key.length===1){ const i=options.findIndex(o => o.text.toLowerCase().startsWith(e.key.toLowerCase())); if(i>=0){ if(list.hidden) open(); focus(i); } }
+    });
+    document.addEventListener('click', e => { if(!wrapper.contains(e.target)) close(); });
+    select.addEventListener('change', update); update();
+  });
+  const mark = (input, bad) => { input.closest('.field')?.classList.toggle('is-invalid', bad); input.setAttribute('aria-invalid', String(bad)); if(input.tagName==='SELECT') input.parentElement.querySelector('button')?.setAttribute('aria-invalid',String(bad)); };
+  $$('input,select,textarea', f).forEach(i => i.addEventListener('input', () => mark(i,false)));
+  f.addEventListener('submit', async e => {
+    e.preventDefault(); if(sending || saved) return;
+    const inputs = $$('input,select,textarea', f).filter(i => !i.disabled);
+    let first = null;
+    inputs.forEach(i => { const bad = !i.checkValidity() || (i.required && !i.value.trim()); mark(i,bad); if(bad) first ||= i; });
+    const days = $$('input[name=days]:checked', f).map(i => i.value);
+    const daysInput = $('input[name=days]',f); mark(daysInput,!days.length); if(!days.length) first ||= daysInput;
+    if(first){ status.textContent='Please complete the highlighted required fields.'; status.className='reg__status is-err'; (first.hidden ? first.parentElement.querySelector('button') : first).focus(); return; }
+    const row = { id:submissionId, site:'koinonia', edition:f.dataset.edition,
+      first_name:f.first.value.trim(), middle_name:f.middle.value.trim()||null, surname:f.surname.value.trim(),
+      gender:f.elements.gender.value, age_range:f.age.value, residence:f.address.value.trim(), country:f.country.value.trim(),
+      phone:f.phone.value.trim(), whatsapp_number:(same.checked ? f.phone.value : whatsapp.value).trim()||null,
+      email:f.email.value.trim()||null, participation:f.elements.participation.value, participation_detail:f.detail.value.trim()||null,
+      days:days.includes('All Three')?'All Three':days.join(', '), dietary:f.dietary.value.trim(), expectation:f.expectation.value.trim() };
+    sending=true; btn.disabled=true; status.className='reg__status'; status.textContent='Saving your registration...';
     try {
-      if (g){ g.innerHTML = ''; Object.entries(map).forEach(([k, name]) => { const vals = k === 'days' ? d.days : [d[k] ?? '']; vals.forEach(v => { const inp = document.createElement('input'); inp.type = 'hidden'; inp.name = name; inp.value = v; g.appendChild(inp); }); }); g.submit(); }
-      const row = { site:'koinonia', edition: f.dataset.edition, first_name:d.first, middle_name:d.middle || null, surname:d.surname, gender:d.gender, age_range:d.age, residence:d.address, country:d.country, phone:d.phone, email:d.email, participation:d.participation, participation_detail:d.detail || null, days:d.days.join(', '), dietary:d.dietary, expectation:d.expectation };
-      if (window.CCFC && window.CCFC.register){ const r = await window.CCFC.register(row); if (r && r.error) throw r.error; }
-      else { const cfg = window.CCFC_CONFIG || {}; if (cfg.supabaseUrl && cfg.supabaseKey){ const r = await fetch(cfg.supabaseUrl + '/rest/v1/registrations', { method:'POST', headers:{ 'Content-Type':'application/json', apikey: cfg.supabaseKey, Authorization: 'Bearer ' + cfg.supabaseKey, Prefer: 'return=minimal' }, body: JSON.stringify(row) }); if (!r.ok) throw new Error('registration ' + r.status); } }
-      f.reset(); $$('.field.is-invalid', f).forEach(x => x.classList.remove('is-invalid')); status.textContent = 'Registered. Thank you, ' + d.first + '. We will be in touch with dates and delegate rates.'; status.className = 'reg__status is-ok'; status.scrollIntoView({ block:'center', behavior:'smooth' });
-    } catch (err){ status.textContent = 'Something went wrong. Please try again or WhatsApp the office.'; status.className = 'reg__status is-err'; } finally { btn.disabled = false; } }); }
+      if(!window.CCFC?.register) throw new Error('Registration is unavailable');
+      const result=await window.CCFC.register(row); if(!result || result.offline || result.error) throw new Error('Registration could not be confirmed');
+      saved=true;
+      const dialog=document.createElement('dialog'); dialog.className='reg-thanks'; dialog.setAttribute('aria-labelledby','reg-thanks-title');
+      dialog.innerHTML='<h2 id="reg-thanks-title">Thank you for registering!</h2><p>Your Koinonia registration has been received. We look forward to gathering with you.</p><button type="button" class="btn">Back to Koinonia home</button>';
+      document.body.append(dialog); const finish=()=>location.assign('/'); dialog.addEventListener('close',finish); dialog.addEventListener('cancel',e=>{e.preventDefault();dialog.close();}); $('button',dialog).addEventListener('click',()=>dialog.close()); dialog.showModal();
+      status.textContent='Registration received.';
+    } catch(err){ status.textContent='We could not confirm your registration. Please try again or contact the church office.'; status.className='reg__status is-err'; }
+    finally { sending=false; btn.disabled=saved; }
+  });
+}
 
 /* ---------- edition photo galleries (k24-photos, k25-photos): day groups, lightbox, download, share, download-all zip.
    The grid says what to show: data-photos (list json), data-dir (assets/<ed>), data-prefix (download names), data-name, data-days {date: heading};

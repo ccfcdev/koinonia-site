@@ -462,3 +462,17 @@ h2 .script,.h-script{font-size:1.05em}
 .nav__signin{white-space:nowrap}
 @media (min-width:960px) and (max-width:1299px){.nav .nav__cta-long{display:none}.nav .nav__cta-short{display:inline}.nav__links{gap:1.1rem}}
 @media (min-width:960px) and (max-width:1139px){.nav__links{display:none}}
+
+/* Dedicated conference registration */
+.reg__intro h1{font-size:clamp(3rem,6vw,5.5rem);line-height:.98;margin:.8rem 0 1.3rem}
+.reg__same{display:flex;gap:.65rem;align-items:center;margin:0 0 1.5rem;cursor:pointer}
+.reg__same input{width:1.2rem;height:1.2rem;accent-color:var(--orange,#ed6b28)}
+.reg-select{position:relative}.reg-select__button{width:100%;padding:1rem 2.5rem 1rem 1rem;border:1px solid #ffffff30;border-radius:16px;background:#ffffff0d;color:#fff;text-align:left;font:inherit;cursor:pointer}
+.reg-select__button:after{content:'⌄';position:absolute;right:1rem}.reg-select__button:focus-visible{outline:3px solid #ed6b28;outline-offset:3px}
+.reg-select__list{position:absolute;z-index:30;top:calc(100% + 6px);left:0;right:0;max-height:260px;overflow:auto;background:#122f50;color:#fff;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 35px #06172a80;padding:.4rem}
+.reg-select__list [role=option]{padding:.7rem .8rem;border-radius:6px;cursor:pointer}.reg-select__list [role=option]:hover,.reg-select__list .is-active{background:#ffffff18}.reg-select__list [aria-selected=true]{font-weight:700;color:#ff9f55}
+.is-invalid .reg-select__button{border-color:#ff8e7f}.reg__same input:focus-visible{outline:3px solid #ff9f55;outline-offset:3px}
+.reg-thanks{border:0;border-radius:22px;padding:clamp(24px,5vw,50px);max-width:520px;width:calc(100% - 32px);color:#0a203d;background:#fffaf3;text-align:center}.reg-thanks::backdrop{background:#06172acc;backdrop-filter:blur(5px)}.reg-thanks h2{font-size:2.2rem;margin-bottom:1rem}.reg-thanks p{margin-bottom:1.8rem}.purpose__side a{text-decoration:underline;text-underline-offset:4px}
+
+.reg-thanks h2{color:#0a203d}
+@media(max-width:999px){.reg__layout>.reg{order:-1}}
