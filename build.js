@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const SEO = require('./build-shared.js');
 /* favicon version: /assets is cached for a year, so bump this whenever tools-favicon.py redraws the icons */
-const ICONV = 'koi26-orange';
+const ICONV = 'koi26-emblem';
 const ORIGIN = 'https://koinonia.ccfczambia.org';
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
 const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
