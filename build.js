@@ -2,6 +2,8 @@
 /* KOINONIA EXPERIENCE site builder. node build.js → index.html, k24.html, k25.html, k26.html, <ed>-photos.html (published galleries) */
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const SEO = require('./build-shared.js');
+/* favicon version: /assets is cached for a year, so bump this whenever tools-favicon.py redraws the icons */
+const ICONV = 'koi26-orange';
 const ORIGIN = 'https://koinonia.ccfczambia.org';
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
 const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
@@ -95,7 +97,7 @@ function layout(p){
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: KSEO[p.file][0], iconV: 'koi26'.split(' | ')[0] + ', Koinonia Experience family conference', siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'index.html' ? '/assets/img/hero-poster-v2.webp' : null })}
+${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'index.html' ? '/assets/img/hero-poster-v2.webp' : null })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/mazar.css?v=${V.mzcss}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
@@ -303,7 +305,7 @@ for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const htm
 SEO.writeContentMap(__dirname, CONTENT_MAP, PAGE_CONTENT);
 fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7', 'k24-photos.html':'0.6' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p))));
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
-fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#0A203D', background: '#0A203D' }));
+fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#0A203D', background: '#0A203D' }).replaceAll('?v=3', '?v=' + ICONV));
 console.log('built', pages.length, 'pages', V);
 
 /* Knowledge base for Mazar, the AI Bible companion: the visible text of every page, rebuilt on each deploy (kb.json). */
