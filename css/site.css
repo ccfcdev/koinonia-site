@@ -117,6 +117,9 @@ p{margin:0}
 .menu__list a{color:var(--white)}.menu__list a:hover,.menu__list a[aria-current=page]{background:rgba(255,255,255,.06)}
 .menu__list a[aria-current=page] b{color:var(--orange-2)}.menu__list small{color:var(--muted)}.menu__list a span{background:rgba(255,255,255,.1);color:var(--white)}
 .mq--a{background:linear-gradient(150deg,var(--orange-2),var(--orange));color:var(--on-accent)}.mq--b{background:linear-gradient(150deg,#123A6B,var(--blue));color:#fff;border:1px solid var(--line)}
+/* the planning team's Command Centre (koicmd.ccfczambia.org): shown to signed-in accounts only */
+.mcard--cmd{background:#0B1526 radial-gradient(260px 120px at 100% 0%,rgba(201,165,74,.34),transparent 70%);color:#EEECE6;border:1px solid rgba(201,165,74,.35)}
+.mcard--cmd b i{color:#E8C56A}.mcard--cmd span{background:#C9A54A;color:#0A203D}
 .mcard--church{background:#fff;color:var(--navy);border:1px solid var(--line)}.mcard--church span{background:var(--navy);color:#fff}
 .menu__bottom{background:var(--ground-2);border-top:1px solid var(--line)}
 .menu__wa{color:#7ED49B}
