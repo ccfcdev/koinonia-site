@@ -9,7 +9,7 @@ const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__di
 const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
 const SETTINGS_URL = 'https://dcqydtkjzgilyjnjyisb.supabase.co/rest/v1/site_settings?select=key,value&site=eq.koinonia';
 function loadSettings(defaults){ try { const out = require('child_process').execSync(`curl -s --max-time 6 -H "apikey: sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp" "${SETTINGS_URL}"`, { encoding:'utf8' }); const rows = JSON.parse(out); const s = Object.assign({}, defaults); for (const r of rows) if (r.value && r.value.trim()) s[r.key] = r.value; console.log('settings: live'); return s; } catch (e){ console.log('settings: defaults (offline)'); return Object.assign({}, defaults); } }
-const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'Abide and Bear Fruit', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
+const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'The RESET', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
 const set = (k, cls='') => `<span data-setting="${k}"${cls ? ' class="' + cls + '"' : ''}>${S[k]}</span>`;
 const WA = '260573762913', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
 const AGES = ['0-6 Years Old', '7-12 Years Old', '13-15 Years Old', '16-20 Years Old', '21-30 Years Old', '31-40 Years Old', '41-50 Years Old', '51-60 Years Old', '61 Years and Older'];
@@ -69,7 +69,7 @@ const EDITIONS = {
         ['DSC_2520.JPG', 'The youth group dancing in praise'],
       ] } },
   k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:set('k26_when'), where:set('k26_where'), theme:S.k26_theme ? set('k26_theme') : '', status:'next',
-    blurb:set('k26_blurb'),
+    blurb:set('k26_blurb'), verses:['Psalm 51:10-12', 'Isaiah 43:18-19', '2 Corinthians 5:17'],
     videos:[], speakers:[], hero:'k26-soon', gallery:[] },
 };
 for (const e of Object.values(EDITIONS)) if (e.photos){ const f = path.join(__dirname, e.photos.json); e.photos.list = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : []; }
@@ -92,7 +92,10 @@ const CARD = { 'index.html':'home', 'k24.html':'k24', 'k25.html':'k25', 'k26.htm
 const MENU = [['index.html','Home','The family conference'],['updates.html','Updates','News, videos and photos'],['k26.html',"Koi 26'",'December 2026, register now'],['k25.html',"Koi 25'",'Going Deep and Multiplying'],['k24.html',"Koi 24'",'Where it began, Ibex Hill']]
   .flatMap(m => { const e = EDITIONS[m[0].replace('.html', '')]; return e && PHOTO_EDS.includes(e) ? [m, [`${e.key}-photos.html`, `Koi ${e.n}' photos`, 'View and download']] : [m]; });
 function layout(p){
-  const links = [['index.html','Home'],['k24.html',"Koi 24'"],['k25.html',"Koi 25'"],['k26.html',"Koi 26'"],['updates.html','Updates']].map(([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`).join('');
+  /* header: the three editions in one menu, and the family's other sites */
+  const li = ([f,l]) => `<li><a href="${f}"${f===p.file?' aria-current="page"':''}>${l}</a></li>`;
+  const links = li(['index.html','Home']) + SEO.navMenu('editions', 'Editions', [['k26.html', "Koi 26'", 'The RESET, December 2026. Register now'], ['k25.html', "Koi 25'", 'Going Deep and Multiplying'], ['k24.html', "Koi 24'", 'Where it began, Ibex Hill']], { current: p.file })
+    + li(['updates.html','Updates']) + SEO.navMenu('sites', 'Our sites', SEO.familySites('koinonia.'), { current: p.file, end: true });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,7 +110,7 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home">${klogo()}</a>
   <ul class="nav__links">${links}</ul>
-  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><a class="btn btn--ghost nav__home" href="${MAIN}" title="Back to the main church website" aria-label="Church website">${ICON.back}<span class="nav__home-t">Church website</span></a><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
@@ -141,7 +144,7 @@ const closeBlock = () => `<section class="close"><div class="bg">${img('worship-
 
 const K26FAQ = [
   ['Who can come to Koinonia?', "Everyone is welcome: members, friends and first-time guests from every CCFC church in Zambia, Zimbabwe, Malawi and the wider family."],
-  ["When and where is Koi 26?", "Koi 26 is in December 2026 in Lusaka. The exact dates, venue and theme will be announced on this page first."],
+  ["When and where is Koi 26?", "Koi 26 is in December 2026 in Lusaka. Its theme is The RESET, from Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17. The dates and venue are on the Koi 26 page."],
   ['How much does it cost?', "The delegate fee is announced with the dates. For Koi 25 it was K200 for Zambian delegates and USD 10 for international delegates."],
   ['Can I register my children?', "Yes. Koinonia is a family conference. Fill in the form for each child and choose their age range."],
   ['Can I take part by preaching, singing or performing?', "Yes. Choose Yes on the form and tell us what you would like to share. Slots are limited and the organisers will confirm."],
@@ -167,8 +170,10 @@ const pillarsSection = () => `<section class="pillars"><div class="wrap"><div cl
 
 const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) => [P.list.find(p => p.src === src), alt]).filter(([p]) => p);
   return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
+/* a scripture reference that opens the passage in the Yuriel widget on this page (core.js, data-mazar="bible") */
+const vref = r => `<a href="/?mazar=bible&amp;ref=${encodeURIComponent(r)}" data-mazar="bible" data-ref="${r}">${r}</a>`;
 function editionPage(e){
-  const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
+  const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.verses ? ['Theme scriptures', e.verses.map(vref).join(', ')] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
   const P = PHOTO_EDS.includes(e) ? e.photos : null;
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
     body:`
@@ -221,7 +226,7 @@ const updates = { file:'updates.html', title:'Updates', og:'worship-3', desc:'Ko
 <section class="sec" id="feed" data-site="koinonia" style="padding-top:clamp(40px,6vw,70px)"><div class="wrap"><div class="feed__grid">
   <div><div class="feed__filters mb-2"></div><div class="feed__composer"></div><div class="feed__list mt-2"></div></div>
   <aside class="feed__side">
-    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>Dates, venue and theme will be announced here first.</p><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a></div>
+    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>The theme is <b>${set('k26_theme')}</b>: Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17.</p><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a></div>
     <div class="side"><h3>Watch Koi 25'</h3><p>Both Worship Connect sets from Koi 25' are up.</p><a class="link" href="k25.html#videos">Watch the sets ${ICON.arrow}</a></div>
     <div class="side" data-guest><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account ${ICON.arrow}</button></div>
   </aside></div></div></section>` };
