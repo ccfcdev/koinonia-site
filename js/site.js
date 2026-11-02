@@ -41,31 +41,7 @@ function register(){
   const syncPhone = () => { whatsapp.disabled = same.checked; if (same.checked) whatsapp.value = f.phone.value; };
   same.addEventListener('change', syncPhone); f.phone.addEventListener('input', syncPhone);
   let sending = false, saved = false, submissionId = crypto.randomUUID();
-  // Enhance each form select with a keyboard-accessible listbox; retain its value for form helpers.
-  $$('select', f).forEach(select => {
-    const wrapper = document.createElement('div'); wrapper.className = 'reg-select'; select.before(wrapper); wrapper.append(select);
-    const button = document.createElement('button'); button.type = 'button'; button.className = 'reg-select__button';
-    button.setAttribute('role', 'combobox'); button.setAttribute('aria-haspopup', 'listbox'); button.setAttribute('aria-expanded', 'false');
-    const list = document.createElement('div'); list.className = 'reg-select__list'; list.id = select.id + '-options'; list.setAttribute('role', 'listbox'); list.hidden = true;
-    const label = document.querySelector('label[for="' + select.id + '"]'); if (label){ label.id = select.id + '-label'; button.setAttribute('aria-labelledby', label.id); label.addEventListener('click', e => { e.preventDefault(); button.focus(); }); }
-    button.setAttribute('aria-controls', list.id); button.setAttribute('aria-required', String(select.required));
-    select.hidden = true; select.tabIndex = -1; wrapper.append(button, list);
-    let active = 0; const options = Array.from(select.options);
-    const update = () => { button.textContent = select.selectedOptions[0]?.textContent || 'Select'; Array.from(list.children).forEach((el,i) => el.setAttribute('aria-selected', String(i === select.selectedIndex))); };
-    const close = () => { list.hidden = true; button.setAttribute('aria-expanded','false'); button.removeAttribute('aria-activedescendant'); };
-    const focus = i => { active = Math.max(0, Math.min(options.length-1,i)); button.setAttribute('aria-activedescendant', list.children[active].id); Array.from(list.children).forEach((el,j) => el.classList.toggle('is-active',j===active)); list.children[active].scrollIntoView({block:'nearest'}); };
-    const open = () => { list.hidden = false; button.setAttribute('aria-expanded','true'); focus(select.selectedIndex); };
-    const choose = i => { select.selectedIndex = i; select.dispatchEvent(new Event('input',{bubbles:true})); select.dispatchEvent(new Event('change',{bubbles:true})); update(); close(); button.focus(); };
-    options.forEach((o,i) => { const el = document.createElement('div'); el.id = select.id + '-option-' + i; el.setAttribute('role','option'); el.textContent = o.textContent; el.addEventListener('click', () => choose(i)); list.append(el); });
-    button.addEventListener('click', () => list.hidden ? open() : close());
-    button.addEventListener('keydown', e => {
-      if (['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(e.key)){ e.preventDefault(); if (list.hidden){ open(); return; } if (e.key==='Enter'||e.key===' '){ choose(active); return; } focus(e.key==='Home'?0:e.key==='End'?options.length-1:active+(e.key==='ArrowDown'?1:-1)); }
-      else if(e.key==='Escape'){ e.preventDefault(); close(); } else if(e.key==='Tab') close();
-      else if(e.key.length===1){ const i=options.findIndex(o => o.text.toLowerCase().startsWith(e.key.toLowerCase())); if(i>=0){ if(list.hidden) open(); focus(i); } }
-    });
-    document.addEventListener('click', e => { if(!wrapper.contains(e.target)) close(); });
-    select.addEventListener('change', update); update();
-  });
+  /* the form's dropdowns are the shared custom ones (core.js UI), the same as every other CCFC site */
   const mark = (input, bad) => { input.closest('.field')?.classList.toggle('is-invalid', bad); input.setAttribute('aria-invalid', String(bad)); if(input.tagName==='SELECT') input.parentElement.querySelector('button')?.setAttribute('aria-invalid',String(bad)); };
   $$('input,select,textarea', f).forEach(i => i.addEventListener('input', () => mark(i,false)));
   f.addEventListener('submit', async e => {
