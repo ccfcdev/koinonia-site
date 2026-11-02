@@ -16,19 +16,57 @@ function reveals(){ const els = $$('[data-rv],[data-rv-stagger]'); if (RM || IS_
   const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add('is-rv'); io.unobserve(en.target); } }), {rootMargin:'0px 0px -10% 0px', threshold:.06}); els.forEach(e => io.observe(e)); }
 function nav(){ const n = $('.nav'); if (!n) return; const hero = $('.hero'); Bus.add(y => n.classList.toggle('is-solid', y > (hero ? hero.offsetHeight - 120 : 40)));
   const menu = $('.menu'), veil = $('.menu__veil'), open = $('.nav__burger'), close = $('.menu__close'); if (!menu) return;
-  const t = on => { menu.classList.toggle('is-open', on); veil && veil.classList.toggle('is-open', on); document.body.style.overflow = on ? 'hidden' : ''; open.setAttribute('aria-expanded', on); (on ? close : open).focus(); };
+  const t = on => { menu.classList.toggle('is-open', on); veil && veil.classList.toggle('is-open', on); document.documentElement.classList.toggle('menu-open', on); document.body.style.overflow = on ? 'hidden' : ''; open.setAttribute('aria-expanded', on); (on ? close : open).focus(); };
   open.addEventListener('click', () => t(true)); close.addEventListener('click', () => t(false)); veil && veil.addEventListener('click', () => t(false));
   $$('.menu a', menu).forEach(a => a.addEventListener('click', () => { if (a.getAttribute('href').startsWith('#')) t(false); }));
-  addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('is-open')) t(false); }); }
+  addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('is-open')) t(false); });
+  /* Pulling the open menu to the right drags it 1:1 (to the left it resists); let go and it closes if the flick,
+     projected forward, would carry it past 40% of its width, otherwise it settles back. Vertical moves still scroll. */
+  let md = null; const W = () => menu.offsetWidth;
+  menu.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' || !menu.classList.contains('is-open')) return; md = { x0: e.clientX, y0: e.clientY, dx: 0, on: false, id: e.pointerId, h: [[e.timeStamp, e.clientX]] }; });
+  menu.addEventListener('pointermove', e => { if (!md) return; const dx = e.clientX - md.x0, dy = e.clientY - md.y0;
+    if (!md.on){ if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return; if (Math.abs(dy) > Math.abs(dx)){ md = null; return; } md.on = true; menu.setPointerCapture(md.id); menu.style.transition = 'none'; if (veil) veil.style.transition = 'none'; }
+    md.dx = dx; md.h.push([e.timeStamp, e.clientX]); if (md.h.length > 5) md.h.shift();
+    menu.style.transform = `translateX(${(dx > 0 ? dx : rubber(dx, W())).toFixed(1)}px)`; if (veil) veil.style.opacity = String(1 - Math.max(0, dx) / W()); });
+  const mEnd = () => { const d = md; md = null; if (!d || !d.on) return; menu.style.transition = ''; menu.style.transform = ''; if (veil){ veil.style.transition = ''; veil.style.opacity = ''; }
+    if (d.dx + project(velocity(d.h)) > W() * 0.4) t(false); };
+  menu.addEventListener('pointerup', mEnd); menu.addEventListener('pointercancel', mEnd); }
 function hero(){ const h = $('.hero'); if (!h) return; const v = $('video', h); if (v && !RM && !IS_CAP){ const conn = navigator.connection || {}; const slow = !!conn.saveData || ['slow-2g','2g','3g'].includes(conn.effectiveType) || innerWidth < 768;   /* phones keep the still poster: faster and kinder to mobile data */ const px = Math.max(screen.width, screen.height) * (devicePixelRatio || 1); const pick = slow ? null : (px >= 2560 && (conn.downlink || 10) >= 10 && v.dataset.src4k) ? v.dataset.src4k : (Math.min(screen.width, screen.height) * (devicePixelRatio || 1) < 1100 || innerWidth < 900) && v.dataset.src720 ? v.dataset.src720 : v.dataset.src; if (pick){ const start = () => { v.src = pick; v.muted = true; const p = v.play(); p && p.catch && p.catch(()=>{}); }; if (document.readyState === 'complete') setTimeout(start, 900); else addEventListener('load', () => setTimeout(start, 900), { once: true }); } }
   if (RM || IS_CAP) return; const m = $('.hero__media', h), c = $('.hero__copy', h);
   Bus.add(y => { if (y > innerHeight*1.2) return; const t = Math.min(1, y/innerHeight); if (m) m.style.transform = `translate3d(0,${(y*.35).toFixed(1)}px,0) scale(${1+t*.08})`; if (c){ c.style.transform = `translate3d(0,${(y*.18).toFixed(1)}px,0)`; c.style.opacity = 1 - t*1.25; } }); }
+/* Apple's momentum projection and rubber band (Designing Fluid Interfaces): a flick goes where it was heading,
+   and past an edge things resist instead of stopping dead. h is a short [time, position] history of the pointer. */
+const project = v => (v / 1000) * 0.998 / (1 - 0.998);
+const rubber = (x, d) => (x * d * 0.55) / (d + 0.55 * Math.abs(x));
+const velocity = h => { const a = h[0], z = h[h.length - 1]; return a && z && z[0] > a[0] ? (z[1] - a[1]) / (z[0] - a[0]) * 1000 : 0; };
+const SHEET = 'cubic-bezier(.32,.72,0,1)';
+/* The player grows out of the video that was tapped and shrinks back into it. Every move starts from where the
+   frame is on screen right now, so closing it half-way through opening (or the reverse) never jumps.
+   On a phone it can be pulled down to close. */
 function lightbox(){ const tr = $$('[data-lb]'); if (!tr.length) return; const lb = document.createElement('div'); lb.className='lb'; lb.setAttribute('role','dialog'); lb.setAttribute('aria-modal','true');
   lb.innerHTML = `<button class="lb__close" aria-label="Close video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="lb__frame"><div class="lb__box"></div><p class="lb__title"></p></div>`; document.body.appendChild(lb);
-  const box = $('.lb__box', lb), title = $('.lb__title', lb), cb = $('.lb__close', lb); let last = null;
-  const open = (id, t) => { last = document.activeElement; box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${t}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`; title.textContent = t; lb.classList.add('is-open'); document.body.style.overflow='hidden'; cb.focus(); };
-  const close = () => { lb.classList.remove('is-open'); box.innerHTML=''; document.body.style.overflow=''; last && last.focus(); };
-  tr.forEach(t => t.addEventListener('click', e => { e.preventDefault(); open(t.dataset.lb, t.dataset.title || 'Video'); })); cb.addEventListener('click', close); lb.addEventListener('click', e => { if (e.target === lb) close(); }); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('is-open')) close(); });
+  const box = $('.lb__box', lb), title = $('.lb__title', lb), cb = $('.lb__close', lb), frame = $('.lb__frame', lb); let last = null, card = null, anim = null, drag = null;
+  const toCard = () => { if (RM || !card || !card.isConnected) return null; const r = card.getBoundingClientRect(), k = r.width / frame.offsetWidth;
+    return `translate(${(r.left - frame.offsetLeft).toFixed(1)}px,${(r.top - frame.offsetTop).toFixed(1)}px) scale(${k.toFixed(4)})`; };
+  const move = (from, to, done) => { anim && anim.cancel(); anim = frame.animate([{ transform: from }, { transform: to }], { duration: 440, easing: SHEET, fill: 'forwards' }); anim.onfinish = () => { done && done(); }; };
+  const now = () => getComputedStyle(frame).transform;
+  const open = (id, t, from) => { last = document.activeElement; card = from || null; box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${t}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`; title.textContent = t;
+    const wasOpen = lb.classList.contains('is-open'), start = wasOpen ? now() : toCard(); lb.classList.add('is-open'); document.body.style.overflow='hidden'; cb.focus({ preventScroll: true });
+    if (start) move(start, 'none', () => { anim.cancel(); anim = null; }); };
+  const close = (from) => { if (!lb.classList.contains('is-open')) return; lb.classList.remove('is-open'); document.body.style.overflow=''; last && last.focus({ preventScroll: true });
+    const done = () => { box.innerHTML=''; anim && anim.cancel(); anim = null; }, to = toCard();
+    if (to) move(from || now(), to, done); else { anim && anim.cancel(); setTimeout(done, 400); } };
+  tr.forEach(t => t.addEventListener('click', e => { e.preventDefault(); open(t.dataset.lb, t.dataset.title || 'Video', t); })); cb.addEventListener('click', () => close()); lb.addEventListener('click', e => { if (e.target === lb) close(); }); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('is-open')) close(); });
+  /* pull down to close: the frame follows the finger, shrinking a little, and the backdrop clears as it goes */
+  lb.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' || e.target.closest('.lb__close') || !lb.classList.contains('is-open')) return;
+    const base = now(); anim && anim.cancel(); anim = null; frame.style.transform = base === 'none' ? '' : base; drag = { y0: e.clientY, dy: 0, h: [[e.timeStamp, e.clientY]] }; lb.setPointerCapture(e.pointerId); });
+  lb.addEventListener('pointermove', e => { if (!drag) return; drag.dy = e.clientY - drag.y0; drag.h.push([e.timeStamp, e.clientY]); if (drag.h.length > 5) drag.h.shift();
+    const down = Math.max(0, drag.dy), y = drag.dy > 0 ? drag.dy : rubber(drag.dy, innerHeight), k = 1 - down / (innerHeight * 3);
+    frame.style.transform = `translate(${((1 - k) * frame.offsetWidth / 2).toFixed(1)}px,${y.toFixed(1)}px) scale(${k.toFixed(4)})`;
+    lb.style.backgroundColor = `rgba(6,22,48,${(0.95 * (1 - Math.min(1, down / 500))).toFixed(3)})`; });
+  const end = () => { if (!drag) return; const d = drag, cur = frame.style.transform || 'none'; drag = null; frame.style.transform = ''; lb.style.backgroundColor = '';
+    if (d.dy + project(velocity(d.h)) > 160) close(cur); else move(cur, 'none', () => { anim.cancel(); anim = null; }); };
+  lb.addEventListener('pointerup', end); lb.addEventListener('pointercancel', end);
   const v = Q.get('lb'); if (v){ const t = tr.find(x => x.dataset.lb === v); if (t) open(v, t.dataset.title); } }
 function countdown(){ const el = $('[data-countdown]'); if (!el) return; const to = new Date(el.dataset.countdown); if (isNaN(to)) return;
   const tick = () => { const d = Math.max(0, to - Date.now())/1000; const set = (k,v) => { const e = $(`[data-cd=${k}]`, el); if (e) e.textContent = String(v).padStart(2,'0'); };
