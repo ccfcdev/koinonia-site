@@ -12,7 +12,7 @@ Assets are copies from `../ccfc-site/assets` (fonts, logo cut-outs, Koinonia 25 
 ## Editions (edit `EDITIONS` in build.js)
 - **K24**: 21 to 22 December 2024, Ibex Hill opposite Chainda Legacy Academy (from the church's registration form). 99 curated photos at `/k24-photos` (from the info@ccfczambia.org Drive folder "Koinonia 24' Pictures"); videos still to be supplied.
 - **K25**: 19 to 21 December 2025, Grace Exploits Event Center, Chainama; "Going Deep and Multiplying"; 5 speakers; 2 Worship Connect videos; K200 / USD 10.
-- **K26**: December 2026, Lusaka; dates, venue and theme to be announced. Registration form mirrors the church's Google Form (same questions, entry IDs in `GFORM`), submits to Google Forms via a hidden iframe and to Supabase `registrations` when the main site's config is filled. Swap `GFORM.action` and `entry` for the K26 form once the church creates it.
+- **K26**: 18 to 20 December 2026, Lusaka. Theme: The RESET (Psalm 51:10-12, Isaiah 43:18-19, 2 Corinthians 5:17); the live text comes from the `k26_*` site settings. Registration form mirrors the church's Google Form (same questions, entry IDs in `GFORM`), submits to Google Forms via a hidden iframe and to Supabase `registrations` when the main site's config is filled. Swap `GFORM.action` and `entry` for the K26 form once the church creates it.
 
 `?cap=1&y=<px>` capture mode and `./shot.sh` work as on the main site. `k25.html?lb=<videoId>` opens a video.
 Set `MAIN` in build.js to the church's main domain once registered (currently a placeholder).
