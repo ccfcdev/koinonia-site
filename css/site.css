@@ -508,3 +508,5 @@ h2 .script,.h-script{font-size:1.05em}
 /* A jump to a section (Details, Watch, the FAQ) stops below the fixed header, not under it */
 html{scroll-padding-top:calc(var(--nav-h) + 12px)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* The menu's list scrolls on its own, so it too must leave sideways moves to the pull-to-close gesture */
+.menu__scroll{touch-action:pan-y;overflow-x:hidden}
