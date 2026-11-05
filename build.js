@@ -9,7 +9,7 @@ const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__di
 const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
 const SETTINGS_URL = 'https://dcqydtkjzgilyjnjyisb.supabase.co/rest/v1/site_settings?select=key,value&site=eq.koinonia';
 function loadSettings(defaults){ try { const out = require('child_process').execSync(`curl -s --max-time 6 -H "apikey: sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp" "${SETTINGS_URL}"`, { encoding:'utf8' }); const rows = JSON.parse(out); const s = Object.assign({}, defaults); for (const r of rows) if (r.value && r.value.trim()) s[r.key] = r.value; console.log('settings: live'); return s; } catch (e){ console.log('settings: defaults (offline)'); return Object.assign({}, defaults); } }
-const S = loadSettings({ k26_when:'December 2026', k26_where:'Lusaka, Zambia', k26_theme:'The RESET', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Dates, venue and theme will be announced here first. Tell us you are coming and we will keep you posted.' });
+const S = loadSettings({ k26_when:'18 to 20 December 2026', k26_where:'Lusaka, Zambia', k26_theme:'The RESET', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Join us in Lusaka from 18 to 20 December 2026 under the theme The RESET. Tell us you are coming and we will keep you posted.' });
 const set = (k, cls='') => `<span data-setting="${k}"${cls ? ' class="' + cls + '"' : ''}>${S[k]}</span>`;
 const WA = '260573762913', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
 const AGES = ['0-6 Years Old', '7-12 Years Old', '13-15 Years Old', '16-20 Years Old', '21-30 Years Old', '31-40 Years Old', '41-50 Years Old', '51-60 Years Old', '61 Years and Older'];
@@ -70,7 +70,7 @@ const EDITIONS = {
       ] } },
   k26: { key:'k26', n:'26', title:'Koinonia 26 Experience', when:set('k26_when'), where:set('k26_where'), theme:S.k26_theme ? set('k26_theme') : '', status:'next',
     blurb:set('k26_blurb'), verses:['Psalm 51:10-12', 'Isaiah 43:18-19', '2 Corinthians 5:17'],
-    videos:[], speakers:[], hero:'k26-soon', gallery:[] },
+    videos:[], speakers:[], hero:'k26-official-reset-v1', gallery:[] },
 };
 for (const e of Object.values(EDITIONS)) if (e.photos){ const f = path.join(__dirname, e.photos.json); e.photos.list = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : []; }
 const PHOTO_EDS = Object.values(EDITIONS).filter(e => e.photos && e.photos.list.length);   // editions whose gallery is published
@@ -81,7 +81,7 @@ const KSEO = {
   'index.html': ["Koinonia Experience | Family Conference in Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
   'k24.html': ["Koi 24' | Where Koinonia Began | Koinonia Experience", "Koi 24', the first Koinonia Experience, gathered the CCFC family at Ibex Hill, Lusaka, on 21 and 22 December 2024 for worship, the Word and testimonies."],
   'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
-  'k26.html': ["Koi 26' | Register for December 2026 | Koinonia", "Register for Koi 26', the next Koinonia Experience family conference in Lusaka, December 2026. It takes two minutes. Dates and venue announced here first."],
+  'k26.html': ["Koi 26' | The RESET | 18 to 20 December 2026", "Koinonia Experience 2026: The RESET. Join the family in Lusaka, 18 to 20 December 2026. View the official banner and register for Koi 26'."],
   'k25-photos.html': ["Koi 25' Photos | View and Download | Koinonia", "View and download free photos from Koi 25', Going Deep and Multiplying, the Koinonia Experience family conference in Lusaka, December 2025."],
   'k24-photos.html': ["Koi 24' Photos | View and Download | Koinonia", "View and download free photos from Koi 24', the first Koinonia Experience family conference, held at Ibex Hill in Lusaka in December 2024."],
   'updates.html': ["Koinonia Updates | News, Videos and Photos", "Announcements, speaker news, videos and photos from every Koinonia Experience conference, posted by the Christ Connect Family Church media team."],
@@ -100,7 +100,7 @@ function layout(p){
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'index.html' ? '/assets/img/hero-poster-v2.webp' : null })}
+${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: ['index.html','k26.html','register.html'].includes(p.file) ? 'assets/img/k26-official-reset-v1-1280.webp' : 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: ['index.html','k26.html'].includes(p.file) ? '/assets/img/k26-official-reset-v1-1280.webp' : null })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/mazar.css?v=${V.mzcss}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
@@ -172,12 +172,17 @@ const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) =>
   return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
 /* a scripture reference that opens the passage in the Yuriel widget on this page (core.js, data-mazar="bible") */
 const vref = r => `<a href="/?mazar=bible&amp;ref=${encodeURIComponent(r)}" data-mazar="bible" data-ref="${r}">${r}</a>`;
+const k26Banner = (eager=false) => img('k26-official-reset-v1', 'Official Koinonia Experience 2026 banner. Theme: The RESET. 18 to 20 December, Lusaka, Zambia.', '(min-width:1000px) 65vw, 100vw', eager);
+const k26Hero = () => `<section class="k26-banner" aria-labelledby="k26-title"><div class="wrap k26-banner__grid">
+  <a class="k26-banner__art" href="assets/img/k26-official-reset-v1.png" aria-label="Open the official Koinonia 26 banner">${k26Banner(true)}</a>
+  <div class="k26-banner__copy"><span class="pill pill--orange">Koinonia Experience 2026</span><p class="k26-banner__eyebrow">This year's theme</p><h1 id="k26-title">The <em>RESET</em></h1>
+  <p>Deep in Christ. One in fellowship. Sent to multiply.</p><p class="k26-banner__date">18 to 20 December 2026<br>Lusaka, Zambia</p>
+  <div class="row"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#details">Conference details</a></div></div>
+</div></section>`;
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.verses ? ['Theme scriptures', e.verses.map(vref).join(', ')] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
   const P = PHOTO_EDS.includes(e) ? e.photos : null;
-  return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
-    body:`
-<section class="hero hero--short"><div class="hero__media">${img(e.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
+  const heroMarkup = e.status === 'next' ? k26Hero() : `<section class="hero hero--short"><div class="hero__media">${img(e.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
     <span class="pill ${e.status==='next'?'pill--orange':''}">${e.status==='next' ? 'Next edition' : 'Past edition'}</span>
     ${e.status === 'next' && e.theme
@@ -187,7 +192,10 @@ function editionPage(e){
     <div class="row">${e.status==='next' ? `<a class="btn" href="register.html">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
   </div>
   ${e.status === 'next' ? '' : `<div class="hero__meta" data-rv-stagger>${metaRows.slice(0,3).map(([k,v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('')}</div>`}</div>
-</section>
+</section>`;
+  return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
+    body:`
+${heroMarkup}
 <section class="sec" id="details"><div class="wrap"><h2 data-split>The details</h2><div class="details mt-2" data-rv-stagger>
   ${metaRows.map(([k,v]) => `<div class="detail"><b>${k}</b><p>${v}</p></div>`).join('')}
   <div class="detail"><b>Who</b><p>Members, friends and first-time guests from every CCFC church<small>Zambia, Zimbabwe, Malawi and the wider family</small></p></div>
@@ -201,18 +209,10 @@ ${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
-<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}<video data-src720="assets/img/hero-720.mp4" data-src="assets/img/hero-1080-v2.mp4" data-src4k="assets/img/hero-4k.mp4" poster="assets/img/hero-poster-v2.webp" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div><div class="hero__scrim"></div>
-  <div class="wrap"><div class="hero__copy">
-    <h1 class="hero__logo">${kstack(true)}</h1>
-    <div class="hero__tag">${TAGLINE}</div>
-    <p>Once a year the whole Christ Connect family comes home to Lusaka: three days of worship, the Word and fellowship that sends us back out multiplying.</p>
-    <div class="row"><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k25.html#videos">Watch Koi 25'</a></div>
-  </div>
-  <div class="hero__meta" data-rv-stagger><div><b>Next</b><span>Koi 26', December 2026</span></div><div><b>Where</b><span>Lusaka, Zambia</span></div><div><b>Theme</b><span>"${set('k26_theme')}"</span></div></div></div>
-</section>
+${k26Hero()}
 ${pillarsSection()}
 <section class="sec"><div class="wrap"><h2 class="mb-2" data-split>Every Koinonia Experience</h2><div class="eds" data-rv-stagger>
-  ${['k24','k25','k26'].map(k => { const e = EDITIONS[k]; return `<a class="ed ${e.status==='next'?'ed--next':''}" href="${k}.html">${e.status==='next' ? `<div class="ed__soon" aria-label="Coming soon"><img src="assets/logo/ccfc-mark-white.png?v=2" alt=""><b>Coming</b><i>soon</i><small>December 2026</small></div>` : img(e.hero,'','(min-width:900px) 33vw, 100vw')}<span class="pill ${e.status==='next'?'pill--orange':''}">${e.status==='next'?'Next':'Past'}</span><div class="ed__k">Koi <em>${e.n}'</em></div><div class="ed__t">${e.theme ? `"${e.theme}"` : e.when}</div><p>${e.theme ? e.when + ' &middot; ' + e.where.split(',')[0] : e.blurb}</p><span class="link">Open ${k.toUpperCase()} ${ICON.arrow}</span></a>`; }).join('')}
+  ${['k24','k25','k26'].map(k => { const e = EDITIONS[k]; return `<a class="ed ${e.status==='next'?'ed--next':''}" href="${k}.html">${e.status==='next' ? `<div class="ed__official">${k26Banner()}</div>` : img(e.hero,'','(min-width:900px) 33vw, 100vw')}<span class="pill ${e.status==='next'?'pill--orange':''}">${e.status==='next'?'Next':'Past'}</span><div class="ed__k">Koi <em>${e.n}'</em></div><div class="ed__t">${e.theme ? `"${e.theme}"` : e.when}</div><p>${e.theme ? e.when + ' &middot; ' + e.where.split(',')[0] : e.blurb}</p><span class="link">Open ${k.toUpperCase()} ${ICON.arrow}</span></a>`; }).join('')}
 </div></div></section>
 <div class="facts" data-rv-stagger><div class="fact"><b>3</b><span>days together every December</span></div><div class="fact"><b>3+</b><span>nations in the room: Zambia, Zimbabwe, Malawi</span></div><div class="fact"><b>5</b><span>leaders taught at Koi 25'</span></div><div class="fact"><b>1</b><span>family under Christ</span></div></div>
 <section class="sec"><div class="wrap"><h2 data-split>What Koinonia<br>means</h2><p class="lede mt-1" data-rv>Koinonia is the New Testament word for fellowship: sharing life, not just a room. "They devoted themselves to the apostles' teaching and to fellowship." Acts 2:42. The conference exists so that churches spread across borders remember they are one body, go deep in the Word together, and go home to multiply.</p></div></section>
