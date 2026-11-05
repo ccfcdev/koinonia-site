@@ -6,7 +6,7 @@ const SEO = require('./build-shared.js');
 const ICONV = 'koi26-emblem';
 const ORIGIN = 'https://koinonia.ccfczambia.org';
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
-const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
+const V = { chat: hash('js/mazar.js'), mzcss: hash('css/mazar.css'), minimal: hash('css/minimal.css'), css: hash('css/site.css'), js: hash('js/site.js'), fonts: hash('css/fonts.css'), core: hash('css/core.css'), corejs: hash('js/core.js') };
 const SETTINGS_URL = 'https://dcqydtkjzgilyjnjyisb.supabase.co/rest/v1/site_settings?select=key,value&site=eq.koinonia';
 function loadSettings(defaults){ try { const out = require('child_process').execSync(`curl -s --max-time 6 -H "apikey: sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp" "${SETTINGS_URL}"`, { encoding:'utf8' }); const rows = JSON.parse(out); const s = Object.assign({}, defaults); for (const r of rows) if (r.value && r.value.trim()) s[r.key] = r.value; console.log('settings: live'); return s; } catch (e){ console.log('settings: defaults (offline)'); return Object.assign({}, defaults); } }
 const S = loadSettings({ k26_when:'18 to 20 December 2026', k26_where:'Lusaka, Zambia', k26_theme:'The RESET', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Join us in Lusaka from 18 to 20 December 2026 under the theme The RESET. Tell us you are coming and we will keep you posted.' });
@@ -102,7 +102,7 @@ function layout(p){
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: ['index.html','k26.html','register.html'].includes(p.file) ? 'assets/img/k26-official-cream-v2-1280.webp' : 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'k26.html' ? '/assets/img/k26-official-cream-v2-1280.webp' : p.file === 'index.html' ? '/assets/img/hero-poster-v2.webp' : null })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/mazar.css?v=${V.mzcss}">
+<link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/mazar.css?v=${V.mzcss}"><link rel="stylesheet" href="css/minimal.css?v=${V.minimal}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
 </head>
 <body${p.file === 'k26.html' ? ' class="k26-page"' : ''}>
@@ -154,8 +154,8 @@ const K26FAQ = [
 const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
 
 /* brand lockups traced from the 2026 brand kit (assets/logo/koinonia-*.svg): gold crescent + KOINONIA (Bebas Neue) + Experience script */
-const klogo = (cls = 'klogo--nav') => `<img class="klogo ${cls}" src="assets/logo/koinonia-horizontal.svg" alt="Koinonia Experience" width="350" height="94" decoding="async">`;
-const kstack = (eager) => `<img class="klogo klogo--stack" src="assets/logo/koinonia-stacked.svg" alt="Koinonia Experience" width="352" height="247"${eager ? ' fetchpriority="high"' : ' decoding="async"'}>`;
+const klogo = (cls = 'klogo--nav') => `<img class="klogo ${cls}" src="assets/logo/koinonia-horizontal-ink.svg" alt="Koinonia Experience" width="350" height="94" decoding="async">`;
+const kstack = (eager) => `<img class="klogo klogo--stack" src="assets/logo/koinonia-stacked-ink.svg" alt="Koinonia Experience" width="352" height="247"${eager ? ' fetchpriority="high"' : ' decoding="async"'}>`;
 const TAGLINE = '<span class="tagline"><span>Deep in Christ.</span><i></i><span>One in Fellowship.</span><i></i><span>Sent to Multiply.</span></span>';
 const PILLARS = [
   ['Christ-centred encounter', 'Deepening our relationship with Jesus Christ.', '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 14v34M23 25h18"/><path d="M32 4v4M12 12l3 3M52 12l-3 3M6 30h4M54 30h4M14 54l3-3M50 54l-3-3M32 56v4"/><path d="M20 44c3 6 8 9 12 9s9-3 12-9"/></svg>'],
@@ -209,7 +209,7 @@ ${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
-<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}<video data-src720="assets/img/hero-720.mp4" data-src="assets/img/hero-1080-v2.mp4" data-src4k="assets/img/hero-4k.mp4" poster="assets/img/hero-poster-v2.webp" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div><div class="hero__scrim"></div>
+<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
     <h1 class="hero__logo">${kstack(true)}</h1>
     <div class="hero__tag">${TAGLINE}</div>
