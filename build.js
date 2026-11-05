@@ -209,12 +209,12 @@ ${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
-<section class="video-hero" aria-labelledby="home-title"><div class="wrap">
+<section class="video-hero" aria-labelledby="home-title"><div class="video-hero__frame"><video autoplay id="koi-hero-video" muted loop playsinline preload="none" poster="assets/img/hero-crisp-v3.webp" aria-label="Worship Connect leading praise at Koinonia" data-hd="assets/img/hero-1080-v2.mp4" data-uhd="assets/img/hero-4k.mp4"></video></div><div class="wrap">
   <p class="video-hero__eyebrow">Christ Connect Family Church / Koinonia Experience</p>
   <h1 id="home-title">One family.<br><em>Deep in Christ.</em></h1>
   <p class="video-hero__intro">Three days of worship, the Word and fellowship.<br>Come home to Lusaka. Go out ready to multiply.</p>
   <div class="row video-hero__actions"><a class="btn" href="register.html">Join us at Koi 26' ${ICON.arrow}</a><a class="link" href="#coming-up">Explore this year's gathering ${ICON.arrow}</a></div>
-  <div class="video-hero__frame"><video id="koi-hero-video" muted loop playsinline preload="none" poster="assets/img/hero-crisp-v3.webp" aria-label="Worship Connect leading praise at Koinonia" data-hd="assets/img/hero-1080-v2.mp4" data-uhd="assets/img/hero-4k.mp4"></video><button class="video-hero__toggle" type="button" aria-controls="koi-hero-video" aria-label="Play worship video">Play video <span aria-hidden="true">▶</span></button></div>
+  <button class="video-hero__toggle" type="button" aria-controls="koi-hero-video" aria-label="Play worship video">Play video <span aria-hidden="true">▶</span></button>
   <div class="video-hero__caption"><span>Worship. Fellowship. A family sent to multiply.</span><span>18 to 20 December 2026 · Lusaka</span></div>
 </div></section>
 ${k26Hero(true)}
