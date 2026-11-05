@@ -15,3 +15,9 @@ Reference: https://dribbble.com/shots/26631367-Website-Design-For-Church by Jeev
 Registration adds four anchor-based section links, blue focus treatment, selected radio/checkbox indicators and a blue event-information aside. Field names, submission handling and server access remain unchanged. Verification adds native form choice and WhatsApp synchronization checks, video decode/play/pause at phone and desktop sizes and a 3840px decode check at 2x display density. No data submitted. Existing source footage limits visual detail; no upscaling or new third-party video service introduced.
 
 The homepage video fills the entire hero behind its centered text and buttons, with a navy contrast overlay. Autoplay, pause and full-background geometry checked at 390px and 1440px.
+
+## Color modes
+
+A header toggle switches between warm cream light mode and the original navy #0A203D, blue #013E87, orange #FB7624 and gold dark palette. The independent koinonia:theme preference is applied in the document head before styles render, persists across pages, follows system preference until explicitly chosen and synchronizes across tabs. Original light-on-dark logos are restored in dark mode. The hero's contrast overlay stays consistent in both modes.
+
+Verified both modes on all nine pages at 390px and 1440px, dark-mode reload persistence, system dark preference, toggle labels/pressed state, mobile header width and menu interactions. Registration and Koi 26 screenshots reviewed. No production deployment.

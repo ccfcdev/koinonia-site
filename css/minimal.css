@@ -115,3 +115,36 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .video-hero__eyebrow{color:#ffd58f}.video-hero__intro{color:#f1f5fc}.video-hero .link{color:#fff}.video-hero__caption{color:#e0eafa;border-top:1px solid #ffffff44;padding-top:20px}
 .video-hero__toggle{position:static;margin:0 0 32px;background:#082d6080}
 @media(max-width:600px){.video-hero{min-height:100svh;padding-top:calc(var(--nav-h) + 40px);padding-bottom:24px}.video-hero h1{font-size:clamp(2.8rem,12vw,4rem)}.video-hero__actions{gap:20px}.video-hero__toggle{margin-bottom:24px}.video-hero__caption{text-align:center;justify-content:center}}
+
+/* Persisted color modes: warm paper and the original navy/blue palette. */
+:root{color-scheme:light}
+.theme-toggle{display:inline-grid;place-items:center;width:42px;height:42px;flex:none;border:1px solid var(--line);border-radius:8px;color:var(--ink);background:var(--panel);transition:background .2s,border-color .2s}
+.theme-toggle svg{width:20px;height:20px}.theme-toggle__sun{display:none}
+[data-theme=dark] .theme-toggle__sun{display:block}[data-theme=dark] .theme-toggle__moon{display:none}
+.theme-toggle:hover{background:var(--soft)}
+:root[data-theme=dark],:root[data-theme=dark] .k26-page{color-scheme:dark;--ground:#0a203d;--ground-2:#0d2748;--panel:#10305a;--paper-2:#0d2748;--ink:#ffffff;--ink-2:#d3dfed;--ink-3:#a8bad0;--white:#ffffff;--head:#fff;--navy:#0a203d;--muted:#d3dfed;--faint:#a8bad0;--line:#ffffff29;--soft:#ffffff0d;--gold:#d9b45a;--gold-2:#d9b45a;--orange:#fb7624;--orange-2:#ff9a55;--coral:#fb7624;--on-accent:#0a203d}
+[data-theme=dark] body,[data-theme=dark] body.k26-page{background:var(--ground);color:var(--ink)}
+[data-theme=dark] .nav,[data-theme=dark] .nav.is-solid{background:#0a203df5;color:#fff;--line:#ffffff29;--gold-2:#d9b45a}
+[data-theme=dark] .k26-banner{background:var(--ground-2);color:#fff;--ink:#fff;--paper:#0d2748;--accent:#fb7624}
+[data-theme=dark] .k26-banner__intro h1,[data-theme=dark] .k26-banner__intro h2,[data-theme=dark] .k26-banner__intro .script,[data-theme=dark] .k26-banner__copy h2,[data-theme=dark] .k26-banner__date,[data-theme=dark] .k26-banner__copy .k26-banner__date{color:#fff}
+[data-theme=dark] .k26-banner__copy p{color:var(--muted)}
+[data-theme=dark] .k26-banner__intro,[data-theme=dark] .k26-banner__art{border-color:var(--line)}
+[data-theme=dark] .k26-page .sec h2,[data-theme=dark] .k26-page .detail p,[data-theme=dark] .k26-page .kfaq__item summary{color:#fff}
+[data-theme=dark] .k26-page .kfaq__item p{color:var(--muted)}
+[data-theme=dark] .ed--next{background:var(--panel);color:#fff}[data-theme=dark] .ed--next .ed__k{color:#fff}[data-theme=dark] .ed--next .link{color:var(--gold)}
+[data-theme=dark] .btn,[data-theme=dark] .k26-banner .btn{color:#0a203d}
+[data-theme=dark] .btn--ghost,[data-theme=dark] .k26-banner .btn--ghost,[data-theme=dark] .hero .btn--ghost,[data-theme=dark] .close .btn--ghost{color:#fff;background:transparent}
+[data-theme=dark] .pill--orange,[data-theme=dark] .ed--next .pill{background:#fb762426;color:#ffbf8b}
+[data-theme=dark] .menu__list a[aria-current=page] b{color:#ffbf8b}
+[data-theme=dark] .mq--a{background:#fb7624;color:#0a203d}
+[data-theme=dark] .mq--b{background:#013e87;color:#fff}
+[data-theme=dark] .field input,[data-theme=dark] .field textarea,[data-theme=dark] .field select{color:#fff;background:#0d2748;border-color:#8499b3}
+[data-theme=dark] .field input:focus,[data-theme=dark] .field textarea:focus,[data-theme=dark] .field select:focus{background:#10305a;border-color:#8fc0ff;box-shadow:0 0 0 3px #8fc0ff26}
+[data-theme=dark] .reg__choices label{background:#0d2748;border-color:#8499b3;color:#fff}
+[data-theme=dark] .reg__choices label:has(input:checked){background:#013e87;border-color:#8fc0ff;color:#fff}
+[data-theme=dark] .reg__sections a{background:#0d2748;color:#c5defe}[data-theme=dark] .reg__sections a:hover{background:#174575}
+[data-theme=dark] .reg__sections a span,[data-theme=dark] .reg__step legend i{background:#013e87;color:#fff}
+[data-theme=dark] .csel__btn{background:#0d2748!important;border-color:#8499b3!important;color:#fff}
+[data-theme=dark] .reg__status.is-ok{color:#9ddbb0}[data-theme=dark] .reg__status.is-err{color:#ffb2a0}
+[data-theme=dark] .hero__k em,[data-theme=dark] .hero__k .script{color:#fff}
+@media(max-width:600px){.nav .nav__mazar{display:none}.theme-toggle{width:38px;height:40px}.nav>.wrap>.row{gap:6px}}
