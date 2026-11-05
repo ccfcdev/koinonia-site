@@ -31,9 +31,8 @@ function nav(){ const n = $('.nav'); if (!n) return; const hero = $('.hero'); Bu
   const mEnd = () => { const d = md; md = null; if (!d || !d.on) return; menu.style.transition = ''; menu.style.transform = ''; if (veil){ veil.style.transition = ''; veil.style.opacity = ''; }
     if (d.dx + project(velocity(d.h)) > W() * 0.4) t(false); };
   menu.addEventListener('pointerup', mEnd); menu.addEventListener('pointercancel', mEnd); }
-function hero(){ const h = $('.hero'); if (!h) return; const v = $('video', h); if (v && !RM && !IS_CAP){ const conn = navigator.connection || {}; const slow = !!conn.saveData || ['slow-2g','2g','3g'].includes(conn.effectiveType) || innerWidth < 768;   /* phones keep the still poster: faster and kinder to mobile data */ const px = Math.max(screen.width, screen.height) * (devicePixelRatio || 1); const pick = slow ? null : (px >= 2560 && (conn.downlink || 10) >= 10 && v.dataset.src4k) ? v.dataset.src4k : (Math.min(screen.width, screen.height) * (devicePixelRatio || 1) < 1100 || innerWidth < 900) && v.dataset.src720 ? v.dataset.src720 : v.dataset.src; if (pick){ const start = () => { v.src = pick; v.muted = true; const p = v.play(); p && p.catch && p.catch(()=>{}); }; if (document.readyState === 'complete') setTimeout(start, 900); else addEventListener('load', () => setTimeout(start, 900), { once: true }); } }
-  if (RM || IS_CAP) return; const m = $('.hero__media', h), c = $('.hero__copy', h);
-  Bus.add(y => { if (y > innerHeight*1.2) return; const t = Math.min(1, y/innerHeight); if (m) m.style.transform = `translate3d(0,${(y*.35).toFixed(1)}px,0) scale(${1+t*.08})`; if (c){ c.style.transform = `translate3d(0,${(y*.18).toFixed(1)}px,0)`; c.style.opacity = 1 - t*1.25; } }); }
+/* Static editorial heroes keep imagery still and avoid scroll-linked motion. */
+function hero(){}
 /* Apple's momentum projection (dismiss gestures use the snappier rate) and rubber band (Designing Fluid Interfaces): a flick goes where it was heading,
    and past an edge things resist instead of stopping dead. h is a short [time, position] history of the pointer. */
 const project = (v, d = 0.99) => (v / 1000) * d / (1 - d);   /* 0.99: Apple's snappier rate, so a gentle pull settles back and only a real flick dismisses */
