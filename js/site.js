@@ -32,7 +32,26 @@ function nav(){ const n = $('.nav'); if (!n) return; const hero = $('.hero'); Bu
     if (d.dx + project(velocity(d.h)) > W() * 0.4) t(false); };
   menu.addEventListener('pointerup', mEnd); menu.addEventListener('pointercancel', mEnd); }
 /* Static editorial heroes keep imagery still and avoid scroll-linked motion. */
-function hero(){}
+function hero(){
+  const video = document.querySelector('#koi-hero-video'); if (!video) return;
+  const button = document.querySelector('.video-hero__toggle');
+  let userPaused = false;
+  const label = () => { button.textContent = video.paused ? 'Play video ▶' : 'Pause video Ⅱ'; button.setAttribute('aria-label', video.paused ? 'Play worship video' : 'Pause worship video'); };
+  const play = async () => {
+    if (!video.getAttribute('src')){
+      const pixels = video.clientWidth * Math.min(devicePixelRatio || 1, 3);
+      video.src = pixels > 1920 ? video.dataset.uhd : video.dataset.hd;
+    }
+    try { video.muted = true; await video.play(); } catch (_) { label(); }
+  };
+  button.addEventListener('click', () => { if (video.paused){ userPaused = false; play(); } else { userPaused = true; video.pause(); } });
+  video.addEventListener('play', label); video.addEventListener('pause', label);
+  const connection = navigator.connection || {};
+  const automatic = !RM && !IS_CAP && !connection.saveData && !['slow-2g','2g','3g'].includes(connection.effectiveType);
+  if ('IntersectionObserver' in window){ new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (!entry.isIntersecting) video.pause(); else if (automatic && !userPaused) play(); });
+  }, { threshold: .15 }).observe(video); } else if (automatic) play();
+}
 /* Apple's momentum projection (dismiss gestures use the snappier rate) and rubber band (Designing Fluid Interfaces): a flick goes where it was heading,
    and past an edge things resist instead of stopping dead. h is a short [time, position] history of the pointer. */
 const project = (v, d = 0.99) => (v / 1000) * d / (1 - d);   /* 0.99: Apple's snappier rate, so a gentle pull settles back and only a real flick dismisses */
