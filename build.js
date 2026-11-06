@@ -100,7 +100,8 @@ function layout(p){
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: ['index.html','k26.html','register.html'].includes(p.file) ? 'assets/img/k26-official-cream-v2-1280.webp' : 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'k26.html' ? '/assets/img/k26-official-cream-v2-1280.webp' : p.file === 'index.html' ? '/assets/img/hero-poster-v2.webp' : null })}
+<script>(()=>{let t;try{t=localStorage.getItem('koinonia:theme')}catch(_){}document.documentElement.dataset.theme=t==='light'||t==='dark'?t:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';})();</script>
+${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: ['index.html','k26.html','register.html'].includes(p.file) ? 'assets/img/k26-official-cream-v2-1280.webp' : 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'k26.html' ? '/assets/img/k26-official-cream-v2-1280.webp' : p.file === 'index.html' ? '/assets/img/hero-crisp-v3.webp' : null })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/mazar.css?v=${V.mzcss}"><link rel="stylesheet" href="css/minimal.css?v=${V.minimal}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
@@ -110,7 +111,7 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home">${klogo()}</a>
   <ul class="nav__links">${links}</ul>
-  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row">${SEO.mazarNav()}<span class="nav__account"></span><button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.8 13a9 9 0 0 1-9.8-9.8A9 9 0 1 0 20.8 13Z"/></svg><svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
@@ -209,15 +210,14 @@ ${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
-<section class="hero"><div class="hero__media">${img('worship-1','Worship Connect leading praise at Koinonia 25','100vw',true)}</div><div class="hero__scrim"></div>
-  <div class="wrap"><div class="hero__copy">
-    <h1 class="hero__logo">${kstack(true)}</h1>
-    <div class="hero__tag">${TAGLINE}</div>
-    <p>Once a year the whole Christ Connect family comes home to Lusaka: three days of worship, the Word and fellowship that sends us back out multiplying.</p>
-    <div class="row"><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k25.html#videos">Watch Koi 25'</a></div>
-  </div>
-  <div class="hero__meta" data-rv-stagger><div><b>Next</b><span>Koi 26', December 2026</span></div><div><b>Where</b><span>Lusaka, Zambia</span></div><div><b>Theme</b><span>"${set('k26_theme')}"</span></div></div></div>
-</section>
+<section class="video-hero" aria-labelledby="home-title"><div class="video-hero__frame"><video autoplay id="koi-hero-video" muted loop playsinline preload="none" poster="assets/img/hero-crisp-v3.webp" aria-label="Worship Connect leading praise at Koinonia" data-hd="assets/img/hero-1080-v2.mp4" data-uhd="assets/img/hero-4k.mp4"></video></div><div class="wrap">
+  <p class="video-hero__eyebrow">Christ Connect Family Church / Koinonia Experience</p>
+  <h1 id="home-title">One family.<br><em>Deep in Christ.</em></h1>
+  <p class="video-hero__intro">Three days of worship, the Word and fellowship.<br>Come home to Lusaka. Go out ready to multiply.</p>
+  <div class="row video-hero__actions"><a class="btn" href="register.html">Join us at Koi 26' ${ICON.arrow}</a><a class="link" href="#coming-up">Explore this year's gathering ${ICON.arrow}</a></div>
+  <button class="video-hero__toggle" type="button" aria-controls="koi-hero-video" aria-label="Play worship video">Play video <span aria-hidden="true">▶</span></button>
+  <div class="video-hero__caption"><span>Worship. Fellowship. A family sent to multiply.</span><span>18 to 20 December 2026 · Lusaka</span></div>
+</div></section>
 ${k26Hero(true)}
 ${pillarsSection()}
 <section class="sec"><div class="wrap"><h2 class="mb-2" data-split>Every Koinonia Experience</h2><div class="eds" data-rv-stagger>
@@ -288,22 +288,24 @@ const registration = (() => { const e = EDITIONS.k26; return { file:'register.ht
       <div class="reg__fact"><b>Questions</b><span><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hello, I need help registering for Koi 26'.")}" target="_blank" rel="noopener">WhatsApp the office</a> or email ccfczambia@gmail.com</span></div>
     </aside>
     <form class="reg" data-edition="${e.key}" novalidate data-rv="fade">
-      <fieldset class="reg__step"><legend><i>1</i>About you</legend>
+      <div class="reg__intro"><span class="eyebrow">Koi 26' registration</span><h2>Your place in the family.</h2><p>Complete the four sections below. Required fields are marked with an asterisk.</p></div>
+      <nav class="reg__sections" aria-label="Registration sections">${['About you','Contact','Conference','Other details'].map((label,i)=>`<a href="#reg-section-${i+1}"><span>${i+1}</span>${label}</a>`).join('')}</nav>
+      <fieldset class="reg__step" id="reg-section-1"><legend><i>1</i>About you</legend>
         <div class="reg__row reg__row--3"><div class="field"><label for="r-first">First name <em>*</em></label><input id="r-first" name="first" required autocomplete="given-name"></div><div class="field"><label for="r-middle">Middle name</label><input id="r-middle" name="middle" autocomplete="additional-name"></div><div class="field"><label for="r-sur">Surname <em>*</em></label><input id="r-sur" name="surname" required autocomplete="family-name"></div></div>
         <div class="reg__row"><div class="field"><span class="field__label">Sex <em>*</em></span><div class="reg__choices"><label><input type="radio" name="gender" value="Male" required><span>Male</span></label><label><input type="radio" name="gender" value="Female"><span>Female</span></label></div></div>
           <div class="field"><label for="r-age">Age range <em>*</em></label><select id="r-age" name="age" required><option value="">Select</option>${AGES.map(a => `<option>${a}</option>`).join('')}</select></div></div>
       </fieldset>
-      <fieldset class="reg__step"><legend><i>2</i>Where to reach you</legend>
+      <fieldset class="reg__step" id="reg-section-2"><legend><i>2</i>Where to reach you</legend>
         <div class="reg__row"><div class="field"><label for="r-addr">Physical address <em>*</em></label><input id="r-addr" name="address" required autocomplete="street-address" placeholder="Area and town"></div><div class="field"><label for="r-country">Country of residence <em>*</em></label><input id="r-country" name="country" required autocomplete="country-name" value="Zambia"></div></div>
         <div class="reg__row"><div class="field"><label for="r-phone">Contact number <em>*</em></label><input id="r-phone" name="phone" required minlength="5" maxlength="40" type="tel" autocomplete="tel" placeholder="+260 97 ..."></div><div class="field"><label for="r-email">Email (optional)</label><input id="r-email" name="email" maxlength="254" type="email" autocomplete="email" placeholder="you@example.com"></div></div>
         <div class="field"><label for="r-whatsapp">WhatsApp number (optional)</label><input id="r-whatsapp" name="whatsapp" minlength="5" maxlength="40" type="tel" autocomplete="off" placeholder="+260 97 ..." aria-describedby="r-whatsapp-help"><small id="r-whatsapp-help">If your WhatsApp number is the same as your contact number, tick the box below.</small></div><label class="reg__same"><input type="checkbox" name="same_whatsapp"> My contact number is also my WhatsApp number</label>
       </fieldset>
-      <fieldset class="reg__step"><legend><i>3</i>At the conference</legend>
+      <fieldset class="reg__step" id="reg-section-3"><legend><i>3</i>At the conference</legend>
         <div class="field"><span class="field__label">Are you taking part by sharing a talent? <em>*</em></span><small>Preaching, singing, dancing, a poem, a testimony. Limited slots.</small><div class="reg__choices"><label><input type="radio" name="participation" value="Yes" required><span>Yes, I want to take part</span></label><label><input type="radio" name="participation" value="No"><span>No, just attending</span></label></div></div>
         <div class="field"><label for="r-detail">If taking part, what will you do?</label><input id="r-detail" name="detail" placeholder="Optional"></div>
         <div class="field"><span class="field__label">Which days will you attend? <em>*</em></span><div class="reg__choices"><label><input type="checkbox" name="days" value="Day 1"><span>Day 1</span></label><label><input type="checkbox" name="days" value="Day 2"><span>Day 2</span></label><label><input type="checkbox" name="days" value="Day 3"><span>Day 3</span></label><label><input type="checkbox" name="days" value="All Three"><span>All three days</span></label></div></div>
       </fieldset>
-      <fieldset class="reg__step"><legend><i>4</i>Anything else</legend>
+      <fieldset class="reg__step" id="reg-section-4"><legend><i>4</i>Anything else</legend>
         <div class="field"><label for="r-diet">Any dietary restrictions? <em>*</em></label><input id="r-diet" name="dietary" required placeholder="None, or the foods you do not eat"></div>
         <div class="field"><label for="r-exp">What is your expectation at Koi ${e.n}' Experience? <em>*</em></label><textarea id="r-exp" name="expectation" rows="3" required></textarea></div>
       </fieldset>
