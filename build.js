@@ -22,6 +22,28 @@ const FEES = (() => { try { const f = JSON.parse(S.k26_fee_table); if (f.adult &
   return { child_max_age:12, home_country:'Zambia', adult:{ home:'K500', away:'USD 25' }, child:{ home:'K250', away:'USD 10' } }; })();
 const VENUE_SHORT = String(S.k26_where).split(',')[0].trim();
 const MAPS = `https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(VENUE_SHORT + ', Lusaka, Zambia')}`;
+/* Koi 26' as a schema.org Event (k26.html), so Google can show it for searches like "Christian conference Lusaka December".
+   Built from the same live settings as the countdown: dates from k26_when, venue from k26_where, prices from k26_fee_table.
+   Dates only (no times) because the opening session time is not announced yet. */
+const K26_EVENT = (() => {
+  const iso = d => `${K26.y}-${String(K26.month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  const parts = String(S.k26_where).split(',').map(x => x.trim()).filter(Boolean);
+  const street = parts.slice(1).filter(x => !/^(lusaka|zambia)$/i.test(x)).join(', ');
+  const price = s => { const k = String(s).match(/^K\s*([\d,.]+)$/i), u = String(s).match(/^USD\s*([\d,.]+)$/i); return k ? ['ZMW', k[1].replace(/,/g, '')] : u ? ['USD', u[1].replace(/,/g, '')] : null; };
+  const offer = (label, s) => { const p = price(s); return p && { '@type':'Offer', name:label, price:p[1], priceCurrency:p[0], url:ORIGIN + '/register', availability:'https://schema.org/InStock' }; };
+  const kid = FEES.child_max_age || 12, home = FEES.home_country || 'Zambia';
+  const offers = [offer(`Adult delegate, ${home} (${kid + 1} and over)`, FEES.adult.home), offer(`Child delegate, ${home} (${kid} and below)`, FEES.child.home),
+    offer(`Adult delegate, international (${kid + 1} and over)`, FEES.adult.away), offer(`Child delegate, international (${kid} and below)`, FEES.child.away)].filter(Boolean);
+  return { '@context':'https://schema.org', '@type':'Event', name:`Koi 26': ${S.k26_theme} (Koinonia Experience 2026)`, url:ORIGIN + '/k26',
+    description:`The annual family conference of Christ Connect Family Church Zambia: ${['one', 'two', 'three', 'four', 'five'][K26.days - 1] || K26.days} days of worship, the Word and fellowship in Lusaka under the theme ${S.k26_theme}. Members, friends and first-time guests are welcome.`,
+    startDate:iso(K26.a), endDate:iso(K26.b), eventStatus:'https://schema.org/EventScheduled', eventAttendanceMode:'https://schema.org/OfflineEventAttendanceMode',
+    location:{ '@type':'Place', name:parts[0] || 'Lusaka', address:{ '@type':'PostalAddress', ...(street ? { streetAddress:street } : {}), addressLocality:'Lusaka', addressCountry:'ZM' } },
+    image:[ORIGIN + '/assets/img/k26-official-cream-v2-1280.webp'],
+    organizer:{ '@type':'Organization', name:'Christ Connect Family Church Zambia', url:'https://ccfczambia.org/' },
+    performer:{ '@type':'MusicGroup', name:'Worship Connect', url:'https://worship.ccfczambia.org/' },
+    superEvent:{ '@type':'EventSeries', name:'Koinonia Experience', url:ORIGIN + '/' },
+    ...(offers.length ? { offers } : {}) };
+})();
 const KJV = r => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(r)}&amp;version=KJV`;
 const K26_VERSES = [['Psalm 51:10-12', 'Create in me a clean heart, O God; and renew a right spirit within me.'],
   ['Isaiah 43:18-19', 'Behold, I will do a new thing; now it shall spring forth; shall ye not know it?'],
@@ -92,10 +114,10 @@ const PHOTO_EDS = Object.values(EDITIONS).filter(e => e.photos && e.photos.list.
 
 const KSEO = {
   'register.html': ["Register for Koi 26 | Koinonia Experience", "Register for Koi 26, the Koinonia family conference in Lusaka. Share your contact details, attendance days and conference needs with the church office."],
-  'index.html': ["Koinonia Experience | Family Conference in Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
+  'index.html': ["Koinonia Experience | Christian Family Conference, Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
   'k24.html': ["Koi 24' | Where Koinonia Began | Koinonia Experience", "Koi 24', the first Koinonia Experience, gathered the CCFC family at Ibex Hill, Lusaka, on 21 and 22 December 2024 for worship, the Word and testimonies."],
   'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
-  'k26.html': ["Koi 26' | The RESET | 18 to 20 December 2026", "Koi 26', The RESET: 18 to 20 December 2026 in Lusaka. The countdown, venue, delegate fees, theme scriptures and registration for Koinonia Experience 2026."],
+  'k26.html': ["Koi 26' | Christian Family Conference, Lusaka, 18 to 20 Dec", "Koi 26', The RESET: 18 to 20 December 2026 in Lusaka. The countdown, venue, delegate fees, theme scriptures and registration for Koinonia Experience 2026."],
   'k25-photos.html': ["Koi 25' Photos | View and Download | Koinonia", "View and download free photos from Koi 25', Going Deep and Multiplying, the Koinonia Experience family conference in Lusaka, December 2025."],
   'k24-photos.html': ["Koi 24' Photos | View and Download | Koinonia", "View and download free photos from Koi 24', the first Koinonia Experience family conference, held at Ibex Hill in Lusaka in December 2024."],
   'updates.html': ["Koinonia Updates | News, Videos and Photos", "Announcements, speaker news, videos and photos from every Koinonia Experience conference, posted by the Christ Connect Family Church media team."],
@@ -118,7 +140,7 @@ function layout(p){
 ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSEO[p.file][1], noindex: p.noindex, ogImage: ['index.html','k26.html','register.html'].includes(p.file) ? 'assets/img/k26-official-cream-v2-1280.webp' : 'assets/og/' + (CARD[p.file] || 'default') + '.jpg', ogAlt: (t => t === 'Koinonia Experience' ? t + ' family conference' : t + ', Koinonia Experience family conference')(KSEO[p.file][0].split(' | ')[0]), iconV: ICONV, siteName: 'Koinonia Experience', themeColor: '#0A203D', preloadImage: p.file === 'k26.html' ? '/assets/img/k26-official-cream-v2-1280.webp' : p.file === 'index.html' ? '/assets/img/hero-wc-poster.webp' : null })}
 <link rel="preload" href="assets/fonts/BricolageGrotesque-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css?v=${V.fonts}"><link rel="stylesheet" href="css/site.css?v=${V.css}"><link rel="stylesheet" href="css/core.css?v=${V.core}"><link rel="stylesheet" href="css/minimal.css?v=${V.minimal}">
-<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.jsonld ? `<script type="application/ld+json">${JSON.stringify(p.jsonld)}</script>` : ''}
+<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'EventSeries',name:'Koinonia Experience',url:ORIGIN + '/',description:'The annual December family conference of Christ Connect Family Church in Lusaka, Zambia.',organizer:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'},location:{'@type':'Place',name:'Lusaka, Zambia',address:{'@type':'PostalAddress',addressLocality:'Lusaka',addressCountry:'ZM'}}})}</script>${p.file === 'index.html' ? `<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'WebSite',name:'Koinonia Experience',alternateName:['Koinonia','Koinonia Experience Lusaka'],url:ORIGIN + '/',publisher:{'@type':'Organization',name:'Christ Connect Family Church Zambia',url:'https://ccfczambia.org/'}})}</script>` : ''}${[].concat(p.jsonld || []).map(j => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('')}
 </head>
 <body${p.file === 'k26.html' ? ' class="k26-page"' : ''}>
 <a class="sr" href="#main">Skip to content</a>
@@ -261,7 +283,7 @@ ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wr
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
 <section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos ${ICON.arrow}</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
 ${e.status==='next' ? k26Faq() : ''}
-${closeBlock()}`, ...(e.status==='next' ? { jsonld: { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: K26FAQ.map(([q, a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) } } : {}) };
+${closeBlock()}`, ...(e.status==='next' ? { jsonld: [{ '@context':'https://schema.org', '@type':'FAQPage', mainEntity: K26FAQ.map(([q, a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) }, ...(e.key === 'k26' ? [K26_EVENT] : [])] } : {}) };
 }
 
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
