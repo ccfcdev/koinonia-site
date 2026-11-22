@@ -12,6 +12,20 @@ function loadSettings(defaults){ try { const out = require('child_process').exec
 const S = loadSettings({ k26_when:'18 to 20 December 2026', k26_where:'Lusaka, Zambia', k26_theme:'The RESET', k26_fee:"Announced with the dates. Koi 25' was K200 for Zambian delegates and USD 10 for international delegates.", k26_blurb:'The next gathering of the family. Join us in Lusaka from 18 to 20 December 2026 under the theme The RESET. Tell us you are coming and we will keep you posted.' });
 const set = (k, cls='') => `<span data-setting="${k}"${cls ? ' class="' + cls + '"' : ''}>${S[k]}</span>`;
 const WA = '260573762913', MAIN = 'https://ccfczambia.org';   // MAIN: the church's main domain once registered
+/* Koi 26' dates, fees and venue for the countdown, the FAQ and koi26.ics (see k26Full below) */
+const K_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'], K_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const K26 = (() => { const m = String(S.k26_when).match(/(\d{1,2})\s*(?:to|-|and)\s*(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/), mo = m ? K_MONTHS.findIndex(x => x.toLowerCase() === m[3].toLowerCase()) : -1;
+  if (mo < 0) console.warn(`k26_when "${S.k26_when}" could not be read as dates; the countdown falls back to 18 to 20 December 2026`);
+  const [a, b, y, month] = mo >= 0 ? [+m[1], +m[2], +m[4], mo] : [18, 20, 2026, 11], day = d => new Date(Date.UTC(y, month, d)), at = d => new Date(Date.UTC(y, month, d) - 7200e3).toISOString();
+  return { a, b, y, month, start: at(a), end: at(b + 1), days: b - a + 1, span: `${K_DAYS[day(a).getUTCDay()]} to ${K_DAYS[day(b).getUTCDay()]}` }; })();
+const FEES = (() => { try { const f = JSON.parse(S.k26_fee_table); if (f.adult && f.child) return f; } catch (e) {}
+  return { child_max_age:12, home_country:'Zambia', adult:{ home:'K500', away:'USD 25' }, child:{ home:'K250', away:'USD 10' } }; })();
+const VENUE_SHORT = String(S.k26_where).split(',')[0].trim();
+const MAPS = `https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(VENUE_SHORT + ', Lusaka, Zambia')}`;
+const KJV = r => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(r)}&amp;version=KJV`;
+const K26_VERSES = [['Psalm 51:10-12', 'Create in me a clean heart, O God; and renew a right spirit within me.'],
+  ['Isaiah 43:18-19', 'Behold, I will do a new thing; now it shall spring forth; shall ye not know it?'],
+  ['2 Corinthians 5:17', 'If any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.']];
 const AGES = ['0-6 Years Old', '7-12 Years Old', '13-15 Years Old', '16-20 Years Old', '21-30 Years Old', '31-40 Years Old', '41-50 Years Old', '51-60 Years Old', '61 Years and Older'];
 const ICON = {
   back: '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
@@ -81,7 +95,7 @@ const KSEO = {
   'index.html': ["Koinonia Experience | Family Conference in Lusaka", "Koinonia Experience is the annual December family conference of Christ Connect Family Church in Lusaka. Register for Koi 26' and watch Koi 25' worship."],
   'k24.html': ["Koi 24' | Where Koinonia Began | Koinonia Experience", "Koi 24', the first Koinonia Experience, gathered the CCFC family at Ibex Hill, Lusaka, on 21 and 22 December 2024 for worship, the Word and testimonies."],
   'k25.html': ["Koi 25' | Going Deep and Multiplying | Koinonia", "Koi 25', Going Deep and Multiplying, 19 to 21 December 2025 in Lusaka. Watch the Worship Connect sets, meet the five speakers and see the photos."],
-  'k26.html': ["Koi 26' | The RESET | 18 to 20 December 2026", "Koinonia Experience 2026: The RESET. Join the family in Lusaka, 18 to 20 December 2026. View the official banner and register for Koi 26'."],
+  'k26.html': ["Koi 26' | The RESET | 18 to 20 December 2026", "Koi 26', The RESET: 18 to 20 December 2026 in Lusaka. The countdown, venue, delegate fees, theme scriptures and registration for Koinonia Experience 2026."],
   'k25-photos.html': ["Koi 25' Photos | View and Download | Koinonia", "View and download free photos from Koi 25', Going Deep and Multiplying, the Koinonia Experience family conference in Lusaka, December 2025."],
   'k24-photos.html': ["Koi 24' Photos | View and Download | Koinonia", "View and download free photos from Koi 24', the first Koinonia Experience family conference, held at Ibex Hill in Lusaka in December 2024."],
   'updates.html': ["Koinonia Updates | News, Videos and Photos", "Announcements, speaker news, videos and photos from every Koinonia Experience conference, posted by the Christ Connect Family Church media team."],
@@ -143,11 +157,11 @@ const closeBlock = () => `<section class="close"><div class="bg">${img('worship-
 
 const K26FAQ = [
   ['Who can come to Koinonia?', "Everyone is welcome: members, friends and first-time guests from every CCFC church in Zambia, Zimbabwe, Malawi and the wider family."],
-  ["When and where is Koi 26?", "Koi 26 is in December 2026 in Lusaka. Its theme is The RESET, from Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17. The dates and venue are on the Koi 26 page."],
-  ['How much does it cost?', "The delegate fee is announced with the dates. For Koi 25 it was K200 for Zambian delegates and USD 10 for international delegates."],
+  ["When and where is Koi 26?", `Koi 26 runs from ${K26.span}, ${S.k26_when}, at ${S.k26_where}. Its theme is ${S.k26_theme}, from Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17.`],
+  ['How much does it cost?', `Delegates from ${FEES.home_country}: ${FEES.adult.home} for adults (${FEES.child_max_age + 1} and over) and ${FEES.child.home} for children (${FEES.child_max_age} and under). International delegates: ${FEES.adult.away} for adults and ${FEES.child.away} for children. Registration is confirmed once the fee is paid.`],
   ['Can I register my children?', "Yes. Koinonia is a family conference. Fill in the form for each child and choose their age range."],
   ['Can I take part by preaching, singing or performing?', "Yes. Choose Yes on the form and tell us what you would like to share. Slots are limited and the organisers will confirm."],
-  ['How do I know my registration went through?', "A thank-you message appears on the page as soon as you register. The team will then contact you with the dates and delegate rates."],
+  ['How do I know my registration went through?', "You get a registration number on the page straight away, and a confirmation email with the delegate fee that applies to you. The email confirms your registration, not payment."],
   ['Who do I ask if I have a question?', "WhatsApp the church office on +260 573 762 913, call +260 772 890 854, or email info@ccfczambia.org."],
 ];
 const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
@@ -171,12 +185,42 @@ const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) =>
   return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
 /* a scripture reference that opens the passage on Bible Gateway (NKJV) in a new tab */
 const vref = r => `<a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(r)}&amp;version=NKJV" target="_blank" rel="noopener">${r}</a>`;
+/* ---------- Koi 26' countdown (k26Full on the Koi 26' page, k26Compact in the home page's Coming up; js/site.js countdown())
+   Everything comes from the live Site text settings: the dates from k26_when, the venue from k26_where, the theme from
+   k26_theme and the fees from k26_fee_table. The office can change them without a deploy: core.js applySettings() updates
+   the [data-setting] text, site.js re-reads the dates every second and redraws the fee table when k26_fee_table changes.
+   The clock counts to midnight in Lusaka (UTC+2) on the opening day, then shows the day number, then a thank-you. */
+const k26Clock = () => `<div class="k26cd__clock" role="timer" aria-label="Time until Koi 26' begins" data-show="before" data-no-edit>${[['d','Days'],['h','Hours'],['m','Minutes'],['s','Seconds']].map(([k, l]) => `<span class="k26cd__unit"><b data-cd="${k}">00</b><small>${l}</small></span>`).join('')}</div>`;
+const k26Attrs = () => `data-countdown data-start="${K26.start}" data-end="${K26.end}" data-days="${K26.days}" data-phase="before"`;
+const k26Fees = () => `<table class="k26cd__fees" data-no-edit><thead><tr><th scope="col"><span class="sr-only">Delegates from</span></th><th scope="col">Adults<small data-fee="adult-age">${FEES.child_max_age + 1} and over</small></th><th scope="col">Children<small data-fee="child-age">${FEES.child_max_age} and under</small></th></tr></thead>
+<tbody><tr><th scope="row" data-fee="home-country">${FEES.home_country}</th><td data-fee="adult-home">${FEES.adult.home}</td><td data-fee="child-home">${FEES.child.home}</td></tr><tr><th scope="row">International</th><td data-fee="adult-away">${FEES.adult.away}</td><td data-fee="child-away">${FEES.child.away}</td></tr></tbody></table>
+<script type="application/json" data-setting="k26_fee_table">${JSON.stringify(FEES)}</script>`;
+const k26Compact = () => `<div class="k26cd k26cd--compact" ${k26Attrs()}><span class="k26cd__label"><span data-show="before">Koi 26' begins in</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Koi 26' has ended</span></span>${k26Clock()}</div>`;
+const k26Full = () => `<section class="k26cd k26cd--full" id="details" aria-labelledby="k26cd-title" ${k26Attrs()}><div class="wrap">
+  <div class="k26cd__top">
+    <div class="k26cd__head"><span class="k26cd__eyebrow">Koi 26' / The RESET</span>
+      <h2 id="k26cd-title"><span data-show="before">Counting down to The RESET</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Thank you for Koi 26'</span></h2>
+      <p class="k26cd__when">${set('k26_when')}<span class="k26cd__span" data-cd="span">${K26.span}, ${K26.days} days in Lusaka</span></p></div>
+    ${k26Clock()}
+    <p class="k26cd__now" data-show="live">Day <b data-cd="day">1</b> of ${K26.days}. Come as you are, and bring someone with you.</p>
+    <p class="k26cd__now" data-show="after">Thank you for coming. Photos and videos from Koi 26' will be on <a href="updates.html">Updates</a>.</p>
+  </div>
+  <div class="k26cd__grid">
+    <div class="k26cd__item"><b>Where</b><p>${set('k26_where')}</p><a class="k26cd__link" href="${MAPS}" target="_blank" rel="noopener">Get directions ${ICON.arrow}</a></div>
+    <div class="k26cd__item"><b>Delegate fees</b>${k26Fees()}<small>Zambia delegates include Lusaka-based and out-of-town participants travelling within Zambia. International delegates travel from outside Zambia. Registration is confirmed once your fee is paid.</small></div>
+    <div class="k26cd__item k26cd__item--theme"><b>The theme</b><p class="k26cd__theme">${set('k26_theme')}</p>
+      <ul class="k26cd__verses">${K26_VERSES.map(([r, q]) => `<li><q>${q}</q><a href="${KJV(r)}" target="_blank" rel="noopener">${r}</a></li>`).join('')}</ul></div>
+    <div class="k26cd__item"><b>Worship</b><p>Worship Connect, the CCFC Zambia praise and worship team, leads worship at Koi 26'.</p><a class="k26cd__link" href="https://worship.ccfczambia.org">Meet the team ${ICON.arrow}</a></div>
+    <div class="k26cd__item"><b>Who</b><p>Members, friends and first-time guests from every CCFC church, with their families.</p><small>Zambia, Zimbabwe, Malawi and the wider family. Register each child too.</small></div>
+  </div>
+  <div class="row k26cd__actions"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="koi26.ics" download>Add to calendar</a><a class="btn btn--ghost" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
+</div></section>`;
 const k26Banner = (eager=false) => img('k26-official-cream-v2', 'Official Koinonia 26 Experience banner with the CCFC logo, gold crescent, worshippers and Lusaka skyline. 18 to 20 December 2026.', '(min-width:1000px) 65vw, 100vw', eager);
 const k26Hero = (upcoming=false) => `<section class="k26-banner ${upcoming ? 'k26-banner--upcoming' : ''}" aria-labelledby="k26-title" ${upcoming ? 'id="coming-up"' : ''}><div class="wrap k26-banner__grid">
   <div class="k26-banner__intro"><span class="k26-banner__eyebrow">${upcoming ? 'Coming up / December 2026' : 'Christ Connect Family Church presents'}</span><${upcoming ? 'h2' : 'h1'} id="k26-title">Koinonia <em>26'</em><span class="script">Experience</span></${upcoming ? 'h2' : 'h1'}></div>
   <a class="k26-banner__art" href="assets/img/k26-official-cream-v2.png" aria-label="Open the official Koinonia 26 banner">${k26Banner(!upcoming)}</a>
   <div class="k26-banner__copy"><div><span class="k26-banner__eyebrow">The 2026 theme</span><h2>The <em>RESET</em></h2><p>Deep in Christ. One in fellowship. Sent to multiply.</p></div>
-  <div class="k26-banner__booking"><p class="k26-banner__date">18 to 20 December 2026<br><span>Lusaka, Zambia</span></p><div class="row"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#details">Conference details</a></div></div></div>
+  <div class="k26-banner__booking">${upcoming ? k26Compact() : ''}<p class="k26-banner__date">${set('k26_when')}<br><span>Lusaka, Zambia</span></p><div class="row"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#details">Conference details</a></div></div></div>
 </div></section>`;
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.verses ? ['Theme scriptures', e.verses.map(vref).join(', ')] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
@@ -195,10 +239,10 @@ function editionPage(e){
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
     body:`
 ${heroMarkup}
-<section class="sec" id="details"><div class="wrap"><h2 data-split>The details</h2><div class="details mt-2" data-rv-stagger>
+${e.status === 'next' ? k26Full() : `<section class="sec" id="details"><div class="wrap"><h2 data-split>The details</h2><div class="details mt-2" data-rv-stagger>
   ${metaRows.map(([k,v]) => `<div class="detail"><b>${k}</b><p>${v}</p></div>`).join('')}
   <div class="detail"><b>Who</b><p>Members, friends and first-time guests from every CCFC church<small>Zambia, Zimbabwe, Malawi and the wider family</small></p></div>
-</div></div></section>
+</div></div></section>`}
 ${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
 <section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
 <section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos ${ICON.arrow}</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
@@ -319,6 +363,11 @@ for (const p of pages){ SEO.lint(p, KSEO[p.file][0], KSEO[p.file][1]); const htm
 SEO.writeContentMap(__dirname, CONTENT_MAP, PAGE_CONTENT);
 fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), SEO.sitemapXml(ORIGIN, SEO.lastmods(__dirname, pages.map(p => Object.assign({ priority: { 'k26.html':'0.9', 'k25.html':'0.8', 'k25-photos.html':'0.7', 'k24-photos.html':'0.6' }[p.file], changefreq: ['index.html','updates.html','k26.html'].includes(p.file) ? 'weekly' : 'monthly' }, p)))));
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), SEO.robotsTxt(ORIGIN));
+{ const ymd = d => new Date(Date.UTC(K26.y, K26.month, d)).toISOString().slice(0, 10).replace(/-/g, ''), ics = s => String(s).replace(/[\;,]/g, m => '\\' + m);
+  fs.writeFileSync(path.join(__dirname, 'koi26.ics'), ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//CCFC Zambia//Koinonia Experience//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
+    'UID:koi26@koinonia.ccfczambia.org', 'DTSTAMP:20261122T000000Z', `DTSTART;VALUE=DATE:${ymd(K26.a)}`, `DTEND;VALUE=DATE:${ymd(K26.b + 1)}`,
+    `SUMMARY:${ics(`Koi 26': ${S.k26_theme} (Koinonia Experience)`)}`, `LOCATION:${ics(S.k26_where)}`,
+    `DESCRIPTION:${ics(`Koinonia Experience 2026, the CCFC family conference. Theme: ${S.k26_theme}. Register at ${ORIGIN}/register`)}`, `URL:${ORIGIN}/k26`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n') + '\r\n'); }
 fs.writeFileSync(path.join(__dirname, 'site.webmanifest'), SEO.manifestJson({ name: 'Koinonia Experience', short: 'Koinonia', themeColor: '#0A203D', background: '#0A203D' }).replaceAll('?v=3', '?v=' + ICONV));
 console.log('built', pages.length, 'pages', V);
 
