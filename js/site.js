@@ -86,25 +86,32 @@ function lightbox(){ const tr = $$('[data-lb]'); if (!tr.length) return; const l
     if (d.dy + project(velocity(d.h)) > 160) close(cur); else move(cur, 'none', () => { anim.cancel(); anim = null; }); };
   lb.addEventListener('pointerup', end); lb.addEventListener('pointercancel', end);
   const v = Q.get('lb'); if (v){ const t = tr.find(x => x.dataset.lb === v); if (t) open(v, t.dataset.title); } }
-/* Koi 26' countdown (build.js k26Full / k26Compact). Counts to midnight in Lusaka (UTC+2) on the opening day, then shows
-   the day number while the conference is on, then a thank-you (data-phase before / live / after; CSS shows the matching
-   [data-show]). The dates follow the live k26_when text once core.js has applied Site text, so the office can move them
-   without a deploy; data-start / data-end are the build's fallback. The fee table follows the live k26_fee_table JSON. */
+/* Koi 26' countdown (build.js k26Full / k26Compact). Counts to midnight in Lusaka (UTC+2) on the opening day; while the
+   conference runs it reads Day One, Day Two, Day Three; from midnight after the last day it says the conference has ended
+   and counts down to the next edition: the weekend before Christmas next year (Friday to Sunday, the last Sunday on or
+   before 24 December). data-phase is before / live / after; CSS shows the [data-show] elements that list the phase.
+   The dates follow the live k26_when text once core.js has applied Site text, so the office can move them without a
+   deploy; data-start / data-end are the build's fallback. The fee table follows the live k26_fee_table JSON. */
 const K_MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'], K_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function k26Range(text){ const m = String(text || '').toLowerCase().match(/(\d{1,2})\s*(?:to|-|–|and)\s*(\d{1,2})\s+([a-z]+)\s+(\d{4})/); if (!m) return null;
   const mo = K_MONTHS.indexOf(m[3]), a = +m[1], b = +m[2], y = +m[4]; if (mo < 0 || b < a) return null;
   const at = d => Date.UTC(y, mo, d) - 7200e3, wd = d => K_DAYS[new Date(Date.UTC(y, mo, d)).getUTCDay()];
   return { start: at(a), end: at(b + 1), days: b - a + 1, span: `${wd(a)} to ${wd(b)}, ${b - a + 1} days in Lusaka` }; }
+const K_WORDS = ['One','Two','Three','Four','Five','Six','Seven'];
+function k26Next(start){ const y = new Date(start + 7200e3).getUTCFullYear() + 1, sun = 24 - new Date(Date.UTC(y, 11, 24)).getUTCDay();
+  return { start: Date.UTC(y, 11, sun - 2) - 7200e3, name: `Koi ${String(y % 100).padStart(2, '0')}'`, when: `Friday ${sun - 2} to Sunday ${sun} December ${y}` }; }
 function countdown(){ const els = $$('[data-countdown]'); if (!els.length) return;
   const pad = v => String(v).padStart(2, '0');
+  const clock = (put, ms, p = '') => { const s = Math.max(0, Math.floor(ms / 1000)); put(p + 'd', pad(Math.floor(s / 86400))); put(p + 'h', pad(Math.floor(s % 86400 / 3600))); put(p + 'm', pad(Math.floor(s % 3600 / 60))); put(p + 's', pad(s % 60)); };
   const tick = () => { const w = $('[data-setting="k26_when"]'), r = w && k26Range(w.textContent), now = Date.now();
     els.forEach(el => { const start = r ? r.start : Date.parse(el.dataset.start), end = r ? r.end : Date.parse(el.dataset.end), days = r ? r.days : (+el.dataset.days || 3);
       if (isNaN(start) || isNaN(end)) return;
       const phase = now < start ? 'before' : now < end ? 'live' : 'after'; if (el.dataset.phase !== phase) el.dataset.phase = phase;
       const put = (k, v) => { const e = $(`[data-cd="${k}"]`, el); if (e && e.textContent !== String(v)) e.textContent = v; };
       if (r) put('span', r.span);
-      if (phase === 'before'){ const s = Math.floor((start - now) / 1000); put('d', pad(Math.floor(s / 86400))); put('h', pad(Math.floor(s % 86400 / 3600))); put('m', pad(Math.floor(s % 3600 / 60))); put('s', pad(s % 60)); }
-      else if (phase === 'live') put('day', Math.min(days, Math.floor((now - start) / 864e5) + 1)); }); };
+      if (phase === 'before') clock(put, start - now);
+      else if (phase === 'live'){ const day = Math.min(days, Math.floor((now - start) / 864e5) + 1); put('dayword', K_WORDS[day - 1] || day); put('daystotal', (K_WORDS[days - 1] || String(days)).toLowerCase()); }
+      else { const n = k26Next(start); put('next-name', n.name); put('next-when', n.when); clock(put, n.start - now); clock(put, n.start - now, 'n'); } }); };
   tick(); if (!IS_CAP) setInterval(tick, 1000);
   const src = $('script[data-setting="k26_fee_table"]'); if (!src) return;
   const fees = () => { let f; try { f = JSON.parse(src.textContent); } catch (e){ return; } if (!f || !f.adult || !f.child) return;

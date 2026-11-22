@@ -122,7 +122,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .theme-toggle svg{width:20px;height:20px}.theme-toggle__sun{display:none}
 [data-theme=dark] .theme-toggle__sun{display:block}[data-theme=dark] .theme-toggle__moon{display:none}
 .theme-toggle:hover{background:var(--soft)}
-:root[data-theme=dark],:root[data-theme=dark] .k26-page{color-scheme:dark;--ground:#0a203d;--ground-2:#0d2748;--panel:#10305a;--paper-2:#0d2748;--ink:#ffffff;--ink-2:#d3dfed;--ink-3:#a8bad0;--white:#ffffff;--head:#fff;--navy:#0a203d;--muted:#d3dfed;--faint:#a8bad0;--line:#ffffff29;--soft:#ffffff0d;--gold:#d9b45a;--gold-2:#d9b45a;--orange:#fb7624;--orange-2:#ff9a55;--coral:#fb7624;--on-accent:#0a203d}
+:root[data-theme=dark],:root[data-theme=dark] .k26-page{color-scheme:dark;--ground:#080d15;--ground-2:#0d1420;--panel:#121b2a;--paper-2:#0d1420;--ink:#f1efe9;--ink-2:#c5cad2;--ink-3:#9aa4b2;--white:#f1efe9;--head:#f1efe9;--navy:#0a203d;--muted:#aab2be;--faint:#8d97a5;--line:#f1efe91f;--soft:#f1efe90d;--gold:#d9b45a;--gold-2:#d9b45a;--orange:#fb7624;--orange-2:#ff9a55;--coral:#fb7624;--on-accent:#0a203d}
 [data-theme=dark] body,[data-theme=dark] body.k26-page{background:var(--ground);color:var(--ink)}
 [data-theme=dark] .nav,[data-theme=dark] .nav.is-solid{background:#0a203df5;color:#fff;--line:#ffffff29;--gold-2:#d9b45a}
 [data-theme=dark] .k26-banner{background:var(--ground-2);color:#fff;--ink:#fff;--paper:#0d2748;--accent:#fb7624}
@@ -151,7 +151,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 
 /* ---------- Koi 26' countdown: build.js k26Full (Koi 26' page, #details) and k26Compact (home page, Coming up);
    js/site.js countdown() sets data-phase before / live / after and fills [data-cd] and [data-fee] ---------- */
-[data-countdown]:not([data-phase=before]) [data-show=before],[data-countdown]:not([data-phase=live]) [data-show=live],[data-countdown]:not([data-phase=after]) [data-show=after]{display:none}
+[data-countdown][data-phase=before] [data-show]:not([data-show~=before]),[data-countdown][data-phase=live] [data-show]:not([data-show~=live]),[data-countdown][data-phase=after] [data-show]:not([data-show~=after]){display:none}
 .k26cd__clock{display:flex;font-variant-numeric:tabular-nums}
 .k26cd__unit{display:grid;align-content:start;min-width:0}
 .k26cd__unit b{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;letter-spacing:-.04em;line-height:.95}
@@ -216,3 +216,95 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 [data-theme=dark] .k26cd--compact .k26cd__unit b{color:#fff}
 [data-theme=dark] .k26cd--compact .k26cd__unit small{color:var(--muted)}
 @media(prefers-reduced-motion:reduce){.k26cd__link{transition:none}}
+
+/* ---------- UI refresh (22 November 2026): night palette for dark mode, poster edition cards, quieter headlines,
+   bigger stats, rounded media and a fuller footer. Every colour is the brand kit's own or a shade of it: navy #0A203D,
+   orange #FB7624, gold #C9A54A / #D9B45A, stone #EEECE6, fellowship blue #013E87. The night ground is the darkest
+   shade of the navy; navy itself is kept for the feature bands (countdown, pillars, stats, closing call). ---------- */
+:root{--band:#082d60;--date:#a8440a;--radius-media:14px}
+.eyebrow{color:var(--gold);letter-spacing:.16em}
+.pillars .eyebrow{color:#ffd58f}
+.pillars h2{max-width:22ch}
+.video-hero h1 em{color:inherit}
+
+.eds2{display:grid;gap:clamp(32px,3.4vw,44px)}
+@media(min-width:760px){.eds2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1100px){.eds2{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ed2{display:grid;gap:20px;align-content:start;color:var(--ink);text-decoration:none}
+.ed2__media{position:relative;aspect-ratio:16/10;border-radius:var(--radius-media);overflow:hidden;background:var(--ground-2)}
+.ed2__media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.ed2:hover .ed2__media img{transform:scale(1.03)}
+.ed2__media .pill{position:absolute;top:14px;right:14px;left:auto;margin:0}
+.ed2__media .pill:not(.pill--orange){background:#0a203dd9;color:#fff}
+.ed2__body{display:grid;gap:6px}
+.ed2__when{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--date)}
+.ed2 .ed2__k{font-size:clamp(2rem,3vw,2.6rem);margin:2px 0 0;letter-spacing:-.04em;max-width:none}
+.ed2__t{color:var(--ink);font-weight:500;margin:0}
+.ed2__where{color:var(--muted);font-size:.92rem;margin:0}
+.ed2 .link{margin-top:10px;color:var(--ink);font-weight:600}
+.ed2:hover .link{color:var(--date)}
+.ed2:focus-visible{outline:2px solid var(--gold);outline-offset:6px;border-radius:var(--radius-media)}
+
+.facts{background:var(--band);border:0;gap:0;padding:clamp(44px,6vw,72px) max(var(--gutter,24px),calc((100vw - var(--maxw)) / 2));grid-template-columns:repeat(2,minmax(0,1fr));row-gap:32px}
+@media(min-width:900px){.facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fact{background:transparent;padding:4px 24px;border-left:1px solid #ffffff26;gap:12px;align-content:start}
+.fact:first-child{border-left:0;padding-left:0}
+@media(max-width:899px){.fact:nth-child(odd){border-left:0;padding-left:0}}
+.fact b{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(3rem,5.4vw,4.75rem);letter-spacing:-.045em;line-height:1;color:#fff}
+.fact span{color:#d3dfed;font-size:.95rem;max-width:22ch}
+
+.vcard{border-radius:var(--radius-media);border-color:var(--line)}
+.spk .ph{border-radius:12px}
+.k26-banner__art{border-radius:var(--radius-media);overflow:hidden}
+
+.foot{padding:clamp(56px,7vw,88px) 0 28px;background:var(--ground-2);border-top:1px solid var(--line);font-size:.93rem}
+.foot .wrap{display:block}
+.foot__top{display:grid;gap:40px;padding-bottom:40px;border-bottom:1px solid var(--line)}
+@media(min-width:900px){.foot__top{grid-template-columns:minmax(0,1.1fr) minmax(0,2fr);gap:72px}}
+.foot__brand{display:grid;gap:14px;align-content:start;max-width:42ch}
+.foot__brand .klogo--foot{height:40px;width:auto}
+.foot__brand .foot__tag{width:auto;margin:6px 0 0;font-family:var(--font-body);font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.foot__brand p{margin:0;color:var(--muted)}
+.foot__cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+@media(min-width:600px){.foot__cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.foot__cols div{display:grid;gap:10px;align-content:start}
+.foot .foot__h{font-family:var(--font-body);font-size:.72rem;font-weight:700;letter-spacing:.15em;line-height:1.4;text-transform:uppercase;color:var(--ink);margin:0 0 4px;max-width:none}
+.foot__cols a{color:var(--muted);text-decoration:none;justify-self:start}
+.foot__cols a:hover{color:var(--ink)}
+.foot .legal{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-top:24px;color:var(--faint)}
+
+.k26cd__day{display:grid;gap:.6rem;justify-items:start}
+.k26cd__day b{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(3.4rem,8vw,6.5rem);letter-spacing:-.045em;line-height:.95;color:#fff}
+.k26cd__day small{color:var(--muted);font-size:1rem;line-height:1.5;max-width:30ch}
+@media(min-width:1100px){.k26cd__day{justify-items:end;text-align:right}}
+.k26cd__next{display:grid;gap:clamp(24px,4vw,40px);align-items:end;padding-top:clamp(36px,5vw,56px)}
+.k26cd__next h3{color:#fff;font-size:clamp(1.9rem,3.6vw,3rem);letter-spacing:-.035em;margin:.6rem 0 .9rem}
+@media(min-width:1100px){.k26cd__next{grid-template-columns:minmax(0,1fr) auto}}
+.k26cd__when a{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.k26cd__daybig{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(2.6rem,5vw,3.6rem);letter-spacing:-.04em;line-height:1;color:var(--ink);margin:0}
+
+/* night palette (dark mode) */
+[data-theme=dark]{--band:#0a203d;--date:#ff9a55}
+[data-theme=dark] .nav,[data-theme=dark] .nav.is-solid{background:#080d15eb;border-bottom-color:var(--line)}
+[data-theme=dark] .video-hero,[data-theme=dark] .video-hero>.video-hero__frame{background:#080d15}
+[data-theme=dark] .video-hero__frame::after{background:linear-gradient(180deg,rgba(8,13,21,.5),rgba(8,13,21,.72) 60%,rgba(8,13,21,.94))}
+[data-theme=dark] .video-hero__toggle{background:#080d1599}
+[data-theme=dark] .k26-banner{--paper:#0d1420}
+[data-theme=dark] .pillars,[data-theme=dark] .close,[data-theme=dark] .reg__aside,[data-theme=dark] .mq--b{background:var(--band)}
+[data-theme=dark] .purpose{background:var(--ground-2)}
+[data-theme=dark] .k26cd--full{background:var(--band);border-block:1px solid var(--line)}
+[data-theme=dark] .ed2__media .pill:not(.pill--orange){background:#080d15d9}
+[data-theme=dark] .foot{background:#060a11}
+[data-theme=dark] .k26-page .sec h2,[data-theme=dark] .k26-page .detail p,[data-theme=dark] .k26-page .kfaq__item summary{color:var(--ink)}
+[data-theme=dark] .field input,[data-theme=dark] .field textarea,[data-theme=dark] .field select{background:#0d1420;border-color:#6b7484;color:var(--ink)}
+[data-theme=dark] .field input:focus,[data-theme=dark] .field textarea:focus,[data-theme=dark] .field select:focus{background:#121b2a;border-color:#d9b45a;box-shadow:0 0 0 3px #d9b45a26}
+[data-theme=dark] .reg__choices label{background:#0d1420;border-color:#6b7484;color:var(--ink)}
+[data-theme=dark] .reg__choices label::before{background:#0d1420;border-color:#8d97a5}
+[data-theme=dark] .reg__choices label:has(input:checked){background:#0a203d;border-color:#d9b45a;color:var(--ink)}
+[data-theme=dark] .reg__choices label:has(input:checked)::before{background:#d9b45a;border-color:#d9b45a;box-shadow:inset 0 0 0 4px #0a203d}
+[data-theme=dark] .reg__choices label:has(input:focus-visible){outline-color:#d9b45a}
+[data-theme=dark] .reg__sections a{background:var(--panel);color:var(--ink)}
+[data-theme=dark] .reg__sections a:hover{background:#172235}
+[data-theme=dark] .reg__sections a span,[data-theme=dark] .reg__step legend i{background:#0a203d;color:#ffd58f}
+[data-theme=dark] .csel__btn{background:#0d1420!important;border-color:#6b7484!important;color:var(--ink)}
+@media(prefers-reduced-motion:reduce){.ed2__media img{transition:none}}
