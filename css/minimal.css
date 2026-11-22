@@ -308,3 +308,19 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 [data-theme=dark] .reg__sections a span,[data-theme=dark] .reg__step legend i{background:#0a203d;color:#ffd58f}
 [data-theme=dark] .csel__btn{background:#0d1420!important;border-color:#6b7484!important;color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.ed2__media img{transition:none}}
+
+/* ---------- Coming up (home page, light mode): the official Koi 26' poster bleeds into the page. The section takes the
+   poster's own paper colour (sampled from its edges: #eee8e0 top, #e4dacf sides, #e9dccd bottom), the poster loses its
+   frame and runs edge to edge (up to 1680px), and its edges feather into the paper so it reads as part of the page,
+   not a picture placed on it. The feather stops short of the CFC cross (4.7% down) and the tagline (94% down).
+   Dark mode keeps the framed poster: a cream poster cannot blend into a night ground. ---------- */
+:root:not([data-theme=dark]) .k26-banner--upcoming{background:#efe8df;border-block-color:transparent;overflow-x:clip}
+:root:not([data-theme=dark]) .k26-banner--upcoming .k26-banner__intro{border-color:#d8cab8}
+:root:not([data-theme=dark]) .k26-banner--upcoming .k26-banner__art{
+  width:min(100vw,1680px);max-width:none;margin-inline:calc(50% - min(50vw,840px));
+  border:0;border-radius:0;box-shadow:none;background:transparent;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 96%,transparent 100%),linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 96%,transparent 100%),linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%);
+  mask-composite:intersect}
+:root:not([data-theme=dark]) .k26-banner--upcoming .k26-cd--compact,:root:not([data-theme=dark]) .k26-banner--upcoming .k26cd--compact{border-color:#d8cab8}
