@@ -138,7 +138,12 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
   <div class="menu__bottom"><div class="menu__account"></div><a class="menu__wa" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
 </nav>
 <main id="main">${p.body}</main>
-<footer class="foot"><div class="wrap"><span class="foot__tag">Deep in Christ. One in Fellowship. Sent to Multiply.</span><span>Koinonia Experience is the annual family conference of Christ Connect Family Church.</span><span><a href="${MAIN}">CCFC Zambia</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></span><nav class="legal" aria-label="Legal"><a href="${MAIN}/privacy">Privacy</a><a href="${MAIN}/terms">Terms</a><a href="${MAIN}/faq">FAQ</a><button type="button" data-consent-open>Cookie settings</button><a href="${MAIN}/sitemap">Site map</a><span>&copy; <span class="year"></span> CCFC</span></nav></div></footer>
+<footer class="foot"><div class="wrap"><div class="foot__top">
+  <div class="foot__brand"><a href="index.html" aria-label="Koinonia Experience, home">${klogo('klogo--foot')}</a><p class="foot__tag">Deep in Christ. One in Fellowship. Sent to Multiply.</p><p>Koinonia Experience is the annual family conference of Christ Connect Family Church, every December in Lusaka.</p></div>
+  <nav class="foot__cols" aria-label="Footer"><div><h2 class="foot__h">Editions</h2><a href="k26.html">Koi 26'</a><a href="k25.html">Koi 25'</a><a href="k24.html">Koi 24'</a></div>
+    <div><h2 class="foot__h">Take part</h2><a href="register.html">Register</a><a href="updates.html">Updates</a><a href="k25-photos.html">Photos</a></div>
+    <div><h2 class="foot__h">Contact</h2><a href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a><a href="mailto:info@ccfczambia.org">info@ccfczambia.org</a><a href="${MAIN}">CCFC Zambia</a><a href="https://worship.ccfczambia.org">Worship Connect</a><a href="https://www.youtube.com/@christconnectfamilychurchz7833" target="_blank" rel="noopener">YouTube</a></div></nav>
+</div><nav class="legal" aria-label="Legal"><a href="${MAIN}/privacy">Privacy</a><a href="${MAIN}/terms">Terms</a><a href="${MAIN}/faq">FAQ</a><button type="button" data-consent-open>Cookie settings</button><a href="${MAIN}/sitemap">Site map</a><span>&copy; <span class="year"></span> CCFC</span></nav></div></footer>
 <script>window.CCFC_CONFIG={supabaseUrl:'https://dcqydtkjzgilyjnjyisb.supabase.co',supabaseKey:'sb_publishable_gPig-ePcoJIUnQ4fij6viw_ukAhlifp'}</script>
 <script src="js/site.js?v=${V.js}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
@@ -176,7 +181,7 @@ const PILLARS = [
   ['Biblical formation', 'Being equipped through the Word for life and ministry.', '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 18c-6-5-14-6-24-4v34c10-2 18-1 24 4 6-5 14-6 24-4V14c-10-2-18-1-24 4z"/><path d="M32 18v34"/></svg>'],
   ['Missional multiplication', "Sent out to make disciples and expand God's Kingdom.", '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="24"/><path d="M20 38c2-9 9-14 18-14h6"/><path d="M38 17l8 7-8 7"/></svg>'],
 ];
-const pillarsSection = () => `<section class="pillars"><div class="wrap"><div class="sec__head"><div><span class="eyebrow">What Koinonia is about</span><h2>Deep in Christ. <span class="script">One in Fellowship.</span> Sent to Multiply.</h2></div></div>
+const pillarsSection = () => `<section class="pillars"><div class="wrap"><div class="sec__head"><div><span class="eyebrow">What Koinonia is about</span><h2>Deep in Christ. One in Fellowship. Sent to Multiply.</h2></div></div>
   <div class="pillars__grid" data-rv-stagger>${PILLARS.map(([t, d, ic], i) => `<div class="pillar"><span class="pillar__n">0${i + 1}</span><span class="pillar__ico">${ic}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div></div></section>
 <section class="purpose"><div class="wrap purpose__grid"><div data-rv><span class="eyebrow">Our purpose</span><h2>To encounter Christ <span class="script">deeply,</span> live in fellowship genuinely, be formed biblically, and multiply faithfully.</h2></div>
   <div class="purpose__side" data-rv><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li><a href="https://www.biblegateway.com/passage/?search=Acts%202%3A42-47&amp;version=NKJV" target="_blank" rel="noopener">Acts 2:42-47</a></li><li><a href="https://www.biblegateway.com/passage/?search=1%20John%201%3A3&amp;version=NKJV" target="_blank" rel="noopener">1 John 1:3</a></li><li><a href="https://www.biblegateway.com/passage/?search=Philippians%202%3A1-2&amp;version=NKJV" target="_blank" rel="noopener">Philippians 2:1-2</a></li><li><a href="https://www.biblegateway.com/passage/?search=2%20Timothy%202%3A2&amp;version=NKJV" target="_blank" rel="noopener">2 Timothy 2:2</a></li><li><a href="https://www.biblegateway.com/passage/?search=John%2015%3A4-5&amp;version=NKJV" target="_blank" rel="noopener">John 15:4-5</a>, <a href="https://www.biblegateway.com/passage/?search=John%2015%3A16&amp;version=NKJV" target="_blank" rel="noopener">16</a></li></ul></div></div></div></section>`;
@@ -190,22 +195,31 @@ const vref = r => `<a href="https://www.biblegateway.com/passage/?search=${encod
    k26_theme and the fees from k26_fee_table. The office can change them without a deploy: core.js applySettings() updates
    the [data-setting] text, site.js re-reads the dates every second and redraws the fee table when k26_fee_table changes.
    The clock counts to midnight in Lusaka (UTC+2) on the opening day, then shows the day number, then a thank-you. */
-const k26Clock = () => `<div class="k26cd__clock" role="timer" aria-label="Time until Koi 26' begins" data-show="before" data-no-edit>${[['d','Days'],['h','Hours'],['m','Minutes'],['s','Seconds']].map(([k, l]) => `<span class="k26cd__unit"><b data-cd="${k}">00</b><small>${l}</small></span>`).join('')}</div>`;
+/* the edition after this one: the weekend before Christmas next year (Friday to Sunday, the last Sunday on or before 24 December) */
+const NEXT = (() => { const y = K26.y + 1, sun = 24 - new Date(Date.UTC(y, 11, 24)).getUTCDay();
+  return { name: `Koi ${String(y % 100).padStart(2, '0')}'`, when: `Friday ${sun - 2} to Sunday ${sun} December ${y}` }; })();
+const k26Clock = (show = 'before', p = '', label = "Time until Koi 26' begins") => `<div class="k26cd__clock" role="timer" aria-label="${label}" data-show="${show}" data-no-edit>${[['d','Days'],['h','Hours'],['m','Minutes'],['s','Seconds']].map(([k, l]) => `<span class="k26cd__unit"><b data-cd="${p}${k}">00</b><small>${l}</small></span>`).join('')}</div>`;
 const k26Attrs = () => `data-countdown data-start="${K26.start}" data-end="${K26.end}" data-days="${K26.days}" data-phase="before"`;
 const k26Fees = () => `<table class="k26cd__fees" data-no-edit><thead><tr><th scope="col"><span class="sr-only">Delegates from</span></th><th scope="col">Adults<small data-fee="adult-age">${FEES.child_max_age + 1} and over</small></th><th scope="col">Children<small data-fee="child-age">${FEES.child_max_age} and under</small></th></tr></thead>
 <tbody><tr><th scope="row" data-fee="home-country">${FEES.home_country}</th><td data-fee="adult-home">${FEES.adult.home}</td><td data-fee="child-home">${FEES.child.home}</td></tr><tr><th scope="row">International</th><td data-fee="adult-away">${FEES.adult.away}</td><td data-fee="child-away">${FEES.child.away}</td></tr></tbody></table>
 <script type="application/json" data-setting="k26_fee_table">${JSON.stringify(FEES)}</script>`;
-const k26Compact = () => `<div class="k26cd k26cd--compact" ${k26Attrs()}><span class="k26cd__label"><span data-show="before">Koi 26' begins in</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Koi 26' has ended</span></span>${k26Clock()}</div>`;
+const k26Compact = () => `<div class="k26cd k26cd--compact" ${k26Attrs()}><span class="k26cd__label"><span data-show="before">Koi 26' begins in</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Koi 26' has ended. <span data-cd="next-name">${NEXT.name}</span> begins in</span></span>
+  <p class="k26cd__daybig" data-show="live" data-no-edit>Day <span data-cd="dayword">One</span></p>${k26Clock('before after', '', 'Countdown')}</div>`;
 const k26Full = () => `<section class="k26cd k26cd--full" id="details" aria-labelledby="k26cd-title" ${k26Attrs()}><div class="wrap">
   <div class="k26cd__top">
     <div class="k26cd__head"><span class="k26cd__eyebrow">Koi 26' / The RESET</span>
-      <h2 id="k26cd-title"><span data-show="before">Counting down to The RESET</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Thank you for Koi 26'</span></h2>
-      <p class="k26cd__when">${set('k26_when')}<span class="k26cd__span" data-cd="span">${K26.span}, ${K26.days} days in Lusaka</span></p></div>
+      <h2 id="k26cd-title"><span data-show="before">Counting down to The RESET</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Koi 26' has ended</span></h2>
+      <p class="k26cd__when" data-show="before live">${set('k26_when')}<span class="k26cd__span" data-cd="span">${K26.span}, ${K26.days} days in Lusaka</span></p>
+      <p class="k26cd__when" data-show="after">Thank you for coming to The RESET.<span class="k26cd__span">Photos and videos from Koi 26' will be on <a href="updates.html">Updates</a>.</span></p></div>
     ${k26Clock()}
-    <p class="k26cd__now" data-show="live">Day <b data-cd="day">1</b> of ${K26.days}. Come as you are, and bring someone with you.</p>
-    <p class="k26cd__now" data-show="after">Thank you for coming. Photos and videos from Koi 26' will be on <a href="updates.html">Updates</a>.</p>
+    <div class="k26cd__day" data-show="live" data-no-edit><b>Day <span data-cd="dayword">One</span></b><small>of <span data-cd="daystotal">three</span>. Come as you are, and bring someone with you.</small></div>
   </div>
-  <div class="k26cd__grid">
+  <div class="k26cd__next" data-show="after">
+    <div><span class="k26cd__eyebrow">Next</span><h3><span data-cd="next-name">${NEXT.name}</span> begins in</h3>
+      <p class="k26cd__when"><span data-cd="next-when">${NEXT.when}</span><span class="k26cd__span">The weekend before Christmas, in Lusaka</span></p></div>
+    ${k26Clock('after', 'n', 'Time until the next Koinonia begins')}
+  </div>
+  <div class="k26cd__grid" data-show="before live">
     <div class="k26cd__item"><b>Where</b><p>${set('k26_where')}</p><a class="k26cd__link" href="${MAPS}" target="_blank" rel="noopener">Get directions ${ICON.arrow}</a></div>
     <div class="k26cd__item"><b>Delegate fees</b>${k26Fees()}<small>Zambia delegates include Lusaka-based and out-of-town participants travelling within Zambia. International delegates travel from outside Zambia. Registration is confirmed once your fee is paid.</small></div>
     <div class="k26cd__item k26cd__item--theme"><b>The theme</b><p class="k26cd__theme">${set('k26_theme')}</p>
@@ -213,7 +227,7 @@ const k26Full = () => `<section class="k26cd k26cd--full" id="details" aria-labe
     <div class="k26cd__item"><b>Worship</b><p>Worship Connect, the CCFC Zambia praise and worship team, leads worship at Koi 26'.</p><a class="k26cd__link" href="https://worship.ccfczambia.org">Meet the team ${ICON.arrow}</a></div>
     <div class="k26cd__item"><b>Who</b><p>Members, friends and first-time guests from every CCFC church, with their families.</p><small>Zambia, Zimbabwe, Malawi and the wider family. Register each child too.</small></div>
   </div>
-  <div class="row k26cd__actions"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="koi26.ics" download>Add to calendar</a><a class="btn btn--ghost" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
+  <div class="row k26cd__actions" data-show="before live"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="koi26.ics" download>Add to calendar</a><a class="btn btn--ghost" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
 </div></section>`;
 const k26Banner = (eager=false) => img('k26-official-cream-v2', 'Official Koinonia 26 Experience banner with the CCFC logo, gold crescent, worshippers and Lusaka skyline. 18 to 20 December 2026.', '(min-width:1000px) 65vw, 100vw', eager);
 const k26Hero = (upcoming=false) => `<section class="k26-banner ${upcoming ? 'k26-banner--upcoming' : ''}" aria-labelledby="k26-title" ${upcoming ? 'id="coming-up"' : ''}><div class="wrap k26-banner__grid">
@@ -262,12 +276,14 @@ const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia E
 </div></section>
 ${k26Hero(true)}
 ${pillarsSection()}
-<section class="sec"><div class="wrap"><h2 class="mb-2" data-split>Every Koinonia Experience</h2><div class="eds" data-rv-stagger>
-  ${['k24','k25','k26'].map(k => { const e = EDITIONS[k]; return `<a class="ed ${e.status==='next'?'ed--next':''}" href="${k}.html">${e.status==='next' ? `<div class="ed__official">${k26Banner()}</div>` : img(e.hero,'','(min-width:900px) 33vw, 100vw')}<span class="pill ${e.status==='next'?'pill--orange':''}">${e.status==='next'?'Next':'Past'}</span><div class="ed__k">Koi <em>${e.n}'</em></div><div class="ed__t">${e.theme ? `"${e.theme}"` : e.when}</div><p>${e.theme ? e.when + ' &middot; ' + e.where.split(',')[0] : e.blurb}</p><span class="link">Open ${k.toUpperCase()} ${ICON.arrow}</span></a>`; }).join('')}
+<section class="sec"><div class="wrap"><span class="eyebrow">Editions</span><h2 class="mb-2" data-split>Every Koinonia Experience</h2><div class="eds2">
+  ${['k26','k25','k24'].map(k => { const e = EDITIONS[k], next = e.status === 'next';
+    return `<a class="ed2${next ? ' ed2--next' : ''}" href="${k}.html"><div class="ed2__media">${next ? k26Banner() : img(e.hero, '', '(min-width:900px) 33vw, 100vw')}<span class="pill${next ? ' pill--orange' : ''}">${next ? 'Next' : 'Past'}</span></div>
+    <div class="ed2__body"><span class="ed2__when">${e.when}</span><h3 class="ed2__k">Koi ${e.n}'</h3><p class="ed2__t">${e.theme ? `"${e.theme}"` : 'Where Koinonia began'}</p><p class="ed2__where">${next ? VENUE_SHORT : e.where.split(',')[0]}</p><span class="link">${next ? 'Details and registration' : `Open Koi ${e.n}'`} ${ICON.arrow}</span></div></a>`; }).join('')}
 </div></div></section>
 <div class="facts" data-rv-stagger><div class="fact"><b>3</b><span>days together every December</span></div><div class="fact"><b>3+</b><span>nations in the room: Zambia, Zimbabwe, Malawi</span></div><div class="fact"><b>5</b><span>leaders taught at Koi 25'</span></div><div class="fact"><b>1</b><span>family under Christ</span></div></div>
-<section class="sec"><div class="wrap"><h2 data-split>What Koinonia<br>means</h2><p class="lede mt-1" data-rv>Koinonia is the New Testament word for fellowship: sharing life, not just a room. "They devoted themselves to the apostles' teaching and to fellowship." Acts 2:42. The conference exists so that churches spread across borders remember they are one body, go deep in the Word together, and go home to multiply.</p></div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>From Koi 25'</h2>${videos(EDITIONS.k25.videos)}</div></section>
+<section class="sec"><div class="wrap"><span class="eyebrow">The word</span><h2 data-split>What Koinonia<br>means</h2><p class="lede mt-1" data-rv>Koinonia is the New Testament word for fellowship: sharing life, not just a room. "They devoted themselves to the apostles' teaching and to fellowship." Acts 2:42. The conference exists so that churches spread across borders remember they are one body, go deep in the Word together, and go home to multiply.</p></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><span class="eyebrow">Watch</span><h2 class="mb-2" data-split>From Koi 25'</h2>${videos(EDITIONS.k25.videos)}</div></section>
 ${closeBlock()}` };
 
 

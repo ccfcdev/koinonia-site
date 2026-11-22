@@ -21,3 +21,14 @@ The homepage video fills the entire hero behind its centered text and buttons, w
 A header toggle switches between warm cream light mode and the original navy #0A203D, blue #013E87, orange #FB7624 and gold dark palette. The independent koinonia:theme preference is applied in the document head before styles render, persists across pages, follows system preference until explicitly chosen and synchronizes across tabs. Original light-on-dark logos are restored in dark mode. The hero's contrast overlay stays consistent in both modes.
 
 Verified both modes on all nine pages at 390px and 1440px, dark-mode reload persistence, system dark preference, toggle labels/pressed state, mobile header width and menu interactions. Registration and Koi 26 screenshots reviewed. No production deployment.
+
+## UI refresh and night palette (22 November 2026)
+
+Joshua asked for an upgraded Koinonia UI and a better dark mode. References: Passion Conferences (near-black ground, editorial type, accent-coloured dates over poster-led event cards) and Hillsong Conference (minimal nav, rounded media, bold titles). Every colour stays in the brand kit or is a shade of it.
+
+- **Night palette (dark mode):** ground #080D15 (darkest shade of the brand navy), surfaces #0D1420 / #121B2A, stone text #F1EFE9, gold labels #D9B45A, orange actions #FB7624 with navy text. Brand navy #0A203D is kept for the feature bands only: countdown, pillars, stats, closing call and the registration aside. Form fields use gold focus rings.
+- **Home:** edition cards are poster-style (photo or official banner on top; date, title, theme and venue below, nothing written over photos), newest first. Section labels (Editions, The word, Watch) above headings. The hero and pillars headlines no longer colour or script one phrase; the script face stays in the logo lockup. Stats are a full-width band with large numerals.
+- **Footer:** logo, purpose line, three link columns (Editions, Take part, Contact) and the legal row.
+- **Countdown phases:** before the opening day the clock counts down; during the conference it reads Day One, Day Two, Day Three; from midnight after the last day it says the conference has ended and counts down to the next edition, the weekend before Christmas next year (Friday to Sunday ending on the last Sunday on or before 24 December). Logic in js/site.js countdown() / k26Next(); markup in build.js k26Full / k26Compact.
+
+Source of truth: the "UI refresh" block at the end of css/minimal.css, and build.js.
