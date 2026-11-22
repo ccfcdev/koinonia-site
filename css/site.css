@@ -440,8 +440,8 @@ h2 .script,.h-script{font-size:1.05em}
 .lockup__year{font-family:var(--font-display);font-size:clamp(3rem,7vw,5.6rem);line-height:.9;color:#fff;letter-spacing:.02em;padding-left:1.4rem;border-left:2px solid var(--gold-2)}
 .lockup__theme{font-family:var(--font-display);font-size:clamp(1.3rem,2.6vw,2.1rem);line-height:.95;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-2);max-width:9ch}
 .foot__tag{display:block;width:100%;font-family:var(--font-display);font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
-/* Mazar keeps its own display face on this site (Bebas Neue is all caps) */
-.mz,.mzp,.mz-filled,.nav__mazar,.mzq,.consent{--font-display:'Montserrat',system-ui,sans-serif}
+/* the cookie notice keeps its own display face on this site (Bebas Neue is all caps) */
+.consent{--font-display:'Montserrat',system-ui,sans-serif}
 
 /* phones: logo keeps its size, menu button goes icon-only, tagline stacks */
 .nav__brand{flex:none}
@@ -494,8 +494,6 @@ h2 .script,.h-script{font-size:1.05em}
 /* The video player grows out of the video you tapped and goes back into it; on a phone it can be pulled down */
 .lb{touch-action:none}
 .lb__frame{transform-origin:0 0;will-change:transform}
-/* Yuriel's button waits while the side menu is open, instead of sitting on top of it */
-.menu-open .mz--widget{visibility:hidden;opacity:0}
 @media (prefers-reduced-motion:reduce){.kfaq__item::details-content{transition:none}.menu{transition:opacity .2s,visibility .2s}.ed:active,.vcard:active,.gal--photos .ph:active{transform:none}}
 @media (prefers-reduced-transparency:reduce){.nav.is-solid{background:#0A203D;backdrop-filter:none;-webkit-backdrop-filter:none}.menu__veil{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,22,48,.85)}}
 @media (prefers-contrast:more){.nav.is-solid{box-shadow:0 1px 0 rgba(255,255,255,.45)}.nav::before{background:rgba(6,22,48,.85)}}

@@ -147,4 +147,4 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 [data-theme=dark] .csel__btn{background:#0d2748!important;border-color:#8499b3!important;color:#fff}
 [data-theme=dark] .reg__status.is-ok{color:#9ddbb0}[data-theme=dark] .reg__status.is-err{color:#ffb2a0}
 [data-theme=dark] .hero__k em,[data-theme=dark] .hero__k .script{color:#fff}
-@media(max-width:600px){.nav .nav__mazar{display:none}.theme-toggle{width:38px;height:40px}.nav>.wrap>.row{gap:6px}}
+@media(max-width:600px){.theme-toggle{width:38px;height:40px}.nav>.wrap>.row{gap:6px}}
