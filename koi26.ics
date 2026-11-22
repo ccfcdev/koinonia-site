@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CCFC Zambia//Koinonia Experience//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:koi26@koinonia.ccfczambia.org
+DTSTAMP:20261122T000000Z
+DTSTART;VALUE=DATE:20261218
+DTEND;VALUE=DATE:20261221
+SUMMARY:Koi 26': The RESET (Koinonia Experience)
+LOCATION:Grace Exploits Event Center\, Don Gordon Road (opposite Don Gordon School)\, Chainama Minestone\, Lusaka
+DESCRIPTION:Koinonia Experience 2026\, the CCFC family conference. Theme: The RESET. Register at https://koinonia.ccfczambia.org/register
+URL:https://koinonia.ccfczambia.org/k26
+END:VEVENT
+END:VCALENDAR

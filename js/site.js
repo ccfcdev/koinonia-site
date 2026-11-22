@@ -86,9 +86,32 @@ function lightbox(){ const tr = $$('[data-lb]'); if (!tr.length) return; const l
     if (d.dy + project(velocity(d.h)) > 160) close(cur); else move(cur, 'none', () => { anim.cancel(); anim = null; }); };
   lb.addEventListener('pointerup', end); lb.addEventListener('pointercancel', end);
   const v = Q.get('lb'); if (v){ const t = tr.find(x => x.dataset.lb === v); if (t) open(v, t.dataset.title); } }
-function countdown(){ const el = $('[data-countdown]'); if (!el) return; const to = new Date(el.dataset.countdown); if (isNaN(to)) return;
-  const tick = () => { const d = Math.max(0, to - Date.now())/1000; const set = (k,v) => { const e = $(`[data-cd=${k}]`, el); if (e) e.textContent = String(v).padStart(2,'0'); };
-    set('d', Math.floor(d/86400)); set('h', Math.floor(d%86400/3600)); set('m', Math.floor(d%3600/60)); set('s', Math.floor(d%60)); }; tick(); if (!IS_CAP) setInterval(tick, 1000); }
+/* Koi 26' countdown (build.js k26Full / k26Compact). Counts to midnight in Lusaka (UTC+2) on the opening day, then shows
+   the day number while the conference is on, then a thank-you (data-phase before / live / after; CSS shows the matching
+   [data-show]). The dates follow the live k26_when text once core.js has applied Site text, so the office can move them
+   without a deploy; data-start / data-end are the build's fallback. The fee table follows the live k26_fee_table JSON. */
+const K_MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'], K_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function k26Range(text){ const m = String(text || '').toLowerCase().match(/(\d{1,2})\s*(?:to|-|–|and)\s*(\d{1,2})\s+([a-z]+)\s+(\d{4})/); if (!m) return null;
+  const mo = K_MONTHS.indexOf(m[3]), a = +m[1], b = +m[2], y = +m[4]; if (mo < 0 || b < a) return null;
+  const at = d => Date.UTC(y, mo, d) - 7200e3, wd = d => K_DAYS[new Date(Date.UTC(y, mo, d)).getUTCDay()];
+  return { start: at(a), end: at(b + 1), days: b - a + 1, span: `${wd(a)} to ${wd(b)}, ${b - a + 1} days in Lusaka` }; }
+function countdown(){ const els = $$('[data-countdown]'); if (!els.length) return;
+  const pad = v => String(v).padStart(2, '0');
+  const tick = () => { const w = $('[data-setting="k26_when"]'), r = w && k26Range(w.textContent), now = Date.now();
+    els.forEach(el => { const start = r ? r.start : Date.parse(el.dataset.start), end = r ? r.end : Date.parse(el.dataset.end), days = r ? r.days : (+el.dataset.days || 3);
+      if (isNaN(start) || isNaN(end)) return;
+      const phase = now < start ? 'before' : now < end ? 'live' : 'after'; if (el.dataset.phase !== phase) el.dataset.phase = phase;
+      const put = (k, v) => { const e = $(`[data-cd="${k}"]`, el); if (e && e.textContent !== String(v)) e.textContent = v; };
+      if (r) put('span', r.span);
+      if (phase === 'before'){ const s = Math.floor((start - now) / 1000); put('d', pad(Math.floor(s / 86400))); put('h', pad(Math.floor(s % 86400 / 3600))); put('m', pad(Math.floor(s % 3600 / 60))); put('s', pad(s % 60)); }
+      else if (phase === 'live') put('day', Math.min(days, Math.floor((now - start) / 864e5) + 1)); }); };
+  tick(); if (!IS_CAP) setInterval(tick, 1000);
+  const src = $('script[data-setting="k26_fee_table"]'); if (!src) return;
+  const fees = () => { let f; try { f = JSON.parse(src.textContent); } catch (e){ return; } if (!f || !f.adult || !f.child) return;
+    const put = (k, v) => { if (v == null || v === '') return; $$(`[data-fee="${k}"]`).forEach(x => { if (x.textContent !== String(v)) x.textContent = v; }); };
+    put('adult-home', f.adult.home); put('child-home', f.child.home); put('adult-away', f.adult.away); put('child-away', f.child.away); put('home-country', f.home_country);
+    if (f.child_max_age !== '' && f.child_max_age != null && Number.isFinite(+f.child_max_age)){ put('adult-age', `${+f.child_max_age + 1} and over`); put('child-age', `${+f.child_max_age} and under`); } };
+  fees(); new MutationObserver(fees).observe(src, { childList: true, characterData: true, subtree: true }); }
 function capture(){ if (!IS_CAP) return; const y = +(Q.get('y')||0); const apply = () => { document.body.style.transform = `translateY(-${y}px)`; }; addEventListener('load', () => setTimeout(apply, 300)); setTimeout(apply, 1500); }
 function register(){
   const f = $('.reg'); if (!f) return;
