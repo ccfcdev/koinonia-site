@@ -338,8 +338,6 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .video-hero__frame::after{background:rgba(5,24,52,.68)}
 [data-theme=dark] .video-hero__frame::after{background:rgba(8,13,21,.7)}
 .k26-banner,.k26-page .k26-banner{background:var(--ground-2)}
-:root:not([data-theme=dark]) .k26-banner--upcoming{background:#EEECE6}
-:root:not([data-theme=dark]) .k26-banner--upcoming .k26-banner__intro,:root:not([data-theme=dark]) .k26-banner--upcoming .k26cd--compact{border-color:#d9d6cc}
 .k26-banner__intro{padding-bottom:20px}
 .k26-banner__intro .script,.hero__k .script{font-family:inherit;font-size:inherit;color:inherit}
 
@@ -361,6 +359,5 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .reg__step legend{padding-bottom:4px}
 @media(max-width:600px){.reg__sections{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* hero headline balances its lines; the Coming up poster sits in a plain rounded frame on the stone band (no feathered edges) */
+/* hero headline balances its lines; (Coming up poster design restored from main) */
 .video-hero h1{max-width:18ch;text-wrap:balance}
-:root:not([data-theme=dark]) .k26-banner--upcoming .k26-banner__art{width:auto;max-width:100%;margin-inline:0;border:1px solid var(--line);border-radius:var(--radius-media);-webkit-mask-image:none;mask-image:none;overflow:hidden}
