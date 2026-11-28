@@ -1,6 +1,6 @@
 /* Site-wide paper and ink system, drawn from the official Koi 26 artwork. */
-:root,.k26-page{--ground:#faf8f2;--ground-2:#f2eee5;--panel:#fffdfa;--paper-2:#f2eee5;--ink:#102e55;--ink-2:#526077;--ink-3:#677185;--white:#102e55;--head:#102e55;--navy:#102e55;--navy-2:#173e6b;--muted:#526077;--faint:#677185;--line:#ded7c9;--soft:#f0ece3;--orange:#f56a17;--orange-2:#db570d;--coral:#f56a17;--gold:#896b2c;--gold-2:#896b2c;--on-accent:#102844;--shadow:0 12px 36px -28px #102e5533;--font-body:'Instrument Sans',sans-serif;--radius:12px;--maxw:1240px;--nav-h:80px}
-body,.k26-page{background:#faf8f2;color:var(--ink);font-size:17px;line-height:1.65;background-image:none}
+:root,.k26-page{--ground:#ffffff;--ground-2:#EEECE6;--panel:#ffffff;--paper-2:#EEECE6;--ink:#102e55;--ink-2:#526077;--ink-3:#677185;--white:#102e55;--head:#102e55;--navy:#102e55;--navy-2:#173e6b;--muted:#526077;--faint:#677185;--line:#d9d6cc;--soft:#EEECE6;--orange:#f56a17;--orange-2:#db570d;--coral:#f56a17;--gold:#896b2c;--gold-2:#896b2c;--on-accent:#102844;--shadow:0 12px 36px -28px #102e5533;--font-body:'Instrument Sans',sans-serif;--radius:12px;--maxw:1240px;--nav-h:80px}
+body,.k26-page{background:#ffffff;color:var(--ink);font-size:17px;line-height:1.65;background-image:none}
 .grain{display:none!important}
 h1,h2,h3,.pillar h3{font-family:'Bricolage Grotesque',sans-serif;text-transform:none;letter-spacing:-.035em;font-weight:500;line-height:1.1;color:var(--ink)}
 h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-spacing:-.015em}
@@ -11,7 +11,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .btn--ghost:hover,.k26-banner .btn--ghost:hover{background:var(--soft);color:var(--ink)}
 .pill{background:var(--soft);color:var(--gold);font-size:.68rem;letter-spacing:.1em;padding:.45rem .7rem}
 .pill--orange{background:#fff0df;color:#913d09}.link{color:var(--ink)}
-.nav,.nav.is-solid,.k26-page .nav,.k26-page .nav.is-solid{background:rgba(250,248,242,.95);color:var(--ink);border-bottom:1px solid var(--line);box-shadow:none;backdrop-filter:blur(16px);--line:#ded7c9;--gold-2:#896b2c}
+.nav,.nav.is-solid,.k26-page .nav,.k26-page .nav.is-solid{background:rgba(255,255,255,.98);color:var(--ink);border-bottom:1px solid var(--line);box-shadow:none;backdrop-filter:blur(16px);--line:#d9d6cc;--gold-2:#896b2c}
 .nav .wrap{gap:1.5rem}.nav__links{gap:1.5rem}.nav__signin{color:var(--ink)}
 .nav__burger,.nav.is-solid .nav__burger{background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--ink)}
 .nav__home,.nav:not(.is-solid) .nav__home{color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
@@ -46,7 +46,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 .close{background:#102e55;color:#fff;padding-block:72px}.close .bg,.close::after{display:none}.close h2,.k26-page .close h2{color:#fff;font-family:'Bricolage Grotesque',sans-serif;max-width:20ch}.close .btn--ghost{color:#fff;box-shadow:inset 0 0 0 1px #ffffff66}
 .foot{background:var(--ground);color:var(--muted)}
 .reg{box-shadow:none;border-radius:12px;background:var(--panel);padding:clamp(24px,3vw,40px)}
-.field input,.field textarea,.field select{border:1px solid #bab5a9;border-radius:8px;background:#fffdfa;color:var(--ink);min-height:48px}
+.field input,.field textarea,.field select{border:1px solid #bab5a9;border-radius:8px;background:#ffffff;color:var(--ink);min-height:48px}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:#896b2c;box-shadow:0 0 0 3px #896b2b22}
 .reg__step legend{color:var(--ink)}.reg__step legend i{background:var(--soft);color:var(--gold)}
 .reg__choices label{border:1px solid #bab5a9;background:var(--panel);border-radius:8px}.reg__choices label:hover{border-color:var(--gold)}.reg__choices label:has(input:checked){background:#ffead2;border-color:#ad6828;color:var(--ink)}
@@ -67,7 +67,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
 
 /* Fellowship blue: quiet editorial sections balanced with living worship imagery. */
 :root{--fellowship:#013e87;--fellowship-deep:#082d60}
-.video-hero{padding:calc(var(--nav-h) + 64px) 0 48px;background:linear-gradient(180deg,#eaf1fa 0%,#faf8f2 70%);text-align:center}
+.video-hero{padding:calc(var(--nav-h) + 64px) 0 48px;background:linear-gradient(180deg,#eaf1fa 0%,#ffffff 70%);text-align:center}
 .video-hero__eyebrow{font-size:.73rem;font-weight:650;letter-spacing:.12em;text-transform:uppercase;color:var(--fellowship);margin-bottom:20px}
 .video-hero h1{font-size:clamp(3.3rem,7vw,6.7rem);line-height:1.02;letter-spacing:-.055em;max-width:14ch;margin:0 auto 24px}
 .video-hero h1 em{color:var(--fellowship);font-style:normal}
@@ -324,3 +324,40 @@ h2{font-size:clamp(2rem,4vw,3.5rem);max-width:24ch}h3{font-size:1.25rem;letter-s
   mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 96%,transparent 100%),linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%);
   mask-composite:intersect}
 :root:not([data-theme=dark]) .k26-banner--upcoming .k26-cd--compact,:root:not([data-theme=dark]) .k26-banner--upcoming .k26cd--compact{border-color:#d8cab8}
+
+/* ---------- De-slop pass (28 November 2026): plain, deliberate UI. White page, Warm Stone #EEECE6 used as a flat band colour
+   (banner, footer, hover), no glows, no frosted glass, no hover lifts, no scroll fades, no arrows on buttons,
+   no eyebrow labels, no stat band, no icon cards. Colours are the brand kit's own. ---------- */
+.nav,.nav.is-solid,.k26-page .nav,.k26-page .nav.is-solid{backdrop-filter:none;-webkit-backdrop-filter:none}
+.video-hero__toggle{backdrop-filter:none;-webkit-backdrop-filter:none}
+.btn:hover,.k26-banner .btn:hover{transform:none;box-shadow:none}
+.ed:hover,.mq:hover,.mcard:hover,.reg__sections a:hover,.reg__sections a:focus-visible,.nf__links a:hover{transform:none}
+.ed2:hover .ed2__media img,.vcard:hover .ph img,.gal .ph:hover img,.phx__tile:hover img,.ed:hover img{transform:none}
+.ed2__media img,.btn,.reg__sections a{transition:none}
+.video-hero h1{text-shadow:none}
+.video-hero__frame::after{background:rgba(5,24,52,.68)}
+[data-theme=dark] .video-hero__frame::after{background:rgba(8,13,21,.7)}
+.k26-banner,.k26-page .k26-banner{background:var(--ground-2)}
+.k26-banner__intro{padding-bottom:20px}
+.k26-banner__intro .script,.hero__k .script{font-family:inherit;font-size:inherit;color:inherit}
+
+/* pillars: four plain statements divided by rules */
+.pillars__grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.pillar{padding:20px 0 0}
+.pillar h3{font-size:1.35rem}
+
+/* typographic note for the former eyebrow position: sections now open straight on their heading */
+.sec>.wrap>h2:first-child,.pillars .sec__head h2{margin-top:0}
+.hero__copy>h1:first-child{margin-top:0}
+
+/* registration: section links and legends carry words, not numbers */
+.reg__sections{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-bottom:1px solid var(--line);padding-bottom:0}
+.reg__sections a{display:block;padding:14px 4px;border-radius:0;background:transparent;border-bottom:2px solid transparent;margin-bottom:-1px}
+.reg__sections a:hover,.reg__sections a:focus-visible{background:transparent;border-bottom-color:var(--fellowship)}
+[data-theme=dark] .reg__sections a{background:transparent;color:var(--ink)}
+[data-theme=dark] .reg__sections a:hover{background:transparent;border-bottom-color:#d9b45a}
+.reg__step legend{padding-bottom:4px}
+@media(max-width:600px){.reg__sections{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* hero headline balances its lines; (Coming up poster design restored from main) */
+.video-hero h1{max-width:18ch;text-wrap:balance}

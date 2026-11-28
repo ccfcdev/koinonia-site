@@ -223,7 +223,7 @@ function theme(){
   const apply = value => {
     const dark = value === 'dark'; root.dataset.theme = dark ? 'dark' : 'light';
     button?.setAttribute('aria-pressed', String(dark)); button?.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0A203D' : '#faf8f2');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0A203D' : '#ffffff');
     document.querySelectorAll('img.klogo').forEach(img => {
       const current = img.getAttribute('src');
       img.setAttribute('src', dark ? current.replace('-ink.svg','.svg') : current.replace(/(?:-ink)?\.svg$/, '-ink.svg'));
@@ -234,6 +234,6 @@ function theme(){
   preference.addEventListener('change', e => { if (!['dark','light'].includes(saved())) apply(e.matches ? 'dark' : 'light'); });
   addEventListener('storage', e => { if (e.key === 'koinonia:theme') apply(['dark','light'].includes(e.newValue) ? e.newValue : preference.matches ? 'dark' : 'light'); });
 }
-function boot(){ theme(); register(); photos(); split(); revealAboveFold(); grain(); nav(); reveals(); revealSafety(); hero(); lightbox(); countdown(); capture(); $$('.year').forEach(e => e.textContent = new Date().getFullYear()); }
+function boot(){ theme(); register(); photos(); split(); revealAboveFold(); nav(); reveals(); revealSafety(); hero(); lightbox(); countdown(); capture(); $$('.year').forEach(e => e.textContent = new Date().getFullYear()); }
 document.readyState === 'loading' ? addEventListener('DOMContentLoaded', boot) : boot();
 })();

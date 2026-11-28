@@ -147,15 +147,15 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 <header class="nav"><div class="wrap">
   <a class="nav__brand" href="index.html" aria-label="Koinonia Experience, home">${klogo()}</a>
   <ul class="nav__links">${links}</ul>
-  <div class="row"><span class="nav__account"></span><button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.8 13a9 9 0 0 1-9.8-9.8A9 9 0 1 0 20.8 13Z"/></svg><svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span> ${ICON.arrow}</a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
+  <div class="row"><span class="nav__account"></span><button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.8 13a9 9 0 0 1-9.8-9.8A9 9 0 1 0 20.8 13Z"/></svg><svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><a class="btn nav__cta" href="register.html"><span class="nav__cta-long">I am coming to Koi 26'</span><span class="nav__cta-short">Register</span></a><button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><span>Menu</span></button></div>
 </div></header>
 <div class="menu__veil"></div>
 <nav class="menu" aria-label="Site menu" id="menu">
   <div class="menu__top"><a class="nav__brand" href="index.html">${klogo()}</a><button class="menu__close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="menu__scroll">
     <div class="menu__quick"><a class="mq mq--a" href="register.html"><b>I am coming to Koi 26'</b><small>Register in two minutes</small></a><a class="mq mq--b" href="k25.html#videos"><b>Watch Koi 25'</b><small>Both worship sets</small></a></div>
-    <h4 class="menu__h">Pages</h4><ul class="menu__list">${MENU.map(([f,l,t],i) => `<li style="--i:${i}"><a href="${f}"${f===p.file?' aria-current="page"':''}><b>${l}</b><small>${t}</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></li>`).join('')}</ul>
-    <h4 class="menu__h">Our sites</h4><div class="menu__cards"><a class="mcard mcard--church" href="${MAIN}"><b>CCFC Zambia</b><small>Back to the church website</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a><a class="mcard mcard--wc" href="https://worship.ccfczambia.org"><b>WORSHIP<i>Connect</i></b><small>The worship team, all videos</small><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></a></div>
+    <h4 class="menu__h">Pages</h4><ul class="menu__list">${MENU.map(([f,l,t],i) => `<li style="--i:${i}"><a href="${f}"${f===p.file?' aria-current="page"':''}><b>${l}</b><small>${t}</small></a></li>`).join('')}</ul>
+    <h4 class="menu__h">Our sites</h4><div class="menu__cards"><a class="mcard mcard--church" href="${MAIN}"><b>CCFC Zambia</b><small>Back to the church website</small></a><a class="mcard mcard--wc" href="https://worship.ccfczambia.org"><b>WORSHIP<i>Connect</i></b><small>The worship team, all videos</small></a></div>
   </div>
   <div class="menu__bottom"><div class="menu__account"></div><a class="menu__wa" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
 </nav>
@@ -174,12 +174,12 @@ ${SEO.headTags({ origin: ORIGIN, file: p.file, title: KSEO[p.file][0], desc: KSE
 </body></html>`;
 }
 
-const videos = list => list.length ? `<div class="vgrid" data-rv-stagger>${list.map(v => `<a href="https://www.youtube.com/watch?v=${v.id}" class="vcard" data-lb="${v.id}" data-title="${v.t}" aria-label="Play: ${v.t}"><div class="ph">${img(v.img,'','(min-width:800px) 50vw, 100vw')}</div><span class="vcard__play" aria-hidden="true">${ICON.play}</span><div class="vcard__meta"><b>${v.t}</b><span>${v.by}</span></div></a>`).join('')}</div>`
-  : `<div class="vcard vcard--soon" data-rv><div><h3>Videos on the way</h3><p>Recordings from this edition will be added here as the media team uploads them.</p></div></div>`;
+const videos = list => list.length ? `<div class="vgrid">${list.map(v => `<a href="https://www.youtube.com/watch?v=${v.id}" class="vcard" data-lb="${v.id}" data-title="${v.t}" aria-label="Play: ${v.t}"><div class="ph">${img(v.img,'','(min-width:800px) 50vw, 100vw')}</div><span class="vcard__play" aria-hidden="true">${ICON.play}</span><div class="vcard__meta"><b>${v.t}</b><span>${v.by}</span></div></a>`).join('')}</div>`
+  : `<div class="vcard vcard--soon"><div><h3>Videos on the way</h3><p>Recordings from this edition will be added here as the media team uploads them.</p></div></div>`;
 const GALT = { 'k25-hero':'Worship Connect singers in bright blazers leading praise at Koinonia 25', 'crowd-koinonia':'Delegates seated together during a Koinonia session', 'worship-1':'Worship Connect singers in white shirts leading praise on stage', 'worship-2':'The worship team singing behind the pulpit under blue lights', 'worship-3':'A worship leader singing with the choir behind him', 'worship-4':'The choir and worship leader in blue stage light, seen from the audience', 'worship-5':'Vocalists and the drummer leading a song on stage', 'worship-6':'The choir dancing on a red-lit stage', 'worship-7':'A keyboard player on a red-lit stage beside the Koinonia screen', 'worship-8':'The choir singing on stage during an evening session' };
-const gallery = list => list.length ? `<div class="gal" data-rv-stagger>${list.map(n => `<div class="ph">${img(n, GALT[n] || 'A moment from Koinonia','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
+const gallery = list => list.length ? `<div class="gal">${list.map(n => `<div class="ph">${img(n, GALT[n] || 'A moment from Koinonia','(min-width:800px) 25vw, 50vw')}</div>`).join('')}</div>`
   : `<div class="empty"><h3>Photos on the way</h3><p>Photographs from this edition will be added here after the conference.</p></div>`;
-const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2 data-split>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
+const closeBlock = () => `<section class="close"><div class="bg">${img('worship-4','', '100vw')}</div><div class="wrap"><h2>Come home<br>this December.</h2><p>Koinonia is where the family remembers it is one body. Whether you belong to a CCFC church or you are curious, there is a seat for you at Koi 26'.</p><div class="row"><a class="btn" href="register.html">I am coming to Koi 26'</a><a class="btn btn--ghost" href="${MAIN}">Visit CCFC Zambia</a></div></div></section>`;
 
 
 const K26FAQ = [
@@ -194,7 +194,7 @@ const K26FAQ = [
   ['What does Koinonia mean?', "Koinonia is the New Testament Greek word for fellowship: sharing life together, not just a room. \"They devoted themselves to the apostles' teaching and to fellowship\" (Acts 2:42). Once a year the churches of the CCFC family gather in Lusaka to remember that they are one body."],
   ['Who do I ask if I have a question?', "WhatsApp the church office on +260 573 762 913, call +260 772 890 854, or email info@ccfczambia.org."],
 ];
-const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><span class="pill">Questions</span><h2 class="mt-1" data-split>Before you<br>register.</h2><p class="lede mt-1" data-rv>The things people ask the office most about Koinonia.</p></div><div class="kfaq__list" data-rv>${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
+const k26Faq = () => `<section class="sec" id="faq" style="padding-top:0"><div class="wrap"><div class="kfaq"><div><h2 class="mt-1">Before you<br>register.</h2><p class="lede mt-1">The things people ask the office most about Koinonia.</p></div><div class="kfaq__list">${K26FAQ.map(([q, a]) => `<details class="kfaq__item"><summary>${q.replace(/Koi 2(\d)/g, "Koi 2$1'")}<span aria-hidden="true">${ICON.arrow}</span></summary><p>${a.replace(/Koi 2(\d)/g, "Koi 2$1'")}</p></details>`).join('')}</div></div></div></section>`;
 
 /* brand lockups traced from the 2026 brand kit (assets/logo/koinonia-*.svg): gold crescent + KOINONIA (Bebas Neue) + Experience script */
 const klogo = (cls = 'klogo--nav') => `<img class="klogo ${cls}" src="assets/logo/koinonia-horizontal-ink.svg" alt="Koinonia Experience" width="350" height="94" decoding="async">`;
@@ -206,13 +206,13 @@ const PILLARS = [
   ['Biblical formation', 'Being equipped through the Word for life and ministry.', '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 18c-6-5-14-6-24-4v34c10-2 18-1 24 4 6-5 14-6 24-4V14c-10-2-18-1-24 4z"/><path d="M32 18v34"/></svg>'],
   ['Missional multiplication', "Sent out to make disciples and expand God's Kingdom.", '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="24"/><path d="M20 38c2-9 9-14 18-14h6"/><path d="M38 17l8 7-8 7"/></svg>'],
 ];
-const pillarsSection = () => `<section class="pillars"><div class="wrap"><div class="sec__head"><div><span class="eyebrow">What Koinonia is about</span><h2>Deep in Christ. One in Fellowship. Sent to Multiply.</h2></div></div>
-  <div class="pillars__grid" data-rv-stagger>${PILLARS.map(([t, d, ic], i) => `<div class="pillar"><span class="pillar__n">0${i + 1}</span><span class="pillar__ico">${ic}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div></div></section>
-<section class="purpose"><div class="wrap purpose__grid"><div data-rv><span class="eyebrow">Our purpose</span><h2>To encounter Christ <span class="script">deeply,</span> live in fellowship genuinely, be formed biblically, and multiply faithfully.</h2></div>
-  <div class="purpose__side" data-rv><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li><a href="https://www.biblegateway.com/passage/?search=Acts%202%3A42-47&amp;version=NKJV" target="_blank" rel="noopener">Acts 2:42-47</a></li><li><a href="https://www.biblegateway.com/passage/?search=1%20John%201%3A3&amp;version=NKJV" target="_blank" rel="noopener">1 John 1:3</a></li><li><a href="https://www.biblegateway.com/passage/?search=Philippians%202%3A1-2&amp;version=NKJV" target="_blank" rel="noopener">Philippians 2:1-2</a></li><li><a href="https://www.biblegateway.com/passage/?search=2%20Timothy%202%3A2&amp;version=NKJV" target="_blank" rel="noopener">2 Timothy 2:2</a></li><li><a href="https://www.biblegateway.com/passage/?search=John%2015%3A4-5&amp;version=NKJV" target="_blank" rel="noopener">John 15:4-5</a>, <a href="https://www.biblegateway.com/passage/?search=John%2015%3A16&amp;version=NKJV" target="_blank" rel="noopener">16</a></li></ul></div></div></div></section>`;
+const pillarsSection = () => `<section class="pillars"><div class="wrap"><div class="sec__head"><div><h2>Deep in Christ. One in Fellowship. Sent to Multiply.</h2></div></div>
+  <div class="pillars__grid">${PILLARS.map(([t, d]) => `<div class="pillar"><h3>${t}</h3><p>${d}</p></div>`).join('')}</div></div></section>
+<section class="purpose"><div class="wrap purpose__grid"><div><h2>To encounter Christ deeply, live in fellowship genuinely, be formed biblically, and multiply faithfully.</h2></div>
+  <div class="purpose__side"><div><h3>Our promise</h3><p>Every participant leaves spiritually renewed, relationally strengthened, biblically equipped and missionally activated to impact the world.</p></div><div><h3>Biblical foundation</h3><ul><li><a href="https://www.biblegateway.com/passage/?search=Acts%202%3A42-47&amp;version=NKJV" target="_blank" rel="noopener">Acts 2:42-47</a></li><li><a href="https://www.biblegateway.com/passage/?search=1%20John%201%3A3&amp;version=NKJV" target="_blank" rel="noopener">1 John 1:3</a></li><li><a href="https://www.biblegateway.com/passage/?search=Philippians%202%3A1-2&amp;version=NKJV" target="_blank" rel="noopener">Philippians 2:1-2</a></li><li><a href="https://www.biblegateway.com/passage/?search=2%20Timothy%202%3A2&amp;version=NKJV" target="_blank" rel="noopener">2 Timothy 2:2</a></li><li><a href="https://www.biblegateway.com/passage/?search=John%2015%3A4-5&amp;version=NKJV" target="_blank" rel="noopener">John 15:4-5</a>, <a href="https://www.biblegateway.com/passage/?search=John%2015%3A16&amp;version=NKJV" target="_blank" rel="noopener">16</a></li></ul></div></div></div></section>`;
 
 const moments = e => { const P = e.photos, tiles = P.moments.map(([src, alt]) => [P.list.find(p => p.src === src), alt]).filter(([p]) => p);
-  return tiles.length ? `<div class="gal gal--photos" data-rv-stagger>${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
+  return tiles.length ? `<div class="gal gal--photos">${tiles.map(([p, alt]) => `<a class="ph" href="${e.key}-photos.html?photo=${p.id}" aria-label="${alt}, open in the photo gallery"><img src="${P.dir}/mid/${p.id}.webp" srcset="${P.dir}/thumb/${p.id}.webp 520w, ${P.dir}/mid/${p.id}.webp 1000w" sizes="(min-width:800px) 25vw, 50vw" alt="${alt}" loading="lazy" decoding="async"></a>`).join('')}</div>` : ''; };
 /* a scripture reference that opens the passage on Bible Gateway (NKJV) in a new tab */
 const vref = r => `<a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(r)}&amp;version=NKJV" target="_blank" rel="noopener">${r}</a>`;
 /* ---------- Koi 26' countdown (k26Full on the Koi 26' page, k26Compact in the home page's Coming up; js/site.js countdown())
@@ -232,7 +232,7 @@ const k26Compact = () => `<div class="k26cd k26cd--compact" ${k26Attrs()}><span 
   <p class="k26cd__daybig" data-show="live" data-no-edit>Day <span data-cd="dayword">One</span></p>${k26Clock('before after', '', 'Countdown')}</div>`;
 const k26Full = () => `<section class="k26cd k26cd--full" id="details" aria-labelledby="k26cd-title" ${k26Attrs()}><div class="wrap">
   <div class="k26cd__top">
-    <div class="k26cd__head"><span class="k26cd__eyebrow">Koi 26' / The RESET</span>
+    <div class="k26cd__head">
       <h2 id="k26cd-title"><span data-show="before">Counting down to The RESET</span><span data-show="live">Koi 26' is on now</span><span data-show="after">Koi 26' has ended</span></h2>
       <p class="k26cd__when" data-show="before live">${set('k26_when')}<span class="k26cd__span" data-cd="span">${K26.span}, ${K26.days} days in Lusaka</span></p>
       <p class="k26cd__when" data-show="after">Thank you for coming to The RESET.<span class="k26cd__span">Photos and videos from Koi 26' will be on <a href="updates.html">Updates</a>.</span></p></div>
@@ -240,51 +240,51 @@ const k26Full = () => `<section class="k26cd k26cd--full" id="details" aria-labe
     <div class="k26cd__day" data-show="live" data-no-edit><b>Day <span data-cd="dayword">One</span></b><small>of <span data-cd="daystotal">three</span>. Come as you are, and bring someone with you.</small></div>
   </div>
   <div class="k26cd__next" data-show="after">
-    <div><span class="k26cd__eyebrow">Next</span><h3><span data-cd="next-name">${NEXT.name}</span> begins in</h3>
+    <div><h3><span data-cd="next-name">${NEXT.name}</span> begins in</h3>
       <p class="k26cd__when"><span data-cd="next-when">${NEXT.when}</span><span class="k26cd__span">The weekend before Christmas, in Lusaka</span></p></div>
     ${k26Clock('after', 'n', 'Time until the next Koinonia begins')}
   </div>
   <div class="k26cd__grid" data-show="before live">
-    <div class="k26cd__item"><b>Where</b><p>${set('k26_where')}</p><a class="k26cd__link" href="${MAPS}" target="_blank" rel="noopener">Get directions ${ICON.arrow}</a></div>
+    <div class="k26cd__item"><b>Where</b><p>${set('k26_where')}</p><a class="k26cd__link" href="${MAPS}" target="_blank" rel="noopener">Get directions</a></div>
     <div class="k26cd__item"><b>Delegate fees</b>${k26Fees()}<small>Zambia delegates include Lusaka-based and out-of-town participants travelling within Zambia. International delegates travel from outside Zambia. Registration is confirmed once your fee is paid.</small></div>
     <div class="k26cd__item k26cd__item--theme"><b>The theme</b><p class="k26cd__theme">${set('k26_theme')}</p>
       <ul class="k26cd__verses">${K26_VERSES.map(([r, q]) => `<li><q>${q}</q><a href="${KJV(r)}" target="_blank" rel="noopener">${r}</a></li>`).join('')}</ul></div>
-    <div class="k26cd__item"><b>Worship</b><p>Worship Connect, the CCFC Zambia praise and worship team, leads worship at Koi 26'.</p><a class="k26cd__link" href="https://worship.ccfczambia.org">Meet the team ${ICON.arrow}</a></div>
+    <div class="k26cd__item"><b>Worship</b><p>Worship Connect, the CCFC Zambia praise and worship team, leads worship at Koi 26'.</p><a class="k26cd__link" href="https://worship.ccfczambia.org">Meet the team</a></div>
     <div class="k26cd__item"><b>Who</b><p>Members, friends and first-time guests from every CCFC church, with their families.</p><small>Zambia, Zimbabwe, Malawi and the wider family. Register each child too.</small></div>
   </div>
-  <div class="row k26cd__actions" data-show="before live"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="koi26.ics" download>Add to calendar</a><a class="btn btn--ghost" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
+  <div class="row k26cd__actions" data-show="before live"><a class="btn" href="register.html">Register for Koi 26'</a><a class="btn btn--ghost" href="koi26.ics" download>Add to calendar</a><a class="btn btn--ghost" href="https://wa.me/${WA}" target="_blank" rel="noopener">WhatsApp the office</a></div>
 </div></section>`;
 const k26Banner = (eager=false) => img('k26-official-cream-v2', 'Official Koinonia 26 Experience banner with the CCFC logo, gold crescent, worshippers and Lusaka skyline. 18 to 20 December 2026.', '(min-width:1000px) 65vw, 100vw', eager);
 const k26Hero = (upcoming=false) => `<section class="k26-banner ${upcoming ? 'k26-banner--upcoming' : ''}" aria-labelledby="k26-title" ${upcoming ? 'id="coming-up"' : ''}><div class="wrap k26-banner__grid">
-  <div class="k26-banner__intro"><span class="k26-banner__eyebrow">${upcoming ? 'Coming up / December 2026' : 'Christ Connect Family Church presents'}</span><${upcoming ? 'h2' : 'h1'} id="k26-title">Koinonia <em>26'</em><span class="script">Experience</span></${upcoming ? 'h2' : 'h1'}></div>
+  <div class="k26-banner__intro"><${upcoming ? 'h2' : 'h1'} id="k26-title">Koinonia 26' Experience</${upcoming ? 'h2' : 'h1'}></div>
   <a class="k26-banner__art" href="assets/img/k26-official-cream-v2.png" aria-label="Open the official Koinonia 26 banner">${k26Banner(!upcoming)}</a>
-  <div class="k26-banner__copy"><div><span class="k26-banner__eyebrow">The 2026 theme</span><h2>The <em>RESET</em></h2><p>Deep in Christ. One in fellowship. Sent to multiply.</p></div>
-  <div class="k26-banner__booking">${upcoming ? k26Compact() : ''}<p class="k26-banner__date">${set('k26_when')}<br><span>Lusaka, Zambia</span></p><div class="row"><a class="btn" href="register.html">Register for Koi 26' ${ICON.arrow}</a><a class="btn btn--ghost" href="k26.html#details">Conference details</a></div></div></div>
+  <div class="k26-banner__copy"><div><h2>The RESET</h2><p>Deep in Christ. One in fellowship. Sent to multiply.</p></div>
+  <div class="k26-banner__booking">${upcoming ? k26Compact() : ''}<p class="k26-banner__date">${set('k26_when')}<br><span>Lusaka, Zambia</span></p><div class="row"><a class="btn" href="register.html">Register for Koi 26'</a><a class="btn btn--ghost" href="k26.html#details">Conference details</a></div></div></div>
 </div></section>`;
 function editionPage(e){
   const metaRows = [['When', e.when], ['Where', e.where], e.theme ? ['Theme', `"${e.theme}"`] : null, e.verses ? ['Theme scriptures', e.verses.map(vref).join(', ')] : null, e.cost ? ['Delegate fee', e.cost] : null].filter(Boolean);
   const P = PHOTO_EDS.includes(e) ? e.photos : null;
   const heroMarkup = e.status === 'next' ? k26Hero() : `<section class="hero hero--short"><div class="hero__media">${img(e.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
-    <span class="pill ${e.status==='next'?'pill--orange':''}">${e.status==='next' ? 'Next edition' : 'Past edition'}</span>
+    
     ${e.status === 'next' && e.theme
       ? `<h1 class="klock mt-1"><span class="sr-only">Koinonia ${e.n}': ${e.theme}</span>${kstack(true)}<span class="klock__side" aria-hidden="true"><span class="klock__year">20${e.n}</span><span class="klock__theme">${e.theme}</span></span></h1>`
-      : `<h1 class="hero__k mt-1">KOINONIA <em>${e.n}'</em><span class="script">Experience</span></h1>${e.theme ? `<div class="hero__theme"><small>Theme</small>${e.theme}</div>` : ''}`}
+      : `<h1 class="hero__k mt-1">KOINONIA ${e.n}' Experience</h1>${e.theme ? `<div class="hero__theme"><small>Theme</small>${e.theme}</div>` : ''}`}
     <p>${e.blurb}</p>
-    <div class="row">${e.status==='next' ? `<a class="btn" href="register.html">I am coming ${ICON.arrow}</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship ${ICON.arrow}</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos ${ICON.arrow}</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
+    <div class="row">${e.status==='next' ? `<a class="btn" href="register.html">I am coming</a>` : (e.videos.length ? `<a class="btn" href="#videos">Watch the worship</a>` : P ? `<a class="btn" href="${e.key}-photos.html">See the photos</a>` : '')}<a class="btn btn--ghost" href="#details">Details</a></div>
   </div>
-  ${e.status === 'next' ? '' : `<div class="hero__meta" data-rv-stagger>${metaRows.slice(0,3).map(([k,v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('')}</div>`}</div>
+  ${e.status === 'next' ? '' : `<div class="hero__meta">${metaRows.slice(0,3).map(([k,v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('')}</div>`}</div>
 </section>`;
   return { file:`${e.key}.html`, title:e.title, og:e.hero, desc:`${e.title}: ${e.when}, ${e.where}. ${e.blurb}`.replace(/<[^>]+>/g, ''),
     body:`
 ${heroMarkup}
-${e.status === 'next' ? k26Full() : `<section class="sec" id="details"><div class="wrap"><h2 data-split>The details</h2><div class="details mt-2" data-rv-stagger>
+${e.status === 'next' ? k26Full() : `<section class="sec" id="details"><div class="wrap"><h2>The details</h2><div class="details mt-2">
   ${metaRows.map(([k,v]) => `<div class="detail"><b>${k}</b><p>${v}</p></div>`).join('')}
   <div class="detail"><b>Who</b><p>Members, friends and first-time guests from every CCFC church<small>Zambia, Zimbabwe, Malawi and the wider family</small></p></div>
 </div></div></section>`}
-${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Who taught</h2><div class="speakers" data-rv-stagger>${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
-<section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2" data-split>Watch</h2>${videos(e.videos)}</div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2 data-split>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos ${ICON.arrow}</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
+${e.speakers.length ? `<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2">Who taught</h2><div class="speakers">${e.speakers.map(([i,n,r]) => `<div class="spk"><div class="ph">${imgP(i,n)}</div><b>${n}</b><span>${r}</span></div>`).join('')}</div></div></section>` : ''}
+<section class="sec" id="videos" style="padding-top:0"><div class="wrap"><h2 class="mb-2">Watch</h2>${videos(e.videos)}</div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="sec__head"><h2>Moments</h2>${P ? `<a class="btn btn--ghost" href="${e.key}-photos.html">See and download ${P.list.length} photos</a>` : ''}</div>${(P && moments(e)) || gallery(e.gallery)}</div></section>
 ${e.status==='next' ? k26Faq() : ''}
 ${closeBlock()}`, ...(e.status==='next' ? { jsonld: [{ '@context':'https://schema.org', '@type':'FAQPage', mainEntity: K26FAQ.map(([q, a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) }, ...(e.key === 'k26' ? [K26_EVENT] : [])] } : {}) };
 }
@@ -292,35 +292,33 @@ ${closeBlock()}`, ...(e.status==='next' ? { jsonld: [{ '@context':'https://schem
 const home = { file:'index.html', title:'Home', og:'worship-1', desc:'Koinonia Experience is the annual family conference of Christ Connect Family Church, held in Lusaka, Zambia every December. Editions Koi 24\', Koi 25\' and the upcoming Koi 26\'.',
   body:`
 <section class="video-hero" aria-labelledby="home-title"><div class="video-hero__frame"><video autoplay id="koi-hero-video" muted loop playsinline preload="none" poster="assets/img/hero-wc-poster.webp" aria-label="Worship Connect leading praise at Koinonia" data-hd="assets/img/hero-1080-v3.mp4" data-uhd="assets/img/hero-4k-v3.mp4"></video></div><div class="wrap">
-  <p class="video-hero__eyebrow">Christ Connect Family Church / Koinonia Experience</p>
-  <h1 id="home-title">One family.<br><em>Deep in Christ.</em></h1>
+  <h1 id="home-title">One family, deep in Christ.</h1>
   <p class="video-hero__intro">Three days of worship, the Word and fellowship.<br>Come home to Lusaka. Go out ready to multiply.</p>
-  <div class="row video-hero__actions"><a class="btn" href="register.html">Join us at Koi 26' ${ICON.arrow}</a><a class="link" href="#coming-up">Explore this year's gathering ${ICON.arrow}</a></div>
+  <div class="row video-hero__actions"><a class="btn" href="register.html">Join us at Koi 26'</a><a class="link" href="#coming-up">Explore this year's gathering</a></div>
   <button class="video-hero__toggle" type="button" aria-controls="koi-hero-video" aria-label="Play worship video">Play video <span aria-hidden="true">▶</span></button>
-  <div class="video-hero__caption"><span>Worship. Fellowship. A family sent to multiply.</span><span>18 to 20 December 2026 · Lusaka</span></div>
+  <div class="video-hero__caption"><span>Worship, fellowship and a family sent to multiply.</span><span>18 to 20 December 2026, Lusaka</span></div>
 </div></section>
 ${k26Hero(true)}
 ${pillarsSection()}
-<section class="sec"><div class="wrap"><span class="eyebrow">Editions</span><h2 class="mb-2" data-split>Every Koinonia Experience</h2><div class="eds2">
+<section class="sec"><div class="wrap"><h2 class="mb-2">Every Koinonia Experience</h2><div class="eds2">
   ${['k26','k25','k24'].map(k => { const e = EDITIONS[k], next = e.status === 'next';
     return `<a class="ed2${next ? ' ed2--next' : ''}" href="${k}.html"><div class="ed2__media">${next ? k26Banner() : img(e.hero, '', '(min-width:900px) 33vw, 100vw')}<span class="pill${next ? ' pill--orange' : ''}">${next ? 'Next' : 'Past'}</span></div>
-    <div class="ed2__body"><span class="ed2__when">${e.when}</span><h3 class="ed2__k">Koi ${e.n}'</h3><p class="ed2__t">${e.theme ? `"${e.theme}"` : 'Where Koinonia began'}</p><p class="ed2__where">${next ? VENUE_SHORT : e.where.split(',')[0]}</p><span class="link">${next ? 'Details and registration' : `Open Koi ${e.n}'`} ${ICON.arrow}</span></div></a>`; }).join('')}
+    <div class="ed2__body"><span class="ed2__when">${e.when}</span><h3 class="ed2__k">Koi ${e.n}'</h3><p class="ed2__t">${e.theme ? `"${e.theme}"` : 'Where Koinonia began'}</p><p class="ed2__where">${next ? VENUE_SHORT : e.where.split(',')[0]}</p><span class="link">${next ? 'Details and registration' : `Open Koi ${e.n}'`}</span></div></a>`; }).join('')}
 </div></div></section>
-<div class="facts" data-rv-stagger><div class="fact"><b>3</b><span>days together every December</span></div><div class="fact"><b>3+</b><span>nations in the room: Zambia, Zimbabwe, Malawi</span></div><div class="fact"><b>5</b><span>leaders taught at Koi 25'</span></div><div class="fact"><b>1</b><span>family under Christ</span></div></div>
-<section class="sec"><div class="wrap"><span class="eyebrow">The word</span><h2 data-split>What Koinonia<br>means</h2><p class="lede mt-1" data-rv>Koinonia is the New Testament word for fellowship: sharing life, not just a room. "They devoted themselves to the apostles' teaching and to fellowship." Acts 2:42. The conference exists so that churches spread across borders remember they are one body, go deep in the Word together, and go home to multiply.</p></div></section>
-<section class="sec" style="padding-top:0"><div class="wrap"><span class="eyebrow">Watch</span><h2 class="mb-2" data-split>From Koi 25'</h2>${videos(EDITIONS.k25.videos)}</div></section>
+<section class="sec"><div class="wrap"><h2>What Koinonia<br>means</h2><p class="lede mt-1">Koinonia is the New Testament word for fellowship: sharing life, not just a room. "They devoted themselves to the apostles' teaching and to fellowship." Acts 2:42. The conference exists so that churches spread across borders remember they are one body, go deep in the Word together, and go home to multiply.</p></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><h2 class="mb-2">From Koi 25'</h2>${videos(EDITIONS.k25.videos)}</div></section>
 ${closeBlock()}` };
 
 
 const updates = { file:'updates.html', title:'Updates', og:'worship-3', desc:'Koinonia Experience updates: announcements about the next conference, speaker news, videos and photos from past editions, posted by the church media team.',
   body:`
-<section class="hero hero--short"><div class="hero__media">${img('worship-3','', '100vw', true)}</div><div class="hero__scrim"></div><div class="wrap"><div class="hero__copy"><span class="pill pill--orange">Live from the team</span><h1 class="hero__k mt-1">Koinonia <span class="script">updates</span></h1><p>Announcements about Koi 26', speaker news, and videos and photos from every edition, as the media team posts them. Sign in to react and comment.</p></div></div></section>
+<section class="hero hero--short"><div class="hero__media">${img('worship-3','', '100vw', true)}</div><div class="hero__scrim"></div><div class="wrap"><div class="hero__copy"><h1 class="hero__k">Koinonia updates</h1><p>Announcements about Koi 26', speaker news, and videos and photos from every edition, as the media team posts them. Sign in to react and comment.</p></div></div></section>
 <section class="sec" id="feed" data-site="koinonia" style="padding-top:clamp(40px,6vw,70px)"><div class="wrap"><div class="feed__grid">
   <div><div class="feed__filters mb-2"></div><div class="feed__composer"></div><div class="feed__list mt-2"></div></div>
   <aside class="feed__side">
-    <div class="side"><span class="eyebrow">Next edition</span><h3>Koi 26', ${set('k26_when')}</h3><p>The theme is <b>${set('k26_theme')}</b>: Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17.</p><a class="btn" href="register.html">I am coming to Koi 26' ${ICON.arrow}</a></div>
-    <div class="side"><h3>Watch Koi 25'</h3><p>Both Worship Connect sets from Koi 25' are up.</p><a class="link" href="k25.html#videos">Watch the sets ${ICON.arrow}</a></div>
-    <div class="side" data-guest><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account ${ICON.arrow}</button></div>
+    <div class="side"><h3>Koi 26', ${set('k26_when')}</h3><p>The theme is <b>${set('k26_theme')}</b>: Psalm 51:10-12, Isaiah 43:18-19 and 2 Corinthians 5:17.</p><a class="btn" href="register.html">I am coming to Koi 26'</a></div>
+    <div class="side"><h3>Watch Koi 25'</h3><p>Both Worship Connect sets from Koi 25' are up.</p><a class="link" href="k25.html#videos">Watch the sets</a></div>
+    <div class="side" data-guest><h3>Join the conversation</h3><p>One free account works on the church site, Koinonia and Worship Connect.</p><button class="btn btn--ghost" data-auth="up">Create account</button></div>
   </aside></div></div></section>` };
 const dashboard = { file:'dashboard.html', title:'Dashboard', og:'worship-1', desc:'Koinonia Experience team dashboard.', noindex:true, body:`
 <section class="sec" id="dashboard" style="padding-top:calc(var(--nav-h) + clamp(40px,6vw,80px))"><div class="wrap">
@@ -334,7 +332,7 @@ const photosPage = e => { const P = e.photos, file = `${e.key}-photos.html`; ret
 <section class="hero hero--short phx__hero"><div class="hero__media">${img(P.hero,'', '100vw', true)}</div><div class="hero__scrim"></div>
   <div class="wrap"><div class="hero__copy">
     <a class="phx__back" href="${e.key}.html">${ICON.back} Koi ${e.n}'</a>
-    <h1 class="hero__k mt-1">KOI <em>${e.n}'</em><span class="script">photos</span></h1>
+    <h1 class="hero__k mt-1">KOI ${e.n}' photos</h1>
     <p>${P.intro} Tap any photo to see it large and download it.</p>
     <div class="row phx__dl" data-zips></div>
   </div></div>
@@ -349,9 +347,9 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
   body:`
 <section class="sec nf" style="padding-top:calc(var(--nav-h) + clamp(40px,6vw,90px))"><div class="wrap">
   <span class="pill">Error 404</span>
-  <h1 class="hero__k mt-1" style="font-size:clamp(3rem,10vw,7rem)">LOST<span class="script">in Lusaka</span></h1>
+  <h1 class="hero__k mt-1" style="font-size:clamp(3rem,10vw,7rem)">Lost in Lusaka</h1>
   <p class="lede mt-1">This page does not exist, or it has moved. Everything about Koinonia is one tap away.</p>
-  <div class="row mt-2"><a class="btn" href="index.html">Koinonia home ${ICON.arrow}</a><a class="btn btn--ghost" href="register.html">Register for Koi 26'</a></div>
+  <div class="row mt-2"><a class="btn" href="index.html">Koinonia home</a><a class="btn btn--ghost" href="register.html">Register for Koi 26'</a></div>
   <ul class="nf__links mt-3">
     <li><a href="k26.html"><b>Koi 26'</b><span>December 2026, register now</span></a></li>
     <li><a href="k25.html"><b>Koi 25'</b><span>Videos and speakers</span></a></li>
@@ -361,38 +359,38 @@ const notFound = { file:'404.html', title:'Page not found', og:'worship-1', noin
   </ul>
 </div></section>` };
 const registration = (() => { const e = EDITIONS.k26; return { file:'register.html', title:'Register for Koi 26', desc:'Register for the Koinonia Experience family conference.', body:`<section class="sec" id="register" style="padding-top:calc(var(--nav-h) + 70px)"><div class="wrap">
-  <div class="reg__intro" data-rv><span class="pill pill--orange">Registration open</span><h1 data-split>Register for<br>Koi ${e.n}'.</h1>
+  <div class="reg__intro"><h1>Register for<br>Koi ${e.n}'.</h1>
     <p class="lede mt-1">Join the family this December. Fields marked * are required. Email is optional; add it if you would like a confirmation.</p></div>
   <div class="reg__layout">
-    <aside class="reg__aside" data-rv-stagger>
+    <aside class="reg__aside">
       <div class="reg__fact"><b>Dates</b><span data-setting="k26_when">${S.k26_when}</span></div>
       <div class="reg__fact"><b>Venue</b><span data-setting="k26_where">${S.k26_where}</span></div>
       <div class="reg__fact"><b>Delegate fee</b><span data-setting="k26_fee">${S.k26_fee}</span></div>
       <div class="reg__fact"><b>Questions</b><span><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hello, I need help registering for Koi 26'.")}" target="_blank" rel="noopener">WhatsApp the office</a> or email ccfczambia@gmail.com</span></div>
     </aside>
-    <form class="reg" data-edition="${e.key}" novalidate data-rv="fade">
-      <div class="reg__intro"><span class="eyebrow">Koi 26' registration</span><h2>Your place in the family.</h2><p>Complete the four sections below. Required fields are marked with an asterisk.</p></div>
-      <nav class="reg__sections" aria-label="Registration sections">${['About you','Contact','Conference','Other details'].map((label,i)=>`<a href="#reg-section-${i+1}"><span>${i+1}</span>${label}</a>`).join('')}</nav>
-      <fieldset class="reg__step" id="reg-section-1"><legend><i>1</i>About you</legend>
+    <form class="reg" data-edition="${e.key}" novalidate>
+      <div class="reg__intro"><h2>Your place in the family.</h2><p>Complete the four sections below. Required fields are marked with an asterisk.</p></div>
+      <nav class="reg__sections" aria-label="Registration sections">${['About you','Contact','Conference','Other details'].map((label,i)=>`<a href="#reg-section-${i+1}">${label}</a>`).join('')}</nav>
+      <fieldset class="reg__step" id="reg-section-1"><legend>About you</legend>
         <div class="reg__row reg__row--3"><div class="field"><label for="r-first">First name <em>*</em></label><input id="r-first" name="first" required autocomplete="given-name"></div><div class="field"><label for="r-middle">Middle name</label><input id="r-middle" name="middle" autocomplete="additional-name"></div><div class="field"><label for="r-sur">Surname <em>*</em></label><input id="r-sur" name="surname" required autocomplete="family-name"></div></div>
         <div class="reg__row"><div class="field"><span class="field__label">Sex <em>*</em></span><div class="reg__choices"><label><input type="radio" name="gender" value="Male" required><span>Male</span></label><label><input type="radio" name="gender" value="Female"><span>Female</span></label></div></div>
           <div class="field"><label for="r-age">Age range <em>*</em></label><select id="r-age" name="age" required><option value="">Select</option>${AGES.map(a => `<option>${a}</option>`).join('')}</select></div></div>
       </fieldset>
-      <fieldset class="reg__step" id="reg-section-2"><legend><i>2</i>Where to reach you</legend>
+      <fieldset class="reg__step" id="reg-section-2"><legend>Where to reach you</legend>
         <div class="reg__row"><div class="field"><label for="r-addr">Physical address <em>*</em></label><input id="r-addr" name="address" required autocomplete="street-address" placeholder="Area and town"></div><div class="field"><label for="r-country">Country of residence <em>*</em></label><input id="r-country" name="country" required autocomplete="country-name" value="Zambia"></div></div>
         <div class="reg__row"><div class="field"><label for="r-phone">Contact number <em>*</em></label><input id="r-phone" name="phone" required minlength="5" maxlength="40" type="tel" autocomplete="tel" placeholder="+260 97 ..."></div><div class="field"><label for="r-email">Email (optional)</label><input id="r-email" name="email" maxlength="254" type="email" autocomplete="email" placeholder="you@example.com"></div></div>
         <div class="field"><label for="r-whatsapp">WhatsApp number (optional)</label><input id="r-whatsapp" name="whatsapp" minlength="5" maxlength="40" type="tel" autocomplete="off" placeholder="+260 97 ..." aria-describedby="r-whatsapp-help"><small id="r-whatsapp-help">If your WhatsApp number is the same as your contact number, tick the box below.</small></div><label class="reg__same"><input type="checkbox" name="same_whatsapp"> My contact number is also my WhatsApp number</label>
       </fieldset>
-      <fieldset class="reg__step" id="reg-section-3"><legend><i>3</i>At the conference</legend>
+      <fieldset class="reg__step" id="reg-section-3"><legend>At the conference</legend>
         <div class="field"><span class="field__label">Are you taking part by sharing a talent? <em>*</em></span><small>Preaching, singing, dancing, a poem, a testimony. Limited slots.</small><div class="reg__choices"><label><input type="radio" name="participation" value="Yes" required><span>Yes, I want to take part</span></label><label><input type="radio" name="participation" value="No"><span>No, just attending</span></label></div></div>
         <div class="field"><label for="r-detail">If taking part, what will you do?</label><input id="r-detail" name="detail" placeholder="Optional"></div>
         <div class="field"><span class="field__label">Which days will you attend? <em>*</em></span><div class="reg__choices"><label><input type="checkbox" name="days" value="Day 1"><span>Day 1</span></label><label><input type="checkbox" name="days" value="Day 2"><span>Day 2</span></label><label><input type="checkbox" name="days" value="Day 3"><span>Day 3</span></label><label><input type="checkbox" name="days" value="All Three"><span>All three days</span></label></div></div>
       </fieldset>
-      <fieldset class="reg__step" id="reg-section-4"><legend><i>4</i>Anything else</legend>
+      <fieldset class="reg__step" id="reg-section-4"><legend>Anything else</legend>
         <div class="field"><label for="r-diet">Any dietary restrictions? <em>*</em></label><input id="r-diet" name="dietary" required placeholder="None, or the foods you do not eat"></div>
         <div class="field"><label for="r-exp">What is your expectation at Koi ${e.n}' Experience? <em>*</em></label><textarea id="r-exp" name="expectation" rows="3" required></textarea></div>
       </fieldset>
-      <div class="reg__submit"><button class="btn" type="submit">Register for Koi ${e.n}' ${ICON.arrow}</button><span class="reg__status" aria-live="polite"></span></div>
+      <div class="reg__submit"><button class="btn" type="submit">Register for Koi ${e.n}'</button><span class="reg__status" aria-live="polite"></span></div>
       <p class="reg__fine">Your details go to the church office only and are used for conference planning. <em>*</em> Required.</p>
     </form>
   </div>
